@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>SpeechToType Updates</title>
+        <link>https://github.com/Janinnho/SpeechToType</link>
+        <description>Neueste Updates für SpeechToType</description>
+        <language>de</language>
+        
+        <!-- 
+        ANLEITUNG: Für neue Updates, füge ein neues <item> hier oben ein.
+        Siehe Documentation/Update-Anleitung.md für Details.
+        -->
+        
+        <item>
+            <title>Version 1.0</title>
+            <pubDate>Sun, 19 Jan 2026 12:00:00 +0100</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 1.0</h2>
+                <p>First Version of SpeechToType!</p>
+                <ul>
+                    <li>Speech-to-text transcription using OpenAI Whisper</li>
+                    <li>Global hotkey support</li>
+                    <li>Menu bar integration</li>
+                    <li>Transcription history</li>
+                </ul>
+            ]]></description>
+            <!-- 
+            WICHTIG: Ersetze diese Werte vor dem ersten Release:
+            - url: Link zur ZIP/DMG-Datei auf GitHub Releases
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure 
+                url="https://github.com/Janinnho/SpeechToType/releases/download/1.0/SpeechToType.dmg"
+                sparkle:edSignature="EwNFC9YTMK04nXAEhgvP49u+gYAD5oDdzqPL0F5tAQ8Z0x6vXzK4L9yjIZYeEECU4nLhpda2OKhPT0FTwtPCAA=="
+                length="5911571"
+                type="application/octet-stream" />
+        </item>
+        
+    </channel>
+</rss>

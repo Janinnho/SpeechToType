@@ -1,0 +1,2 @@
+# SpeechToType - Update Sparkle
+
