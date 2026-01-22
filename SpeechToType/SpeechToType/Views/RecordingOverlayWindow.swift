@@ -8,7 +8,9 @@
 import SwiftUI
 import AppKit
 import Combine
+import QuartzCore
 
+@MainActor
 class RecordingOverlayWindowController: NSObject, ObservableObject {
     static let shared = RecordingOverlayWindowController()
 
@@ -16,6 +18,7 @@ class RecordingOverlayWindowController: NSObject, ObservableObject {
     private var hostingView: NSHostingView<RecordingOverlayView>?
     @Published var audioLevel: Float = 0.0
     @Published var isVisible = false
+    private var isUpdatingLevel = false
 
     private override init() {
         super.init()
@@ -66,9 +69,17 @@ class RecordingOverlayWindowController: NSObject, ObservableObject {
     }
 
     func updateAudioLevel(_ level: Float) {
-        DispatchQueue.main.async {
-            self.audioLevel = level
-        }
+        // Prevent re-entrant updates that could cause layout conflicts
+        guard !isUpdatingLevel else { return }
+        isUpdatingLevel = true
+
+        // Use CATransaction to batch the update and prevent layout thrashing
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        self.audioLevel = level
+        CATransaction.commit()
+
+        isUpdatingLevel = false
     }
 }
 
@@ -122,6 +133,7 @@ struct RecordingOverlayView: View {
 struct SoundWaveView: View {
     var audioLevel: Float
     @State private var phases: [CGFloat] = Array(repeating: 0, count: 5)
+    @State private var smoothedLevel: Float = 0.3
 
     var body: some View {
         HStack(spacing: 3) {
@@ -135,12 +147,17 @@ struct SoundWaveView: View {
         .onAppear {
             startAnimations()
         }
+        .onChange(of: audioLevel) { _, newLevel in
+            // Smooth out level changes to reduce layout updates
+            withAnimation(.linear(duration: 0.1)) {
+                smoothedLevel = max(0.3, min(1.0, newLevel * 3 + 0.3))
+            }
+        }
     }
 
     private func barHeight(for index: Int) -> CGFloat {
         let baseHeights: [CGFloat] = [0.4, 0.7, 1.0, 0.7, 0.4]
-        let levelMultiplier = CGFloat(max(0.3, min(1.0, audioLevel * 3 + 0.3)))
-        return baseHeights[index] * levelMultiplier
+        return baseHeights[index] * CGFloat(smoothedLevel)
     }
 
     private func startAnimations() {

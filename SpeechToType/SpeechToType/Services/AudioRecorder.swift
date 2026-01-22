@@ -38,6 +38,8 @@ class AudioRecorder: NSObject, ObservableObject {
     private var recordingStartTime: Date?
     private var durationTimer: Timer?
     private var levelTimer: Timer?
+    private var lastLevelUpdateTime: Date?
+    private let minLevelUpdateInterval: TimeInterval = 0.1 // Throttle to 10 updates/second max
 
     private override init() {
         super.init()
@@ -91,7 +93,10 @@ class AudioRecorder: NSObject, ObservableObject {
 
             durationTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
                 guard let self = self, let startTime = self.recordingStartTime else { return }
-                self.recordingDuration = Date().timeIntervalSince(startTime)
+                let newDuration = Date().timeIntervalSince(startTime)
+                Task { @MainActor in
+                    self.recordingDuration = newDuration
+                }
             }
 
             // Start audio level metering
@@ -110,10 +115,19 @@ class AudioRecorder: NSObject, ObservableObject {
         // Convert dB to linear scale (0.0 to 1.0)
         // -160 dB is silence, 0 dB is max
         let normalizedLevel = max(0, (level + 50) / 50)
-        audioLevel = normalizedLevel
 
-        // Update overlay window
-        RecordingOverlayWindowController.shared.updateAudioLevel(normalizedLevel)
+        // Throttle UI updates to avoid layout conflicts
+        let now = Date()
+        if let lastUpdate = lastLevelUpdateTime, now.timeIntervalSince(lastUpdate) < minLevelUpdateInterval {
+            return
+        }
+        lastLevelUpdateTime = now
+
+        // Update on main thread safely
+        Task { @MainActor in
+            self.audioLevel = normalizedLevel
+            RecordingOverlayWindowController.shared.updateAudioLevel(normalizedLevel)
+        }
     }
     
     func stopRecording() -> (URL, TimeInterval)? {

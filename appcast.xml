@@ -12,6 +12,42 @@
         -->
 
         <item>
+            <title>Version 1.2</title>
+            <pubDate>Wed, 22 Jan 2026 20:00:00 +0100</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 1.2</h2>
+                <p>Feature update with improved continuous recording and statistics!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Improved Continuous Recording</strong>: Double-tap Control to start continuous recording, double-tap again to stop. No need to hold the key!</li>
+                    <li><strong>Menu Bar Actions</strong>: Start/stop continuous recording and trigger text rewrite directly from the menu bar</li>
+                    <li><strong>Statistics Dashboard</strong>: Track your transcription stats - words transcribed, tokens used, and estimated time saved</li>
+                    <li><strong>Shortcut Reset</strong>: New button to reset keyboard shortcuts to defaults</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li>Fixed keyboard shortcut recording in settings</li>
+                    <li>Fixed crash when holding the transcription button</li>
+                    <li>Improved thread safety for audio level updates</li>
+                    <li>Enhanced German and English localization</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/1.2/SpeechToType.dmg"
+                sparkle:edSignature="REPLACE_WITH_SIGNATURE"
+                length="0"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.1</title>
             <pubDate>Wed, 22 Jan 2026 12:00:00 +0100</pubDate>
             <sparkle:version>2</sparkle:version>

@@ -11,7 +11,8 @@ struct StatusView: View {
     @ObservedObject var hotkeyManager = HotkeyManager.shared
     @ObservedObject var audioRecorder = AudioRecorder.shared
     @ObservedObject var settings = AppSettings.shared
-    
+    @ObservedObject var historyManager = TranscriptionHistoryManager.shared
+
     var body: some View {
         VStack(spacing: 16) {
             // Recording indicator
@@ -97,9 +98,48 @@ struct StatusView: View {
                 .background(Color.yellow.opacity(0.1))
                 .cornerRadius(8)
             }
+
+            // Statistics section
+            if historyManager.totalWordsTranscribed > 0 {
+                Divider()
+                    .padding(.top, 8)
+
+                VStack(spacing: 8) {
+                    Text("statistics")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+
+                    HStack(spacing: 16) {
+                        StatisticItem(
+                            icon: "text.word.spacing",
+                            value: "\(historyManager.totalWordsTranscribed)",
+                            label: "wordsTranscribed"
+                        )
+
+                        StatisticItem(
+                            icon: "waveform",
+                            value: formatMinutes(historyManager.totalRecordingDuration),
+                            label: "transcribedTime"
+                        )
+
+                        StatisticItem(
+                            icon: "number.circle",
+                            value: formatTokens(historyManager.totalTokensUsed),
+                            label: "tokensUsed"
+                        )
+
+                        StatisticItem(
+                            icon: "clock.arrow.circlepath",
+                            value: String(format: "%.1f", historyManager.estimatedMinutesSaved),
+                            label: "minutesSaved"
+                        )
+                    }
+                }
+                .padding(.top, 4)
+            }
         }
         .padding()
-        .frame(minWidth: 250)
+        .frame(minWidth: 300)
     }
     
     private var recordingColor: Color {
@@ -116,11 +156,24 @@ struct StatusView: View {
         let tenths = Int((duration.truncatingRemainder(dividingBy: 1)) * 10)
         return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
     }
+
+    private func formatMinutes(_ duration: TimeInterval) -> String {
+        let totalMinutes = Int(duration) / 60
+        let seconds = Int(duration) % 60
+        return String(format: "%d:%02d", totalMinutes, seconds)
+    }
+
+    private func formatTokens(_ tokens: Int) -> String {
+        if tokens >= 1000 {
+            return String(format: "%.1fk", Double(tokens) / 1000.0)
+        }
+        return "\(tokens)"
+    }
 }
 
 struct KeyCapView: View {
     let text: String
-    
+
     var body: some View {
         Text(text)
             .font(.system(.body, design: .rounded))
@@ -136,6 +189,29 @@ struct KeyCapView: View {
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(Color(NSColor.separatorColor), lineWidth: 1)
             )
+    }
+}
+
+struct StatisticItem: View {
+    let icon: String
+    let value: String
+    let label: LocalizedStringKey
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.accentColor)
+
+            Text(value)
+                .font(.system(.title3, design: .rounded))
+                .fontWeight(.semibold)
+
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .frame(minWidth: 70)
     }
 }
 

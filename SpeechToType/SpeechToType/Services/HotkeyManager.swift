@@ -16,7 +16,7 @@ class HotkeyManager: ObservableObject {
 
     @Published var isListening = false
     @Published var isRecording = false
-    @Published var isContinuousMode = false  // Double-tap toggle mode
+    @Published var isContinuousMode = false  // Double-tap toggle mode - stays recording until double-tap again
     @Published var statusMessage = String(localized: "ready")
     @Published var lastError: String?
 
@@ -24,6 +24,7 @@ class HotkeyManager: ObservableObject {
     private var runLoopSource: CFRunLoopSource?
     private var isKeyDown = false
     private var lastKeyPressTime: Date?
+    private var lastKeyReleaseTime: Date?
     private let doubleTapInterval: TimeInterval = 0.3  // 300ms for double-tap detection
 
     var onRecordingStarted: (() -> Void)?
@@ -178,38 +179,60 @@ class HotkeyManager: ObservableObject {
     private func handleKeyPress() {
         let now = Date()
 
-        // Check for double-tap
-        if let lastPress = lastKeyPressTime,
-           now.timeIntervalSince(lastPress) < doubleTapInterval {
-            // Double-tap detected
-            if isRecording {
-                // Already recording - toggle continuous mode on
-                isContinuousMode = true
-                statusMessage = String(localized: "recordingContinuous")
-            } else {
-                // Start recording in continuous mode
+        // Check for double-tap (based on release times for toggle mode)
+        if let lastRelease = lastKeyReleaseTime,
+           now.timeIntervalSince(lastRelease) < doubleTapInterval {
+            // Double-tap detected!
+            if isContinuousMode && isRecording {
+                // Already in continuous mode - stop recording
+                isContinuousMode = false
+                stopRecording()
+                lastKeyReleaseTime = nil
+                lastKeyPressTime = nil
+                return
+            } else if !isRecording {
+                // Start continuous recording mode
                 isContinuousMode = true
                 startRecording()
+                lastKeyReleaseTime = nil
+                lastKeyPressTime = nil
+                return
             }
-            lastKeyPressTime = nil  // Reset to prevent triple-tap
-        } else {
-            // Single tap - start recording normally
-            lastKeyPressTime = now
-            if !isRecording {
-                startRecording()
-            }
+        }
+
+        // Normal single tap - start recording if not already
+        lastKeyPressTime = now
+        if !isRecording {
+            startRecording()
         }
     }
 
     private func handleKeyRelease() {
+        let now = Date()
+        lastKeyReleaseTime = now
+
         if isContinuousMode {
-            // In continuous mode, key release stops recording
-            isContinuousMode = false
-            stopRecording()
+            // In continuous mode, key release does NOT stop recording
+            // Recording continues until double-tap
+            return
         } else if isRecording {
-            // Normal hold-to-record mode
+            // Normal hold-to-record mode - stop on release
             stopRecording()
         }
+    }
+
+    // Public method to start continuous recording from menu
+    func startContinuousRecording() {
+        guard !isRecording else { return }
+        isContinuousMode = true
+        startRecording()
+    }
+
+    // Public method to stop recording from menu
+    func stopCurrentRecording() {
+        guard isRecording else { return }
+        isContinuousMode = false
+        stopRecording()
     }
 
     private func startRecording() {

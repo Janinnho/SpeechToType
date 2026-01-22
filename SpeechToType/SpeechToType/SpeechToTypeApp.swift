@@ -76,14 +76,17 @@ struct SpeechToTypeApp: App {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Initialize TextInputService early to track app switching
+        _ = TextInputService.shared
+
         // Request necessary permissions on launch
         Task {
             _ = await AudioRecorder.shared.requestPermission()
         }
-        
+
         // Start hotkey listening
         HotkeyManager.shared.startListening()
-        
+
         // Setup recording handlers
         setupRecordingHandlers()
     }
@@ -191,12 +194,43 @@ struct MenuBarView: View {
             Divider()
             
             // Quick actions
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
+                if hotkeyManager.isRecording {
+                    Button(action: {
+                        hotkeyManager.stopCurrentRecording()
+                    }) {
+                        Label("stopRecording", systemImage: "stop.circle.fill")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                } else {
+                    Button(action: {
+                        hotkeyManager.startContinuousRecording()
+                    }) {
+                        Label("startContinuousRecording", systemImage: "mic.circle.fill")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+
+                if settings.textRewriteEnabled {
+                    Button(action: {
+                        triggerRewriteFromMenu()
+                    }) {
+                        Label("rewriteSelectedText", systemImage: "pencil.circle.fill")
+                    }
+                    .buttonStyle(.bordered)
+                }
+
                 Text("holdControlToDictate")
                     .font(.caption)
                     .foregroundColor(.secondary)
+
+                Text("doubleTapForContinuous")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            
+            .padding(.horizontal)
+
             Divider()
             
             // API Status
@@ -251,5 +285,34 @@ struct MenuBarView: View {
         let seconds = Int(duration) % 60
         let tenths = Int((duration.truncatingRemainder(dividingBy: 1)) * 10)
         return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
+    }
+
+    private func triggerRewriteFromMenu() {
+        // First try to get the text via Accessibility API (from the previously active app)
+        if let selectedText = TextInputService.shared.getSelectedText(),
+           !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            TextRewriteWindowController.shared.show(with: selectedText)
+            return
+        }
+
+        // If Accessibility API didn't work, try activating the previous app and copying
+        guard let previousApp = TextInputService.shared.getPreviousApp() else {
+            TextRewriteWindowController.shared.showNoTextSelectedAlert()
+            return
+        }
+
+        // Activate the previous app briefly to copy the text
+        previousApp.activate(options: [])
+
+        // Wait for the app to become active, then copy
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            // Now try to get the text via clipboard (Cmd+C)
+            if let selectedText = TextInputService.shared.getSelectedText(),
+               !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                TextRewriteWindowController.shared.show(with: selectedText)
+            } else {
+                TextRewriteWindowController.shared.showNoTextSelectedAlert()
+            }
+        }
     }
 }

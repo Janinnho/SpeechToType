@@ -174,6 +174,12 @@ final class AppSettings: ObservableObject {
         !apiKey.isEmpty
     }
 
+    func resetShortcutsToDefaults() {
+        recordingShortcut = ShortcutConfig.defaultRecording
+        rewriteShortcut = ShortcutConfig.defaultRewrite
+        useControlKey = true
+    }
+
     private init() {
         self.apiKey = defaults.string(forKey: "apiKey") ?? ""
         self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gpt4oMiniTranscribe
