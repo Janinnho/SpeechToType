@@ -61,6 +61,15 @@ class TextRewriteWindowController: NSObject, ObservableObject {
         // Insert the rewritten text
         TextInputService.shared.insertText(text)
     }
+
+    func showNoTextSelectedAlert() {
+        let alert = NSAlert()
+        alert.messageText = String(localized: "rewriteErrorNoText")
+        alert.informativeText = String(localized: "rewriteSelectTextFirst")
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: String(localized: "ok"))
+        alert.runModal()
+    }
 }
 
 struct TextRewritePopupView: View {

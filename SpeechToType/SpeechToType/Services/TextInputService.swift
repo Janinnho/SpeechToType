@@ -12,7 +12,62 @@ import Carbon.HIToolbox
 class TextInputService {
     static let shared = TextInputService()
 
-    private init() {}
+    /// Stores the previously active application (before our app took focus)
+    private var previousApp: NSRunningApplication?
+    private var lastActiveApp: NSRunningApplication?
+
+    private init() {
+        // Observe app activation changes
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(appWillDeactivate(_:)),
+            name: NSWorkspace.didDeactivateApplicationNotification,
+            object: nil
+        )
+
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(appDidActivate(_:)),
+            name: NSWorkspace.didActivateApplicationNotification,
+            object: nil
+        )
+
+        // Initialize with current frontmost app if it's not us
+        if let frontmost = NSWorkspace.shared.frontmostApplication,
+           frontmost.bundleIdentifier != Bundle.main.bundleIdentifier {
+            previousApp = frontmost
+            lastActiveApp = frontmost
+        }
+    }
+
+    @objc private func appWillDeactivate(_ notification: Notification) {
+        guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
+            return
+        }
+
+        // When another app (not us) is deactivating, remember it
+        if app.bundleIdentifier != Bundle.main.bundleIdentifier {
+            lastActiveApp = app
+        }
+    }
+
+    @objc private func appDidActivate(_ notification: Notification) {
+        guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
+            return
+        }
+
+        // When our app becomes active, save the last active app as the previous app
+        if app.bundleIdentifier == Bundle.main.bundleIdentifier {
+            if let last = lastActiveApp {
+                previousApp = last
+            }
+        }
+    }
+
+    /// Gets the previously active application
+    func getPreviousApp() -> NSRunningApplication? {
+        return previousApp
+    }
 
     func insertText(_ text: String) {
         // Use CGEvent to simulate keyboard input
@@ -37,6 +92,72 @@ class TextInputService {
 
     /// Gets the currently selected text by simulating Cmd+C and reading from clipboard
     func getSelectedText() -> String? {
+        // First try to get selected text via Accessibility API (works even when our app has focus)
+        if let accessibilityText = getSelectedTextViaAccessibility() {
+            return accessibilityText
+        }
+
+        // Fallback to clipboard method
+        return getSelectedTextViaClipboard()
+    }
+
+    /// Gets selected text using the Accessibility API from the previously active app
+    private func getSelectedTextViaAccessibility() -> String? {
+        // Try to get selected text from the previously active app
+        if let prevApp = previousApp,
+           let text = getSelectedTextFromApp(prevApp) {
+            return text
+        }
+
+        // Fallback: try current focused app
+        let systemWide = AXUIElementCreateSystemWide()
+
+        var focusedApp: AnyObject?
+        guard AXUIElementCopyAttributeValue(systemWide, kAXFocusedApplicationAttribute as CFString, &focusedApp) == .success,
+              let appElement = focusedApp else {
+            return nil
+        }
+
+        var focusedElement: AnyObject?
+        guard AXUIElementCopyAttributeValue(appElement as! AXUIElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) == .success,
+              let element = focusedElement else {
+            return nil
+        }
+
+        var selectedText: AnyObject?
+        if AXUIElementCopyAttributeValue(element as! AXUIElement, kAXSelectedTextAttribute as CFString, &selectedText) == .success,
+           let text = selectedText as? String,
+           !text.isEmpty {
+            return text
+        }
+
+        return nil
+    }
+
+    /// Gets selected text from a specific application using Accessibility API
+    private func getSelectedTextFromApp(_ app: NSRunningApplication) -> String? {
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+
+        // Get the focused UI element within that application
+        var focusedElement: AnyObject?
+        guard AXUIElementCopyAttributeValue(appElement, kAXFocusedUIElementAttribute as CFString, &focusedElement) == .success,
+              let element = focusedElement else {
+            return nil
+        }
+
+        // Try to get the selected text
+        var selectedText: AnyObject?
+        if AXUIElementCopyAttributeValue(element as! AXUIElement, kAXSelectedTextAttribute as CFString, &selectedText) == .success,
+           let text = selectedText as? String,
+           !text.isEmpty {
+            return text
+        }
+
+        return nil
+    }
+
+    /// Gets selected text using clipboard simulation (Cmd+C)
+    private func getSelectedTextViaClipboard() -> String? {
         let pasteboard = NSPasteboard.general
         let previousContent = pasteboard.string(forType: .string)
 
