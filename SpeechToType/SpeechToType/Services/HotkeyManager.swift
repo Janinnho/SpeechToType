@@ -13,19 +13,23 @@ import SwiftUI
 
 class HotkeyManager: ObservableObject {
     static let shared = HotkeyManager()
-    
+
     @Published var isListening = false
     @Published var isRecording = false
+    @Published var isContinuousMode = false  // Double-tap toggle mode
     @Published var statusMessage = String(localized: "ready")
     @Published var lastError: String?
-    
+
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
     private var isKeyDown = false
-    
+    private var lastKeyPressTime: Date?
+    private let doubleTapInterval: TimeInterval = 0.3  // 300ms for double-tap detection
+
     var onRecordingStarted: (() -> Void)?
     var onRecordingStopped: (() -> Void)?
-    
+    var onRewriteTriggered: (() -> Void)?
+
     private init() {}
     
     func startListening() {
@@ -88,65 +92,146 @@ class HotkeyManager: ObservableObject {
     
     private func handleEvent(proxy: CGEventTapProxy, type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
         let settings = AppSettings.shared
-        
+        let keyCode = Int(event.getIntegerValueField(.keyboardEventKeycode))
+        let flags = event.flags
+
+        // Check for rewrite shortcut (if enabled)
+        if settings.textRewriteEnabled && type == .keyDown {
+            let rewriteShortcut = settings.rewriteShortcut
+            let rewriteModifiers = CGEventFlags(rawValue: UInt64(rewriteShortcut.modifiers))
+
+            // Check if the pressed key matches the rewrite shortcut
+            if keyCode == rewriteShortcut.keyCode && matchesModifiers(flags, expected: rewriteModifiers) {
+                DispatchQueue.main.async {
+                    self.triggerRewrite()
+                }
+                return nil // Consume the event
+            }
+        }
+
         if type == .flagsChanged {
-            let flags = event.flags
-            
             // Check if Control key is used as hotkey
             if settings.useControlKey {
                 let controlPressed = flags.contains(.maskControl)
-                
+
                 if controlPressed && !isKeyDown {
                     isKeyDown = true
                     DispatchQueue.main.async {
-                        self.startRecording()
+                        self.handleKeyPress()
                     }
                 } else if !controlPressed && isKeyDown {
                     isKeyDown = false
                     DispatchQueue.main.async {
-                        self.stopRecording()
+                        self.handleKeyRelease()
                     }
                 }
             }
-            
+
             return Unmanaged.passRetained(event)
         }
-        
+
         // Handle regular key events if not using Control key
         if !settings.useControlKey {
-            let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
-            
-            if keyCode == Int64(settings.hotkeyKeyCode) {
+            if keyCode == settings.hotkeyKeyCode {
                 if type == .keyDown && !isKeyDown {
                     isKeyDown = true
                     DispatchQueue.main.async {
-                        self.startRecording()
+                        self.handleKeyPress()
                     }
                     return nil // Consume the event
                 } else if type == .keyUp && isKeyDown {
                     isKeyDown = false
                     DispatchQueue.main.async {
-                        self.stopRecording()
+                        self.handleKeyRelease()
                     }
                     return nil // Consume the event
                 }
             }
         }
-        
+
         return Unmanaged.passRetained(event)
     }
-    
+
+    private func matchesModifiers(_ actual: CGEventFlags, expected: CGEventFlags) -> Bool {
+        // Check if the required modifiers are pressed
+        let relevantMasks: [CGEventFlags] = [.maskCommand, .maskControl, .maskAlternate, .maskShift]
+
+        for mask in relevantMasks {
+            let expectedHas = expected.contains(mask)
+            let actualHas = actual.contains(mask)
+            if expectedHas != actualHas {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func triggerRewrite() {
+        // Get selected text
+        if let selectedText = TextInputService.shared.getSelectedText(),
+           !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            TextRewriteWindowController.shared.show(with: selectedText)
+            onRewriteTriggered?()
+        }
+    }
+
+    private func handleKeyPress() {
+        let now = Date()
+
+        // Check for double-tap
+        if let lastPress = lastKeyPressTime,
+           now.timeIntervalSince(lastPress) < doubleTapInterval {
+            // Double-tap detected
+            if isRecording {
+                // Already recording - toggle continuous mode on
+                isContinuousMode = true
+                statusMessage = String(localized: "recordingContinuous")
+            } else {
+                // Start recording in continuous mode
+                isContinuousMode = true
+                startRecording()
+            }
+            lastKeyPressTime = nil  // Reset to prevent triple-tap
+        } else {
+            // Single tap - start recording normally
+            lastKeyPressTime = now
+            if !isRecording {
+                startRecording()
+            }
+        }
+    }
+
+    private func handleKeyRelease() {
+        if isContinuousMode {
+            // In continuous mode, key release stops recording
+            isContinuousMode = false
+            stopRecording()
+        } else if isRecording {
+            // Normal hold-to-record mode
+            stopRecording()
+        }
+    }
+
     private func startRecording() {
         guard !isRecording else { return }
         isRecording = true
-        statusMessage = String(localized: "recording")
+        statusMessage = isContinuousMode ? String(localized: "recordingContinuous") : String(localized: "recording")
+
+        // Show overlay window
+        RecordingOverlayWindowController.shared.show()
+
         onRecordingStarted?()
     }
-    
+
     private func stopRecording() {
         guard isRecording else { return }
         isRecording = false
+        isContinuousMode = false
         statusMessage = String(localized: "processing")
+
+        // Hide overlay window
+        RecordingOverlayWindowController.shared.hide()
+
         onRecordingStopped?()
     }
     
