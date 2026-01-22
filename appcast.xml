@@ -6,11 +6,47 @@
         <description>Neueste Updates für SpeechToType</description>
         <language>de</language>
         
-        <!-- 
+        <!--
         ANLEITUNG: Für neue Updates, füge ein neues <item> hier oben ein.
         Siehe Documentation/Update-Anleitung.md für Details.
         -->
-        
+
+        <item>
+            <title>Version 1.1</title>
+            <pubDate>Wed, 22 Jan 2026 12:00:00 +0100</pubDate>
+            <sparkle:version>1.1</sparkle:version>
+            <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 1.1</h2>
+                <p>Major feature update with new capabilities!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Recording Overlay</strong>: Visual indicator with sound wave animation while recording</li>
+                    <li><strong>Continuous Recording</strong>: Double-tap the hotkey to record without holding</li>
+                    <li><strong>Text Rewriting</strong>: Select text and use AI to correct grammar, elaborate, or apply custom prompts</li>
+                    <li><strong>Customizable Shortcuts</strong>: Configure your own keyboard shortcuts for all functions</li>
+                    <li><strong>GPT Model Selection</strong>: Choose between GPT-4o, GPT-5, and GPT-5.2 for text rewriting</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li>Fixed API key input in onboarding</li>
+                    <li>Improved settings organization</li>
+                    <li>Enhanced localization for German and English</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/1.1/SpeechToType.dmg"
+                sparkle:edSignature="3HBSyUJ6tH/BlEkarUH11sn0uXG/VVa7q2YoymUmNM+6d8Aye7x0gB8PoBiCXW7zcKmlpZJR6K0qoP8VfD8wBw=="
+                length="6027622"
+                type="application/octet-stream" />
+        </item>
+
         <item>
             <title>Version 1.0</title>
             <pubDate>Sun, 19 Jan 2026 12:00:00 +0100</pubDate>
