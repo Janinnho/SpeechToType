@@ -158,29 +158,45 @@ class TextInputService {
 
     /// Gets selected text using clipboard simulation (Cmd+C)
     private func getSelectedTextViaClipboard() -> String? {
+        // Need to make the previous app active first
+        guard let prevApp = previousApp else {
+            return nil
+        }
+
         let pasteboard = NSPasteboard.general
         let previousContent = pasteboard.string(forType: .string)
+        let previousChangeCount = pasteboard.changeCount
 
         // Clear clipboard
         pasteboard.clearContents()
+
+        // Activate the previous app to send the copy command to it
+        prevApp.activate(options: [])
+
+        // Small delay to let the app activate
+        Thread.sleep(forTimeInterval: 0.05)
 
         // Simulate Cmd+C to copy selected text
         simulateCopy()
 
         // Wait a bit for the copy to complete
-        Thread.sleep(forTimeInterval: 0.1)
+        Thread.sleep(forTimeInterval: 0.15)
 
         // Get the copied text
         let selectedText = pasteboard.string(forType: .string)
+        let newChangeCount = pasteboard.changeCount
+
+        // Only consider it a success if the clipboard actually changed
+        let clipboardChanged = newChangeCount != previousChangeCount + 1 // +1 because we cleared it
 
         // Restore previous clipboard content
-        pasteboard.clearContents()
         if let previous = previousContent {
+            pasteboard.clearContents()
             pasteboard.setString(previous, forType: .string)
         }
 
-        // Return nil if nothing was copied or if it's the same as before
-        if let text = selectedText, !text.isEmpty, text != previousContent {
+        // Return the text if clipboard changed and we got something
+        if let text = selectedText, !text.isEmpty, clipboardChanged || text != previousContent {
             return text
         }
 
