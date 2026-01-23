@@ -167,6 +167,13 @@ struct TextRewritePopupView: View {
                 Spacer()
 
                 if !resultText.isEmpty {
+                    Button("rewriteCopy") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(resultText, forType: .string)
+                        controller.hide()
+                    }
+                    .keyboardShortcut("c", modifiers: .command)
+
                     Button("rewriteInsert") {
                         controller.insertResult(resultText)
                     }

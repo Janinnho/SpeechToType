@@ -126,7 +126,6 @@ class AudioRecorder: NSObject, ObservableObject {
         // Update on main thread safely
         Task { @MainActor in
             self.audioLevel = normalizedLevel
-            RecordingOverlayWindowController.shared.updateAudioLevel(normalizedLevel)
         }
     }
     

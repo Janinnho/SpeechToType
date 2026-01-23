@@ -1472,6 +1472,23 @@
         }
       }
     },
+    "rewriteCopy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
     "rewriteInsert" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1546,13 +1563,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausgewählter Text:"
+            "value" : "Text umschreiben"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selected text:"
+            "value" : "Rewrite text"
           }
         }
       }

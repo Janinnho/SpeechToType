@@ -168,11 +168,14 @@ class HotkeyManager: ObservableObject {
     }
 
     private func triggerRewrite() {
-        // Get selected text
+        // Get selected text - first try accessibility, then clipboard
         if let selectedText = TextInputService.shared.getSelectedText(),
            !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             TextRewriteWindowController.shared.show(with: selectedText)
             onRewriteTriggered?()
+        } else {
+            // Show alert if no text was found
+            TextRewriteWindowController.shared.showNoTextSelectedAlert()
         }
     }
 
@@ -240,8 +243,10 @@ class HotkeyManager: ObservableObject {
         isRecording = true
         statusMessage = isContinuousMode ? String(localized: "recordingContinuous") : String(localized: "recording")
 
-        // Show overlay window
-        RecordingOverlayWindowController.shared.show()
+        // Show overlay window - must be done on MainActor
+        Task { @MainActor in
+            RecordingOverlayWindowController.shared.show()
+        }
 
         onRecordingStarted?()
     }
@@ -252,8 +257,10 @@ class HotkeyManager: ObservableObject {
         isContinuousMode = false
         statusMessage = String(localized: "processing")
 
-        // Hide overlay window
-        RecordingOverlayWindowController.shared.hide()
+        // Hide overlay window - must be done on MainActor
+        Task { @MainActor in
+            RecordingOverlayWindowController.shared.hide()
+        }
 
         onRecordingStopped?()
     }
