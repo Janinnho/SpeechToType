@@ -7,17 +7,49 @@
 
 import SwiftUI
 
+enum HistoryFilter: String, CaseIterable {
+    case all
+    case transcriptions
+    case rewrites
+
+    var displayName: LocalizedStringKey {
+        switch self {
+        case .all:
+            return "filterAll"
+        case .transcriptions:
+            return "filterTranscriptions"
+        case .rewrites:
+            return "filterRewrites"
+        }
+    }
+}
+
 struct HistoryView: View {
     @ObservedObject var historyManager = TranscriptionHistoryManager.shared
     @State private var searchText = ""
     @State private var showingDeleteAllAlert = false
     @State private var selectedRecord: TranscriptionRecord?
-    
+    @State private var selectedFilter: HistoryFilter = .all
+
     var filteredRecords: [TranscriptionRecord] {
-        if searchText.isEmpty {
-            return historyManager.records
+        var records = historyManager.records
+
+        // Filter by type
+        switch selectedFilter {
+        case .all:
+            break
+        case .transcriptions:
+            records = records.filter { $0.recordType == .transcription }
+        case .rewrites:
+            records = records.filter { $0.recordType == .rewrite }
         }
-        return historyManager.records.filter { $0.text.localizedCaseInsensitiveContains(searchText) }
+
+        // Filter by search text
+        if !searchText.isEmpty {
+            records = records.filter { $0.text.localizedCaseInsensitiveContains(searchText) }
+        }
+
+        return records
     }
     
     var body: some View {
@@ -41,6 +73,16 @@ struct HistoryView: View {
             }
             .padding()
             
+            // Filter picker
+            Picker("", selection: $selectedFilter) {
+                ForEach(HistoryFilter.allCases, id: \.self) { filter in
+                    Text(filter.displayName).tag(filter)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+
             // Search
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -138,24 +180,49 @@ struct HistoryView: View {
 struct HistoryRowView: View {
     let record: TranscriptionRecord
     let isSelected: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
+            // Record type indicator
+            HStack {
+                Image(systemName: record.recordType == .transcription ? "waveform" : "pencil")
+                    .foregroundColor(record.recordType == .transcription ? .blue : .orange)
+                    .font(.caption)
+                Text(record.recordType == .transcription ? "transcription" : "rewrite")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            // Show original text for rewrites
+            if record.recordType == .rewrite, let original = record.originalText {
+                Text(original)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .strikethrough()
+
+                Image(systemName: "arrow.down")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+
             Text(record.text)
                 .font(.body)
                 .lineLimit(3)
-            
+
             HStack {
                 Label(formatDate(record.date), systemImage: "clock")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Spacer()
-                
-                Label(formatDuration(record.duration), systemImage: "waveform")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                
+
+                if record.recordType == .transcription && record.duration > 0 {
+                    Label(formatDuration(record.duration), systemImage: "waveform")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
                 Text(record.model)
                     .font(.caption2)
                     .padding(.horizontal, 6)
@@ -168,13 +235,13 @@ struct HistoryRowView: View {
         .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear)
         .cornerRadius(4)
     }
-    
+
     private func formatDate(_ date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: date, relativeTo: Date())
     }
-    
+
     private func formatDuration(_ duration: TimeInterval) -> String {
         let seconds = Int(duration)
         if seconds < 60 {

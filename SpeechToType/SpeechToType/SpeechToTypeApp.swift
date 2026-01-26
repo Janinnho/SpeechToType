@@ -115,35 +115,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 hotkeyManager.statusMessage = "Keine Aufnahme verfügbar"
                 return
             }
-            
+
             guard duration >= 0.5 else {
                 hotkeyManager.statusMessage = "Aufnahme zu kurz"
                 audioRecorder.cleanupRecording(at: audioURL)
                 return
             }
-            
+
             hotkeyManager.statusMessage = "Transkribiere..."
-            
+
+            // Show processing overlay
+            Task { @MainActor in
+                RecordingOverlayWindowController.shared.showProcessing()
+            }
+
             Task {
                 do {
                     let text = try await OpenAIService.shared.transcribe(
                         audioURL: audioURL,
                         model: settings.selectedModel
                     )
-                    
+
                     await MainActor.run {
+                        RecordingOverlayWindowController.shared.hide()
                         TextInputService.shared.insertText(text)
-                        
+
                         let record = TranscriptionRecord(
                             text: text,
                             duration: duration,
                             model: settings.selectedModel.displayName
                         )
                         historyManager.addRecord(record)
-                        
+
                         hotkeyManager.statusMessage = "Erfolgreich!"
                         hotkeyManager.lastError = nil
-                        
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             if !hotkeyManager.isRecording {
                                 hotkeyManager.statusMessage = String(localized: "ready")
@@ -152,11 +158,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                 } catch {
                     await MainActor.run {
+                        RecordingOverlayWindowController.shared.hide()
                         hotkeyManager.statusMessage = String(localized: "error")
                         hotkeyManager.lastError = error.localizedDescription
                     }
                 }
-                
+
                 audioRecorder.cleanupRecording(at: audioURL)
             }
         }
@@ -219,6 +226,13 @@ struct MenuBarView: View {
                         Label("rewriteSelectedText", systemImage: "pencil.circle.fill")
                     }
                     .buttonStyle(.bordered)
+
+                    Button(action: {
+                        rewriteFromClipboard()
+                    }) {
+                        Label("rewriteClipboardText", systemImage: "doc.on.clipboard")
+                    }
+                    .buttonStyle(.bordered)
                 }
 
                 Text("holdControlToDictate")
@@ -232,7 +246,13 @@ struct MenuBarView: View {
             .padding(.horizontal)
 
             Divider()
-            
+
+            // Microphone selection
+            MicrophoneSelectionView()
+                .padding(.horizontal)
+
+            Divider()
+
             // API Status
             HStack {
                 Image(systemName: settings.isConfigured ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
@@ -242,9 +262,9 @@ struct MenuBarView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            
+
             Divider()
-            
+
             // Menu items
             Button("openMainWindow") {
                 NSApplication.shared.activate(ignoringOtherApps: true)
@@ -288,8 +308,8 @@ struct MenuBarView: View {
     }
 
     private func triggerRewriteFromMenu() {
-        // First try to get the text via Accessibility API (from the previously active app)
-        if let selectedText = TextInputService.shared.getSelectedText(),
+        // First try to get the text via Accessibility API with retries (from the previously active app)
+        if let selectedText = TextInputService.shared.getSelectedTextWithRetry(maxAttempts: 2, delayBetweenAttempts: 0.05),
            !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             TextRewriteWindowController.shared.show(with: selectedText)
             return
@@ -304,14 +324,84 @@ struct MenuBarView: View {
         // Activate the previous app briefly to copy the text
         previousApp.activate(options: [])
 
-        // Wait for the app to become active, then copy
+        // Wait for the app to become active, then try with retry mechanism
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            // Now try to get the text via clipboard (Cmd+C)
-            if let selectedText = TextInputService.shared.getSelectedText(),
+            // Now try to get the text with multiple attempts
+            if let selectedText = TextInputService.shared.getSelectedTextWithRetry(maxAttempts: 3, delayBetweenAttempts: 0.1),
                !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 TextRewriteWindowController.shared.show(with: selectedText)
             } else {
                 TextRewriteWindowController.shared.showNoTextSelectedAlert()
+            }
+        }
+    }
+
+    private func rewriteFromClipboard() {
+        if let clipboardText = NSPasteboard.general.string(forType: .string),
+           !clipboardText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            TextRewriteWindowController.shared.show(with: clipboardText)
+        } else {
+            let alert = NSAlert()
+            alert.messageText = String(localized: "clipboardEmpty")
+            alert.informativeText = String(localized: "clipboardEmptyDescription")
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: String(localized: "ok"))
+            alert.runModal()
+        }
+    }
+}
+
+// MARK: - Microphone Selection View
+struct MicrophoneSelectionView: View {
+    @ObservedObject var audioRecorder = AudioRecorder.shared
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Image(systemName: "mic.fill")
+                    .foregroundColor(.secondary)
+                Text("microphone")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+
+            Menu {
+                ForEach(audioRecorder.availableInputDevices) { device in
+                    Button(action: {
+                        audioRecorder.selectInputDevice(device.id)
+                    }) {
+                        HStack {
+                            Text(device.name)
+                            if device.isDefault {
+                                Text("(Standard)")
+                                    .foregroundColor(.secondary)
+                            }
+                            if audioRecorder.selectedDeviceId == device.id ||
+                               (audioRecorder.selectedDeviceId == nil && device.isDefault) {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(audioRecorder.selectedDevice?.name ?? String(localized: "defaultMicrophone"))
+                        .font(.caption)
+                        .lineLimit(1)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color(NSColor.controlBackgroundColor))
+                .cornerRadius(6)
+            }
+            .buttonStyle(.plain)
+            .onAppear {
+                audioRecorder.refreshInputDevices()
             }
         }
     }

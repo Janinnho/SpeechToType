@@ -168,8 +168,8 @@ class HotkeyManager: ObservableObject {
     }
 
     private func triggerRewrite() {
-        // Get selected text - first try accessibility, then clipboard
-        if let selectedText = TextInputService.shared.getSelectedText(),
+        // Get selected text with retry mechanism for better detection
+        if let selectedText = TextInputService.shared.getSelectedTextWithRetry(maxAttempts: 3, delayBetweenAttempts: 0.05),
            !selectedText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             TextRewriteWindowController.shared.show(with: selectedText)
             onRewriteTriggered?()

@@ -95,6 +95,16 @@ struct SettingsView: View {
                     Text("gptModelDescription")
                         .font(.caption)
                         .foregroundColor(.secondary)
+
+                    Picker("defaultTranslationLanguage", selection: $settings.defaultTranslationLanguage) {
+                        ForEach(AppSettings.translationLanguages, id: \.self) { language in
+                            Text(language).tag(language)
+                        }
+                    }
+
+                    Text("defaultTranslationLanguageDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             } header: {
                 Text("textRewriteSection")
@@ -177,6 +187,12 @@ struct SettingsView: View {
                 }
 
                 Text("autoDeleteDescription")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Toggle("saveRewritesToHistory", isOn: $settings.saveRewritesToHistory)
+
+                Text("saveRewritesToHistoryDescription")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } header: {

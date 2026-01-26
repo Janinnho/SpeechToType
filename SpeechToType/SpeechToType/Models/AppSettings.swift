@@ -170,6 +170,32 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// Save rewritten texts to history
+    @Published var saveRewritesToHistory: Bool {
+        didSet { defaults.set(saveRewritesToHistory, forKey: "saveRewritesToHistory") }
+    }
+
+    /// Default language for translation
+    @Published var defaultTranslationLanguage: String {
+        didSet { defaults.set(defaultTranslationLanguage, forKey: "defaultTranslationLanguage") }
+    }
+
+    /// Available translation languages
+    static let translationLanguages = [
+        "English",
+        "German",
+        "French",
+        "Spanish",
+        "Italian",
+        "Portuguese",
+        "Dutch",
+        "Polish",
+        "Russian",
+        "Chinese",
+        "Japanese",
+        "Korean"
+    ]
+
     var isConfigured: Bool {
         !apiKey.isEmpty
     }
@@ -192,6 +218,8 @@ final class AppSettings: ObservableObject {
         // New settings
         self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt4o
         self.textRewriteEnabled = defaults.object(forKey: "textRewriteEnabled") as? Bool ?? true
+        self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
+        self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
         // Load shortcuts
         if let recordingData = defaults.data(forKey: "recordingShortcut"),
