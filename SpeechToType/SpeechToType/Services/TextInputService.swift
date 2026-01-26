@@ -93,12 +93,35 @@ class TextInputService {
     /// Gets the currently selected text by simulating Cmd+C and reading from clipboard
     func getSelectedText() -> String? {
         // First try to get selected text via Accessibility API (works even when our app has focus)
-        if let accessibilityText = getSelectedTextViaAccessibility() {
+        if let accessibilityText = getSelectedTextViaAccessibility(),
+           !accessibilityText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return accessibilityText
+        }
+
+        // Try with the last active app if previous app didn't work
+        if let lastApp = lastActiveApp, lastApp != previousApp,
+           let text = getSelectedTextFromApp(lastApp),
+           !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return text
         }
 
         // Fallback to clipboard method
         return getSelectedTextViaClipboard()
+    }
+
+    /// Gets the currently selected text with multiple retry attempts
+    func getSelectedTextWithRetry(maxAttempts: Int = 3, delayBetweenAttempts: TimeInterval = 0.1) -> String? {
+        for attempt in 0..<maxAttempts {
+            if let text = getSelectedText(),
+               !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return text
+            }
+
+            if attempt < maxAttempts - 1 {
+                Thread.sleep(forTimeInterval: delayBetweenAttempts)
+            }
+        }
+        return nil
     }
 
     /// Gets selected text using the Accessibility API from the previously active app

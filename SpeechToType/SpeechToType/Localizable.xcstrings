@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "(Standard)" : {
+
+    },
     "about" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -344,6 +347,40 @@
         }
       }
     },
+    "clipboardEmpty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage leer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard empty"
+          }
+        }
+      }
+    },
+    "clipboardEmptyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte kopiere zuerst einen Text in die Zwischenablage."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please copy some text to the clipboard first."
+          }
+        }
+      }
+    },
     "copy" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -391,6 +428,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The trigger key can be customized in the code."
+          }
+        }
+      }
+    },
+    "defaultMicrophone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard-Mikrofon"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default microphone"
+          }
+        }
+      }
+    },
+    "defaultTranslationLanguage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard-Übersetzungssprache"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default translation language"
+          }
+        }
+      }
+    },
+    "defaultTranslationLanguageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Standardsprache für Übersetzungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The default language for translations."
           }
         }
       }
@@ -480,6 +568,23 @@
         }
       }
     },
+    "doubleTapForContinuous" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doppelt tippen für Daueraufnahme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double-tap for continuous recording"
+          }
+        }
+      }
+    },
     "enterApiKey" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -544,6 +649,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not create event tap"
+          }
+        }
+      }
+    },
+    "filterAll" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
+    },
+    "filterRewrites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umschreibungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrites"
+          }
+        }
+      }
+    },
+    "filterTranscriptions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkriptionen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcriptions"
           }
         }
       }
@@ -752,6 +908,23 @@
         }
       }
     },
+    "microphone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microphone"
+          }
+        }
+      }
+    },
     "microphoneAccess" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -782,6 +955,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Required to record your voice."
+          }
+        }
+      }
+    },
+    "minutesSaved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Min. gespart"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Min. saved"
           }
         }
       }
@@ -1268,6 +1458,74 @@
         }
       }
     },
+    "resetShortcuts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastenkürzel zurücksetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset shortcuts"
+          }
+        }
+      }
+    },
+    "rewrite" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite"
+          }
+        }
+      }
+    },
+    "rewriteClipboardText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text aus Zwischenablage umschreiben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite text from clipboard"
+          }
+        }
+      }
+    },
+    "rewriteCopy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
     "rewriteCustom" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1315,6 +1573,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Describe how the text should be changed..."
+          }
+        }
+      }
+    },
+    "rewriteDictate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diktieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictate"
+          }
+        }
+      }
+    },
+    "rewriteDictateInstructions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diktiere deine Anweisungen:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictate your instructions:"
           }
         }
       }
@@ -1438,23 +1730,6 @@
         }
       }
     },
-    "rewriteSelectTextFirst" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte wähle zuerst einen Text aus, den du umschreiben möchtest."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select some text first that you want to rewrite."
-          }
-        }
-      }
-    },
     "rewriteGrammar" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1468,23 +1743,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grammar"
-          }
-        }
-      }
-    },
-    "rewriteCopy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy"
           }
         }
       }
@@ -1557,6 +1815,23 @@
         }
       }
     },
+    "rewriteStartDictation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahme starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start recording"
+          }
+        }
+      }
+    },
     "rewriteSelectedText" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1591,6 +1866,23 @@
         }
       }
     },
+    "rewriteSelectTextFirst" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte wähle zuerst einen Text aus, den du umschreiben möchtest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select some text first that you want to rewrite."
+          }
+        }
+      }
+    },
     "rewriteShortcut" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1608,6 +1900,40 @@
         }
       }
     },
+    "rewriteTranslate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Translate"
+          }
+        }
+      }
+    },
+    "rewriteTranslateTo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersetzen in:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Translate to:"
+          }
+        }
+      }
+    },
     "rewriteTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1621,6 +1947,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rewrite Text"
+          }
+        }
+      }
+    },
+    "saveRewritesToHistory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umschreibungen im Verlauf speichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save rewrites to history"
+          }
+        }
+      }
+    },
+    "saveRewritesToHistoryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert umgeschriebene Texte zusammen mit Transkriptionen im Verlauf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves rewritten texts along with transcriptions in history."
           }
         }
       }
@@ -1716,6 +2076,40 @@
     "SpeechToType" : {
 
     },
+    "startContinuousRecording" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daueraufnahme starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start continuous recording"
+          }
+        }
+      }
+    },
+    "statistics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiken"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistics"
+          }
+        }
+      }
+    },
     "status" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1746,6 +2140,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stopped"
+          }
+        }
+      }
+    },
+    "stopRecording" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahme stoppen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop recording"
           }
         }
       }
@@ -1835,6 +2246,40 @@
         }
       }
     },
+    "tokensUsed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokens"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokens"
+          }
+        }
+      }
+    },
+    "transcribedTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahmezeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record time"
+          }
+        }
+      }
+    },
     "transcribing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1848,6 +2293,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transcribing..."
+          }
+        }
+      }
+    },
+    "transcription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkription"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcription"
           }
         }
       }
@@ -1954,91 +2416,6 @@
         }
       }
     },
-    "startContinuousRecording" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daueraufnahme starten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start continuous recording"
-          }
-        }
-      }
-    },
-    "stopRecording" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme stoppen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop recording"
-          }
-        }
-      }
-    },
-    "doubleTapForContinuous" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doppelt tippen für Daueraufnahme"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double-tap for continuous recording"
-          }
-        }
-      }
-    },
-    "resetShortcuts" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkürzel zurücksetzen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset shortcuts"
-          }
-        }
-      }
-    },
-    "statistics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statistiken"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statistics"
-          }
-        }
-      }
-    },
     "wordsTranscribed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2052,57 +2429,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Words"
-          }
-        }
-      }
-    },
-    "tokensUsed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokens"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokens"
-          }
-        }
-      }
-    },
-    "minutesSaved" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Min. gespart"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Min. saved"
-          }
-        }
-      }
-    },
-    "transcribedTime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahmezeit"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Record time"
           }
         }
       }
