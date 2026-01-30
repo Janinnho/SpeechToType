@@ -235,11 +235,11 @@ struct MenuBarView: View {
                     .buttonStyle(.bordered)
                 }
 
-                Text("holdControlToDictate")
+                Text(String(format: String(localized: "holdShortcutToDictate %@"), settings.directDictationShortcut.displayString))
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Text("doubleTapForContinuous")
+                Text(String(format: String(localized: "doubleTapShortcutForContinuous %@"), settings.continuousRecordingShortcut.displayString))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

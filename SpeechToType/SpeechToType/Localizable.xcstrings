@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "(2x)" : {
+
+    },
     "(Standard)" : {
 
     },
@@ -381,6 +384,40 @@
         }
       }
     },
+    "continuousRecordingDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doppelt tippen zum Starten/Stoppen der Daueraufnahme."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double-tap to start/stop continuous recording."
+          }
+        }
+      }
+    },
+    "continuousRecordingShortcut" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daueraufnahme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Recording"
+          }
+        }
+      }
+    },
     "copy" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -547,6 +584,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This action cannot be undone."
+          }
+        }
+      }
+    },
+    "directDictationDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte die Taste gedrückt, um zu diktieren. Lasse los, um zu transkribieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold the key to dictate. Release to transcribe."
+          }
+        }
+      }
+    },
+    "directDictationShortcut" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direktes Diktieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direct Dictation"
           }
         }
       }
@@ -836,6 +907,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hold ⌃ Control to dictate"
+          }
+        }
+      }
+    },
+    "holdShortcutToDictate %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte %@ gedrückt zum Diktieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold %@ to dictate"
+          }
+        }
+      }
+    },
+    "doubleTapShortcutForContinuous %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doppelt %@ für Daueraufnahme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double-tap %@ for continuous"
           }
         }
       }
@@ -1815,23 +1920,6 @@
         }
       }
     },
-    "rewriteStartDictation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme starten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start recording"
-          }
-        }
-      }
-    },
     "rewriteSelectedText" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1900,6 +1988,57 @@
         }
       }
     },
+    "rewriteShortcutDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastenkombination zum Umschreiben von markiertem Text."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key combination to rewrite selected text."
+          }
+        }
+      }
+    },
+    "rewriteStartDictation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahme starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start recording"
+          }
+        }
+      }
+    },
+    "rewriteTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text umschreiben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite Text"
+          }
+        }
+      }
+    },
     "rewriteTranslate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1930,23 +2069,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Translate to:"
-          }
-        }
-      }
-    },
-    "rewriteTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text umschreiben"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite Text"
           }
         }
       }

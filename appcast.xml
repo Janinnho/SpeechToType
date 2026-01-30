@@ -12,6 +12,47 @@
         -->
 
         <item>
+            <title>Version 1.5</title>
+            <pubDate>Thu, 30 Jan 2026 12:00:00 +0100</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>1.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 1.5</h2>
+                <p>Major keyboard shortcut update with fully customizable shortcuts!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>New Default Shortcut</strong>: Right Option key (⌥ rechts) is now the default for dictation instead of Control</li>
+                    <li><strong>Three Separate Shortcuts</strong>: Configure different shortcuts for each function:
+                        <ul>
+                            <li>Direct Dictation (hold key) - Default: Right Option</li>
+                            <li>Continuous Recording (double-tap) - Default: Double-tap Right Option</li>
+                            <li>Text Rewrite (key combination) - Default: Right Option + Space</li>
+                        </ul>
+                    </li>
+                    <li><strong>Full Customization</strong>: Each shortcut can be set to any key or key combination</li>
+                    <li><strong>Improved Settings UI</strong>: Clear descriptions for each shortcut type</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li>Better modifier key detection (supports left/right variants)</li>
+                    <li>Migration from old shortcut settings to new format</li>
+                    <li>Updated German and English localizations</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/1.5/SpeechToType.dmg"
+                sparkle:edSignature="rEQHRSyN6mWC4CkEKIzRIlA7i65zMkW3vrZ/KCQ+o0/RurbrpBRwLQEu/nM0Tm0TvG+nF7mJEYG7iO644L9OCA=="
+                length="6144300"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.4</title>
             <pubDate>Sun, 26 Jan 2026 12:00:00 +0100</pubDate>
             <sparkle:version>5</sparkle:version>

@@ -13,7 +13,8 @@ struct SettingsView: View {
     @ObservedObject var settings = AppSettings.shared
     @State private var showingAPIKey = false
     @State private var accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
-    @State private var isRecordingShortcut = false
+    @State private var isRecordingDirectDictationShortcut = false
+    @State private var isRecordingContinuousShortcut = false
     @State private var isRecordingRewriteShortcut = false
 
     private let updater: SPUUpdater?
@@ -112,46 +113,68 @@ struct SettingsView: View {
 
             // Shortcuts Section
             Section {
-                // Recording shortcut
-                HStack {
-                    Text("recordingShortcut")
-                    Spacer()
-                    ShortcutRecorderButton(
-                        shortcut: $settings.recordingShortcut,
-                        isRecording: $isRecordingShortcut,
-                        otherRecording: $isRecordingRewriteShortcut
-                    )
+                // Direct Dictation shortcut (hold to record)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("directDictationShortcut")
+                        Spacer()
+                        ShortcutRecorderButton(
+                            shortcut: $settings.directDictationShortcut,
+                            isRecording: $isRecordingDirectDictationShortcut,
+                            otherRecording: .constant(isRecordingContinuousShortcut || isRecordingRewriteShortcut),
+                            triggerMode: .holdKey
+                        )
+                    }
+                    Text("directDictationDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                // Continuous Recording shortcut (double-tap)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("continuousRecordingShortcut")
+                        Spacer()
+                        ShortcutRecorderButton(
+                            shortcut: $settings.continuousRecordingShortcut,
+                            isRecording: $isRecordingContinuousShortcut,
+                            otherRecording: .constant(isRecordingDirectDictationShortcut || isRecordingRewriteShortcut),
+                            triggerMode: .doubleTap
+                        )
+                    }
+                    Text("continuousRecordingDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
 
                 // Rewrite shortcut (only if enabled)
                 if settings.textRewriteEnabled {
-                    HStack {
-                        Text("rewriteShortcut")
-                        Spacer()
-                        ShortcutRecorderButton(
-                            shortcut: $settings.rewriteShortcut,
-                            isRecording: $isRecordingRewriteShortcut,
-                            otherRecording: $isRecordingShortcut
-                        )
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text("rewriteShortcut")
+                            Spacer()
+                            ShortcutRecorderButton(
+                                shortcut: $settings.rewriteShortcut,
+                                isRecording: $isRecordingRewriteShortcut,
+                                otherRecording: .constant(isRecordingDirectDictationShortcut || isRecordingContinuousShortcut),
+                                triggerMode: .keyCombo
+                            )
+                        }
+                        Text("rewriteShortcutDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
 
                 Text("shortcutsDescription")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                    .padding(.top, 4)
 
                 Button("resetShortcuts") {
                     settings.resetShortcutsToDefaults()
                 }
                 .font(.caption)
-
-                // Legacy toggle for backward compatibility
-                Toggle("useControlKeyAsHotkey", isOn: $settings.useControlKey)
-                    .onChange(of: settings.useControlKey) { _, newValue in
-                        if newValue {
-                            settings.recordingShortcut = ShortcutConfig(keyCode: kVK_Control, modifiers: 0)
-                        }
-                    }
 
                 HStack {
                     Text("accessibilityAccess")
@@ -243,6 +266,7 @@ struct ShortcutRecorderButton: View {
     @Binding var shortcut: ShortcutConfig
     @Binding var isRecording: Bool
     @Binding var otherRecording: Bool
+    var triggerMode: ShortcutTriggerMode = .holdKey
     @State private var eventMonitor: Any?
 
     var body: some View {
@@ -260,8 +284,15 @@ struct ShortcutRecorderButton: View {
                     Text("pressKeys")
                         .foregroundColor(.red)
                 } else {
-                    Text(shortcut.displayString)
-                        .foregroundColor(.primary)
+                    HStack(spacing: 4) {
+                        Text(shortcut.displayString)
+                            .foregroundColor(.primary)
+                        if triggerMode == .doubleTap {
+                            Text("(2x)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
             }
             .padding(.horizontal, 12)
@@ -287,23 +318,32 @@ struct ShortcutRecorderButton: View {
         // Use local event monitor to capture key presses
         eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .flagsChanged]) { event in
             if event.type == .flagsChanged {
-                // Handle modifier-only shortcuts (like Control key alone)
+                // Handle modifier-only shortcuts (like Right Option key alone)
                 let keyCode = Int(event.keyCode)
 
                 // Check if this is a modifier key being pressed
-                if keyCode == kVK_Control || keyCode == kVK_RightControl {
-                    self.shortcut = ShortcutConfig(keyCode: kVK_Control, modifiers: 0)
+                if keyCode == kVK_RightOption {
+                    self.shortcut = ShortcutConfig(keyCode: kVK_RightOption, modifiers: 0, triggerMode: self.triggerMode)
+                    self.stopRecording()
+                    return nil
+                } else if keyCode == kVK_Option {
+                    self.shortcut = ShortcutConfig(keyCode: kVK_Option, modifiers: 0, triggerMode: self.triggerMode)
+                    self.stopRecording()
+                    return nil
+                } else if keyCode == kVK_Control || keyCode == kVK_RightControl {
+                    self.shortcut = ShortcutConfig(keyCode: keyCode, modifiers: 0, triggerMode: self.triggerMode)
                     self.stopRecording()
                     return nil
                 } else if keyCode == kVK_Command || keyCode == kVK_RightCommand {
-                    // Ignore command alone as it's used by system
+                    // Allow command as single key for some shortcuts
+                    if self.triggerMode != .keyCombo {
+                        self.shortcut = ShortcutConfig(keyCode: keyCode, modifiers: 0, triggerMode: self.triggerMode)
+                        self.stopRecording()
+                        return nil
+                    }
                     return event
-                } else if keyCode == kVK_Option || keyCode == kVK_RightOption {
-                    self.shortcut = ShortcutConfig(keyCode: kVK_Option, modifiers: 0)
-                    self.stopRecording()
-                    return nil
                 } else if keyCode == kVK_Shift || keyCode == kVK_RightShift {
-                    self.shortcut = ShortcutConfig(keyCode: kVK_Shift, modifiers: 0)
+                    self.shortcut = ShortcutConfig(keyCode: keyCode, modifiers: 0, triggerMode: self.triggerMode)
                     self.stopRecording()
                     return nil
                 }
@@ -335,7 +375,7 @@ struct ShortcutRecorderButton: View {
                 return nil
             }
 
-            self.shortcut = ShortcutConfig(keyCode: keyCode, modifiers: modifiers)
+            self.shortcut = ShortcutConfig(keyCode: keyCode, modifiers: modifiers, triggerMode: self.triggerMode)
             self.stopRecording()
             return nil  // Consume the event
         }

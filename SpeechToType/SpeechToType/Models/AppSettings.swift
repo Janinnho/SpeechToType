@@ -65,13 +65,51 @@ enum AutoDeleteOption: String, CaseIterable, Codable {
     }
 }
 
+/// Shortcut trigger mode
+enum ShortcutTriggerMode: String, Codable {
+    case holdKey           // Hold single key to activate (for direct dictation)
+    case doubleTap         // Double-tap key/combination to toggle (for continuous recording)
+    case keyCombo          // Press key combination once (for rewrite)
+}
+
 /// Stored shortcut configuration
 struct ShortcutConfig: Codable, Equatable {
     var keyCode: Int
     var modifiers: Int  // CGEventFlags raw value
+    var triggerMode: ShortcutTriggerMode
 
-    static let defaultRecording = ShortcutConfig(keyCode: kVK_Control, modifiers: 0)
-    static let defaultRewrite = ShortcutConfig(keyCode: kVK_ANSI_R, modifiers: Int(CGEventFlags.maskCommand.rawValue))
+    // Default: Right Option key for direct dictation (hold to record)
+    static let defaultDirectDictation = ShortcutConfig(
+        keyCode: kVK_RightOption,
+        modifiers: 0,
+        triggerMode: .holdKey
+    )
+
+    // Default: Double-tap Right Option for continuous recording
+    static let defaultContinuousRecording = ShortcutConfig(
+        keyCode: kVK_RightOption,
+        modifiers: 0,
+        triggerMode: .doubleTap
+    )
+
+    // Default: Right Option + Space for text rewrite
+    static let defaultRewrite = ShortcutConfig(
+        keyCode: kVK_Space,
+        modifiers: Int(CGEventFlags.maskAlternate.rawValue),
+        triggerMode: .keyCombo
+    )
+
+    // Legacy defaults for migration
+    static let legacyRecording = ShortcutConfig(keyCode: kVK_Control, modifiers: 0, triggerMode: .holdKey)
+    static let legacyRewrite = ShortcutConfig(keyCode: kVK_ANSI_R, modifiers: Int(CGEventFlags.maskCommand.rawValue), triggerMode: .keyCombo)
+
+    /// Check if this is a modifier-only shortcut (like Right Option alone)
+    var isModifierOnly: Bool {
+        return keyCode == kVK_RightOption || keyCode == kVK_Option ||
+               keyCode == kVK_RightControl || keyCode == kVK_Control ||
+               keyCode == kVK_RightShift || keyCode == kVK_Shift ||
+               keyCode == kVK_RightCommand || keyCode == kVK_Command
+    }
 
     var displayString: String {
         var parts: [String] = []
@@ -101,7 +139,11 @@ struct ShortcutConfig: Codable, Equatable {
             kVK_F5: "F5", kVK_F6: "F6", kVK_F7: "F7", kVK_F8: "F8",
             kVK_F9: "F9", kVK_F10: "F10", kVK_F11: "F11", kVK_F12: "F12",
             kVK_Space: "Space", kVK_Control: "Control",
-            kVK_Return: "Return", kVK_Tab: "Tab", kVK_Escape: "Esc"
+            kVK_Return: "Return", kVK_Tab: "Tab", kVK_Escape: "Esc",
+            kVK_Option: "⌥", kVK_RightOption: "⌥ Right",
+            kVK_RightControl: "⌃ Right", kVK_RightShift: "⇧ Right",
+            kVK_Command: "⌘", kVK_RightCommand: "⌘ Right",
+            kVK_Shift: "⇧"
         ]
         return keyMap[keyCode] ?? "Key \(keyCode)"
     }
@@ -152,11 +194,20 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(textRewriteEnabled, forKey: "textRewriteEnabled") }
     }
 
-    /// Custom shortcut for recording
-    @Published var recordingShortcut: ShortcutConfig {
+    /// Custom shortcut for direct dictation (hold to record)
+    @Published var directDictationShortcut: ShortcutConfig {
         didSet {
-            if let encoded = try? JSONEncoder().encode(recordingShortcut) {
-                defaults.set(encoded, forKey: "recordingShortcut")
+            if let encoded = try? JSONEncoder().encode(directDictationShortcut) {
+                defaults.set(encoded, forKey: "directDictationShortcut")
+            }
+        }
+    }
+
+    /// Custom shortcut for continuous recording (double-tap to toggle)
+    @Published var continuousRecordingShortcut: ShortcutConfig {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(continuousRecordingShortcut) {
+                defaults.set(encoded, forKey: "continuousRecordingShortcut")
             }
         }
     }
@@ -168,6 +219,12 @@ final class AppSettings: ObservableObject {
                 defaults.set(encoded, forKey: "rewriteShortcut")
             }
         }
+    }
+
+    // Legacy property for backward compatibility
+    var recordingShortcut: ShortcutConfig {
+        get { directDictationShortcut }
+        set { directDictationShortcut = newValue }
     }
 
     /// Save rewritten texts to history
@@ -201,9 +258,10 @@ final class AppSettings: ObservableObject {
     }
 
     func resetShortcutsToDefaults() {
-        recordingShortcut = ShortcutConfig.defaultRecording
+        directDictationShortcut = ShortcutConfig.defaultDirectDictation
+        continuousRecordingShortcut = ShortcutConfig.defaultContinuousRecording
         rewriteShortcut = ShortcutConfig.defaultRewrite
-        useControlKey = true
+        useControlKey = false  // No longer using legacy Control key mode
     }
 
     private init() {
@@ -212,7 +270,6 @@ final class AppSettings: ObservableObject {
         self.autoDeleteOption = AutoDeleteOption(rawValue: defaults.string(forKey: "autoDeleteOption") ?? "") ?? .never
         self.hotkeyKeyCode = defaults.object(forKey: "hotkeyKeyCode") as? Int ?? kVK_ANSI_D
         self.hotkeyModifiers = defaults.object(forKey: "hotkeyModifiers") as? Int ?? 0
-        self.useControlKey = defaults.object(forKey: "useControlKey") as? Bool ?? true
         self.launchAtLogin = defaults.object(forKey: "launchAtLogin") as? Bool ?? false
 
         // New settings
@@ -221,19 +278,54 @@ final class AppSettings: ObservableObject {
         self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
-        // Load shortcuts
-        if let recordingData = defaults.data(forKey: "recordingShortcut"),
-           let recordingConfig = try? JSONDecoder().decode(ShortcutConfig.self, from: recordingData) {
-            self.recordingShortcut = recordingConfig
+        // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
+        let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil
+        let isUpgradeFrom14OrEarlier = !hasNewShortcutSettings && defaults.object(forKey: "useControlKey") != nil
+
+        // Load shortcuts with migration from old format
+        if let directData = defaults.data(forKey: "directDictationShortcut"),
+           let directConfig = try? JSONDecoder().decode(ShortcutConfig.self, from: directData) {
+            self.directDictationShortcut = directConfig
+            self.useControlKey = defaults.object(forKey: "useControlKey") as? Bool ?? false
         } else {
-            self.recordingShortcut = ShortcutConfig.defaultRecording
+            // New installation or upgrade from 1.4 or earlier - use new defaults
+            self.directDictationShortcut = ShortcutConfig.defaultDirectDictation
+            self.useControlKey = false
+            // Persist immediately so we don't migrate again
+            if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultDirectDictation) {
+                defaults.set(encoded, forKey: "directDictationShortcut")
+            }
+            defaults.set(false, forKey: "useControlKey")
+        }
+
+        if let continuousData = defaults.data(forKey: "continuousRecordingShortcut"),
+           let continuousConfig = try? JSONDecoder().decode(ShortcutConfig.self, from: continuousData) {
+            self.continuousRecordingShortcut = continuousConfig
+        } else {
+            self.continuousRecordingShortcut = ShortcutConfig.defaultContinuousRecording
+            if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultContinuousRecording) {
+                defaults.set(encoded, forKey: "continuousRecordingShortcut")
+            }
         }
 
         if let rewriteData = defaults.data(forKey: "rewriteShortcut"),
            let rewriteConfig = try? JSONDecoder().decode(ShortcutConfig.self, from: rewriteData) {
-            self.rewriteShortcut = rewriteConfig
+            // Check if this is the old Cmd+R default - if so, migrate to new default
+            if isUpgradeFrom14OrEarlier &&
+               rewriteConfig.keyCode == kVK_ANSI_R &&
+               rewriteConfig.modifiers == Int(CGEventFlags.maskCommand.rawValue) {
+                self.rewriteShortcut = ShortcutConfig.defaultRewrite
+                if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultRewrite) {
+                    defaults.set(encoded, forKey: "rewriteShortcut")
+                }
+            } else {
+                self.rewriteShortcut = rewriteConfig
+            }
         } else {
             self.rewriteShortcut = ShortcutConfig.defaultRewrite
+            if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultRewrite) {
+                defaults.set(encoded, forKey: "rewriteShortcut")
+            }
         }
     }
 }
