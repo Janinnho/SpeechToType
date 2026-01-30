@@ -61,11 +61,11 @@ struct StatusView: View {
                 Text("pressAndHold")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 HStack(spacing: 4) {
-                    KeyCapView(text: settings.useControlKey ? "⌃ Control" : "D")
+                    KeyCapView(text: settings.directDictationShortcut.displayString)
                 }
-                
+
                 Text("toDictate")
                     .font(.caption)
                     .foregroundColor(.secondary)
