@@ -63,6 +63,7 @@ struct SettingsView: View {
                         Text(model.displayName).tag(model)
                     }
                 }
+                .disabled(settings.useLocalWhisperServer)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("modelInfo")
@@ -80,6 +81,43 @@ struct SettingsView: View {
                 }
             } header: {
                 Text("transcriptionModelSection")
+            }
+
+            // Whisper Server Section
+            Section {
+                Toggle("useLocalWhisperServer", isOn: $settings.useLocalWhisperServer)
+
+                if settings.useLocalWhisperServer {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("whisperServerURL")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        TextField("http://yourserver/v1/audio/transcriptions", text: $settings.whisperServerURL)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("whisperServerModel")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        TextField("whisper-1", text: $settings.whisperServerModel)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("whisperServerBearerToken")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        SecureField("whisperServerBearerTokenPlaceholder", text: $settings.whisperServerBearerToken)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    Text("whisperServerDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            } header: {
+                Text("whisperServerSection")
             }
 
             // Text Rewriting Section
@@ -253,7 +291,7 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 500, height: 700)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
         }

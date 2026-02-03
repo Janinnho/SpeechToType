@@ -656,6 +656,23 @@
         }
       }
     },
+    "doubleTapShortcutForContinuous %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doppelt %@ für Daueraufnahme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double-tap %@ for continuous"
+          }
+        }
+      }
+    },
     "enterApiKey" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -928,23 +945,6 @@
         }
       }
     },
-    "doubleTapShortcutForContinuous %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doppelt %@ für Daueraufnahme"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double-tap %@ for continuous"
-          }
-        }
-      }
-    },
     "holdToDictate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -978,6 +978,9 @@
           }
         }
       }
+    },
+    "http://yourserver/v1/audio/transcriptions" : {
+
     },
     "insert" : {
       "extractionState" : "manual",
@@ -2521,6 +2524,23 @@
         }
       }
     },
+    "useLocalWhisperServer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokalen Whisper-Server verwenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use local Whisper server"
+          }
+        }
+      }
+    },
     "version" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2534,6 +2554,128 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Version"
+          }
+        }
+      }
+    },
+    "whisper-1" : {
+
+    },
+    "whisperServerBearerToken" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearer Token (optional)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearer Token (optional)"
+          }
+        }
+      }
+    },
+    "whisperServerBearerTokenPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token eingeben (optional)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter token (optional)"
+          }
+        }
+      }
+    },
+    "whisperServerDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwende einen eigenen Whisper-Server anstatt der OpenAI API. Die Anfrage wird an die angegebene URL im OpenAI-kompatiblen Format gesendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your own Whisper server instead of the OpenAI API. Requests are sent to the specified URL in OpenAI-compatible format."
+          }
+        }
+      }
+    },
+    "whisperServerModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model"
+          }
+        }
+      }
+    },
+    "whisperServerSection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whisper-Server"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whisper Server"
+          }
+        }
+      }
+    },
+    "whisperServerURL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server-URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server URL"
+          }
+        }
+      }
+    },
+    "whisperServerURLInvalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ungültige Whisper-Server-URL. Bitte überprüfe die Einstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid Whisper server URL. Please check your settings."
           }
         }
       }

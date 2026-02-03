@@ -253,8 +253,33 @@ final class AppSettings: ObservableObject {
         "Korean"
     ]
 
+    // MARK: - Whisper Server Settings
+
+    /// Whether to use a local Whisper server instead of OpenAI API
+    @Published var useLocalWhisperServer: Bool {
+        didSet { defaults.set(useLocalWhisperServer, forKey: "useLocalWhisperServer") }
+    }
+
+    /// URL of the local Whisper server
+    @Published var whisperServerURL: String {
+        didSet { defaults.set(whisperServerURL, forKey: "whisperServerURL") }
+    }
+
+    /// Custom model name for the local Whisper server
+    @Published var whisperServerModel: String {
+        didSet { defaults.set(whisperServerModel, forKey: "whisperServerModel") }
+    }
+
+    /// Optional Bearer token for Whisper server authentication
+    @Published var whisperServerBearerToken: String {
+        didSet { defaults.set(whisperServerBearerToken, forKey: "whisperServerBearerToken") }
+    }
+
     var isConfigured: Bool {
-        !apiKey.isEmpty
+        if useLocalWhisperServer {
+            return !whisperServerURL.isEmpty
+        }
+        return !apiKey.isEmpty
     }
 
     func resetShortcutsToDefaults() {
@@ -266,17 +291,45 @@ final class AppSettings: ObservableObject {
 
     private init() {
         self.apiKey = defaults.string(forKey: "apiKey") ?? ""
-        self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gpt4oMiniTranscribe
         self.autoDeleteOption = AutoDeleteOption(rawValue: defaults.string(forKey: "autoDeleteOption") ?? "") ?? .never
         self.hotkeyKeyCode = defaults.object(forKey: "hotkeyKeyCode") as? Int ?? kVK_ANSI_D
         self.hotkeyModifiers = defaults.object(forKey: "hotkeyModifiers") as? Int ?? 0
         self.launchAtLogin = defaults.object(forKey: "launchAtLogin") as? Bool ?? false
 
-        // New settings
-        self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt4o
+        // v1.6 migration: one-time upgrade of default models
+        let hasApplied16Migration = defaults.bool(forKey: "hasApplied16Migration")
+
+        // Transcription model: new default is gpt4oTranscribe
+        if !hasApplied16Migration {
+            // First install or upgrade: set to new default
+            self.selectedModel = .gpt4oTranscribe
+            defaults.set(TranscriptionModel.gpt4oTranscribe.rawValue, forKey: "selectedModel")
+        } else {
+            self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gpt4oTranscribe
+        }
+
+        // GPT model: new default is gpt52
+        if !hasApplied16Migration {
+            self.selectedGPTModel = .gpt52
+            defaults.set(GPTModel.gpt52.rawValue, forKey: "selectedGPTModel")
+        } else {
+            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt52
+        }
+
+        // Mark v1.6 migration as applied
+        if !hasApplied16Migration {
+            defaults.set(true, forKey: "hasApplied16Migration")
+        }
+
         self.textRewriteEnabled = defaults.object(forKey: "textRewriteEnabled") as? Bool ?? true
         self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
+
+        // Whisper server settings
+        self.useLocalWhisperServer = defaults.object(forKey: "useLocalWhisperServer") as? Bool ?? false
+        self.whisperServerURL = defaults.string(forKey: "whisperServerURL") ?? ""
+        self.whisperServerModel = defaults.string(forKey: "whisperServerModel") ?? "whisper-1"
+        self.whisperServerBearerToken = defaults.string(forKey: "whisperServerBearerToken") ?? ""
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil

@@ -12,6 +12,40 @@
         -->
 
         <item>
+            <title>Version 1.6</title>
+            <pubDate>Mon, 03 Feb 2026 12:00:00 +0100</pubDate>
+            <sparkle:version>7</sparkle:version>
+            <sparkle:shortVersionString>1.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 1.6</h2>
+                <p>New default models, local Whisper server support, and UI improvements!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Local Whisper Server</strong>: Use your own local Whisper-compatible server instead of the OpenAI API for transcription</li>
+                    <li><strong>Configurable Whisper Server</strong>: Set custom server URL, model name, and optional Bearer token</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>New Default Transcription Model</strong>: GPT-4o Transcribe is now the default (higher quality)</li>
+                    <li><strong>New Default Rewrite Model</strong>: GPT-5.2 is now the default for text rewriting</li>
+                    <li><strong>Fixed Sidebar Layout</strong>: Settings view no longer pushes the sidebar navigation off-screen on small windows</li>
+                    <li>Scrollable detail view for better usability at any window size</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/1.6/SpeechToType.dmg"
+                sparkle:edSignature="e1nOXF9UT847L/IDr0v97gCVclLZqSDx22L9T3IIR2kBPnUb4roWnr13KxxSqJMExyq+Hzzdz/Vx5wrbFhZjAw=="
+                length="5426527"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.5</title>
             <pubDate>Thu, 30 Jan 2026 12:00:00 +0100</pubDate>
             <sparkle:version>6</sparkle:version>
