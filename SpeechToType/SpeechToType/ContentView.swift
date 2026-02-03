@@ -49,18 +49,20 @@ struct ContentView: View {
                     .tag(tab)
             }
             .listStyle(.sidebar)
-            .frame(minWidth: 150)
+            .navigationSplitViewColumnWidth(min: 150, ideal: 180, max: 220)
         } detail: {
-            switch selectedTab {
-            case .status:
-                StatusView()
-            case .history:
-                HistoryView()
-            case .settings:
-                SettingsView()
+            ScrollView {
+                switch selectedTab {
+                case .status:
+                    StatusView()
+                case .history:
+                    HistoryView()
+                case .settings:
+                    SettingsView()
+                }
             }
         }
-        .frame(minWidth: 600, minHeight: 400)
+        .frame(minWidth: 650, minHeight: 450)
     }
 }
 

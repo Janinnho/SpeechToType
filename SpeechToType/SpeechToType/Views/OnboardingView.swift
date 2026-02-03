@@ -133,7 +133,6 @@ struct OnboardingView: View {
                         .padding(.vertical, 12)
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(!canProceed)
                 .controlSize(.large)
             }
             .padding(.horizontal)
