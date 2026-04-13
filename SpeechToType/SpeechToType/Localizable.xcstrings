@@ -180,6 +180,57 @@
         }
       }
     },
+    "anthropicApiKey" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic API-Key"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic API Key"
+          }
+        }
+      }
+    },
+    "anthropicApiKeyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du benötigst einen API-Key von Anthropic. Hole dir einen unter console.anthropic.com"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You need an API key from Anthropic. Get one at console.anthropic.com"
+          }
+        }
+      }
+    },
+    "anthropicModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic-Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic Model"
+          }
+        }
+      }
+    },
     "API-Konfiguration" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1012,6 +1063,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Key"
+          }
+        }
+      }
+    },
+    "localProvider" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokal"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
           }
         }
       }
@@ -2181,6 +2249,9 @@
     "sk-..." : {
 
     },
+    "sk-ant-..." : {
+
+    },
     "spacebar" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2194,6 +2265,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spacebar"
+          }
+        }
+      }
+    },
+    "speechModelConfigSection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprachmodellkonfiguration"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speech Model Configuration"
+          }
+        }
+      }
+    },
+    "speechModelProviderPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anbieter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
           }
         }
       }
@@ -2316,6 +2421,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Successfully transcribed!"
+          }
+        }
+      }
+    },
+    "textProcessingProviderPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anbieter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
+          }
+        }
+      }
+    },
+    "textProcessingOpenAIApiKey" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI API-Key (Textverarbeitung)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI API Key (Text Processing)"
+          }
+        }
+      }
+    },
+    "textProcessingOpenAIApiKeyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optionaler separater API-Key für Textverarbeitung. Wenn leer, wird der Sprachmodell-API-Key verwendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional separate API key for text processing. If empty, the speech model API key will be used."
           }
         }
       }

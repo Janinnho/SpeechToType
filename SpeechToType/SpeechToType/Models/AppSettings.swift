@@ -10,6 +10,44 @@ import SwiftUI
 import Carbon.HIToolbox
 import Combine
 
+enum SpeechModelProvider: String, CaseIterable, Codable {
+    case openAI = "openai"
+    case local = "local"
+
+    var displayName: String {
+        switch self {
+        case .openAI: return "OpenAI API"
+        case .local: return String(localized: "localProvider")
+        }
+    }
+}
+
+enum TextProcessingProvider: String, CaseIterable, Codable {
+    case openAI = "openai"
+    case anthropic = "anthropic"
+
+    var displayName: String {
+        switch self {
+        case .openAI: return "OpenAI API"
+        case .anthropic: return "Anthropic API"
+        }
+    }
+}
+
+enum AnthropicModel: String, CaseIterable, Codable {
+    case claude4Sonnet = "claude-sonnet-4-6"
+    case claude4Opus = "claude-opus-4-6"
+    case claudeHaiku = "claude-haiku-4-5-20251001"
+
+    var displayName: String {
+        switch self {
+        case .claude4Sonnet: return "Claude Sonnet 4.6"
+        case .claude4Opus: return "Claude Opus 4.6"
+        case .claudeHaiku: return "Claude Haiku 4.5"
+        }
+    }
+}
+
 enum TranscriptionModel: String, CaseIterable, Codable {
     case gpt4oMiniTranscribe = "gpt-4o-mini-transcribe"
     case gpt4oTranscribe = "gpt-4o-transcribe"
@@ -275,11 +313,59 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(whisperServerBearerToken, forKey: "whisperServerBearerToken") }
     }
 
-    var isConfigured: Bool {
-        if useLocalWhisperServer {
-            return !whisperServerURL.isEmpty
+    // MARK: - Provider Settings
+
+    /// Speech model provider (OpenAI API or Local)
+    @Published var speechModelProvider: SpeechModelProvider {
+        didSet {
+            defaults.set(speechModelProvider.rawValue, forKey: "speechModelProvider")
+            // Sync with useLocalWhisperServer for backward compatibility
+            useLocalWhisperServer = (speechModelProvider == .local)
         }
-        return !apiKey.isEmpty
+    }
+
+    /// Text processing provider (OpenAI API or Anthropic API)
+    @Published var textProcessingProvider: TextProcessingProvider {
+        didSet { defaults.set(textProcessingProvider.rawValue, forKey: "textProcessingProvider") }
+    }
+
+    // MARK: - Anthropic Settings
+
+    /// Separate OpenAI API key for text processing (optional, falls back to main API key)
+    @Published var textProcessingOpenAIApiKey: String {
+        didSet { defaults.set(textProcessingOpenAIApiKey, forKey: "textProcessingOpenAIApiKey") }
+    }
+
+    /// Anthropic API key
+    @Published var anthropicApiKey: String {
+        didSet { defaults.set(anthropicApiKey, forKey: "anthropicApiKey") }
+    }
+
+    /// Selected Anthropic model for text processing
+    @Published var selectedAnthropicModel: AnthropicModel {
+        didSet { defaults.set(selectedAnthropicModel.rawValue, forKey: "selectedAnthropicModel") }
+    }
+
+    var isConfigured: Bool {
+        let speechConfigured: Bool
+        switch speechModelProvider {
+        case .openAI:
+            speechConfigured = !apiKey.isEmpty
+        case .local:
+            speechConfigured = !whisperServerURL.isEmpty
+        }
+
+        // Text processing is optional, but if enabled, check the provider
+        if textRewriteEnabled {
+            switch textProcessingProvider {
+            case .openAI:
+                return speechConfigured && !apiKey.isEmpty
+            case .anthropic:
+                return speechConfigured && !anthropicApiKey.isEmpty
+            }
+        }
+
+        return speechConfigured
     }
 
     func resetShortcutsToDefaults() {
@@ -308,12 +394,12 @@ final class AppSettings: ObservableObject {
             self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gpt4oTranscribe
         }
 
-        // GPT model: new default is gpt52
+        // GPT model: new default is gpt54
         if !hasApplied16Migration {
-            self.selectedGPTModel = .gpt52
-            defaults.set(GPTModel.gpt52.rawValue, forKey: "selectedGPTModel")
+            self.selectedGPTModel = .gpt54
+            defaults.set(GPTModel.gpt54.rawValue, forKey: "selectedGPTModel")
         } else {
-            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt52
+            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt54
         }
 
         // Mark v1.6 migration as applied
@@ -326,10 +412,26 @@ final class AppSettings: ObservableObject {
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
         // Whisper server settings
-        self.useLocalWhisperServer = defaults.object(forKey: "useLocalWhisperServer") as? Bool ?? false
+        let isLocalWhisper = defaults.object(forKey: "useLocalWhisperServer") as? Bool ?? false
+        self.useLocalWhisperServer = isLocalWhisper
         self.whisperServerURL = defaults.string(forKey: "whisperServerURL") ?? ""
         self.whisperServerModel = defaults.string(forKey: "whisperServerModel") ?? "whisper-1"
         self.whisperServerBearerToken = defaults.string(forKey: "whisperServerBearerToken") ?? ""
+
+        // Provider settings - derive from existing useLocalWhisperServer if no explicit setting
+        if let providerRaw = defaults.string(forKey: "speechModelProvider"),
+           let provider = SpeechModelProvider(rawValue: providerRaw) {
+            self.speechModelProvider = provider
+        } else {
+            self.speechModelProvider = isLocalWhisper ? .local : .openAI
+        }
+
+        self.textProcessingProvider = TextProcessingProvider(rawValue: defaults.string(forKey: "textProcessingProvider") ?? "") ?? .openAI
+
+        // Text processing & Anthropic settings
+        self.textProcessingOpenAIApiKey = defaults.string(forKey: "textProcessingOpenAIApiKey") ?? ""
+        self.anthropicApiKey = defaults.string(forKey: "anthropicApiKey") ?? ""
+        self.selectedAnthropicModel = AnthropicModel(rawValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claude4Sonnet
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil

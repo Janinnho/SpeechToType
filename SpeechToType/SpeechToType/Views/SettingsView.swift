@@ -12,6 +12,8 @@ import Sparkle
 struct SettingsView: View {
     @ObservedObject var settings = AppSettings.shared
     @State private var showingAPIKey = false
+    @State private var showingTextProcessingAPIKey = false
+    @State private var showingAnthropicAPIKey = false
     @State private var accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
     @State private var isRecordingDirectDictationShortcut = false
     @State private var isRecordingContinuousShortcut = false
@@ -29,65 +31,61 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            // Speech Model Configuration
             Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("openApiKey")
-                        .font(.headline)
-
-                    HStack {
-                        if showingAPIKey {
-                            TextField("sk-...", text: $settings.apiKey)
-                                .textFieldStyle(.roundedBorder)
-                        } else {
-                            SecureField("sk-...", text: $settings.apiKey)
-                                .textFieldStyle(.roundedBorder)
-                        }
-
-                        Button(action: { showingAPIKey.toggle() }) {
-                            Image(systemName: showingAPIKey ? "eye.slash" : "eye")
-                        }
-                        .buttonStyle(.borderless)
-                    }
-
-                    Text("openApiKeyDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } header: {
-                Text("API-Konfiguration")
-            }
-
-            Section {
-                Picker("transcriptionModel", selection: $settings.selectedModel) {
-                    ForEach(TranscriptionModel.allCases, id: \.self) { model in
-                        Text(model.displayName).tag(model)
+                Picker("speechModelProviderPicker", selection: $settings.speechModelProvider) {
+                    ForEach(SpeechModelProvider.allCases, id: \.self) { provider in
+                        Text(provider.displayName).tag(provider)
                     }
                 }
-                .disabled(settings.useLocalWhisperServer)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("modelInfo")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                    Text("modelInfoMini")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("modelInfoStandard")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("modelInfoDiarize")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } header: {
-                Text("transcriptionModelSection")
-            }
+                if settings.speechModelProvider == .openAI {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("openApiKey")
+                            .font(.headline)
 
-            // Whisper Server Section
-            Section {
-                Toggle("useLocalWhisperServer", isOn: $settings.useLocalWhisperServer)
+                        HStack {
+                            if showingAPIKey {
+                                TextField("sk-...", text: $settings.apiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            } else {
+                                SecureField("sk-...", text: $settings.apiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            }
 
-                if settings.useLocalWhisperServer {
+                            Button(action: { showingAPIKey.toggle() }) {
+                                Image(systemName: showingAPIKey ? "eye.slash" : "eye")
+                            }
+                            .buttonStyle(.borderless)
+                        }
+
+                        Text("openApiKeyDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Picker("transcriptionModel", selection: $settings.selectedModel) {
+                        ForEach(TranscriptionModel.allCases, id: \.self) { model in
+                            Text(model.displayName).tag(model)
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("modelInfo")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        Text("modelInfoMini")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("modelInfoStandard")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("modelInfoDiarize")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                } else {
+                    // Local Whisper Server config
                     VStack(alignment: .leading, spacing: 4) {
                         Text("whisperServerURL")
                             .font(.caption)
@@ -117,7 +115,7 @@ struct SettingsView: View {
                         .foregroundColor(.secondary)
                 }
             } header: {
-                Text("whisperServerSection")
+                Text("speechModelConfigSection")
             }
 
             // Text Rewriting Section
@@ -125,15 +123,78 @@ struct SettingsView: View {
                 Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
 
                 if settings.textRewriteEnabled {
-                    Picker("gptModel", selection: $settings.selectedGPTModel) {
-                        ForEach(GPTModel.allCases, id: \.self) { model in
-                            Text(model.displayName).tag(model)
+                    Picker("textProcessingProviderPicker", selection: $settings.textProcessingProvider) {
+                        ForEach(TextProcessingProvider.allCases, id: \.self) { provider in
+                            Text(provider.displayName).tag(provider)
                         }
                     }
 
-                    Text("gptModelDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    if settings.textProcessingProvider == .openAI {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("textProcessingOpenAIApiKey")
+                                .font(.headline)
+
+                            HStack {
+                                if showingTextProcessingAPIKey {
+                                    TextField("sk-...", text: $settings.textProcessingOpenAIApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                } else {
+                                    SecureField("sk-...", text: $settings.textProcessingOpenAIApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                }
+
+                                Button(action: { showingTextProcessingAPIKey.toggle() }) {
+                                    Image(systemName: showingTextProcessingAPIKey ? "eye.slash" : "eye")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+
+                            Text("textProcessingOpenAIApiKeyDescription")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Picker("gptModel", selection: $settings.selectedGPTModel) {
+                            ForEach(GPTModel.allCases, id: \.self) { model in
+                                Text(model.displayName).tag(model)
+                            }
+                        }
+
+                        Text("gptModelDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        // Anthropic API config
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("anthropicApiKey")
+                                .font(.headline)
+
+                            HStack {
+                                if showingAnthropicAPIKey {
+                                    TextField("sk-ant-...", text: $settings.anthropicApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                } else {
+                                    SecureField("sk-ant-...", text: $settings.anthropicApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                }
+
+                                Button(action: { showingAnthropicAPIKey.toggle() }) {
+                                    Image(systemName: showingAnthropicAPIKey ? "eye.slash" : "eye")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+
+                            Text("anthropicApiKeyDescription")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Picker("anthropicModel", selection: $settings.selectedAnthropicModel) {
+                            ForEach(AnthropicModel.allCases, id: \.self) { model in
+                                Text(model.displayName).tag(model)
+                            }
+                        }
+                    }
 
                     Picker("defaultTranslationLanguage", selection: $settings.defaultTranslationLanguage) {
                         ForEach(AppSettings.translationLanguages, id: \.self) { language in

@@ -57,17 +57,20 @@ enum RewriteMode: String, CaseIterable, Codable {
 
 enum GPTModel: String, CaseIterable, Codable {
     case gpt4o = "gpt-4o"
-    case gpt5 = "gpt-5"
-    case gpt52 = "gpt-5.2"
+    case gpt54 = "gpt-5.4"
+    case gpt54mini = "gpt-5.4-mini"
+    case gpt54nano = "gpt-5.4-nano"
 
     var displayName: String {
         switch self {
         case .gpt4o:
             return "GPT-4o"
-        case .gpt5:
-            return "GPT-5"
-        case .gpt52:
-            return "GPT-5.2"
+        case .gpt54:
+            return "GPT-5.4"
+        case .gpt54mini:
+            return "GPT-5.4 Mini"
+        case .gpt54nano:
+            return "GPT-5.4 Nano"
         }
     }
 
@@ -76,7 +79,7 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return false
-        case .gpt5, .gpt52:
+        case .gpt54, .gpt54mini, .gpt54nano:
             return true
         }
     }
@@ -86,8 +89,8 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return true
-        case .gpt5, .gpt52:
-            return false // Only supports default temperature (1.0)
+        case .gpt54, .gpt54mini, .gpt54nano:
+            return false
         }
     }
 }
@@ -121,31 +124,25 @@ enum TextRewriteError: Error, LocalizedError {
 class TextRewriteService {
     static let shared = TextRewriteService()
 
-    private let baseURL = "https://api.openai.com/v1/chat/completions"
+    private let openAIBaseURL = "https://api.openai.com/v1/chat/completions"
+    private let anthropicBaseURL = "https://api.anthropic.com/v1/messages"
 
     private init() {}
 
     func rewriteText(_ text: String, mode: RewriteMode, customPrompt: String? = nil, targetLanguage: String? = nil) async throws -> String {
-        let apiKey = AppSettings.shared.apiKey
-
-        guard !apiKey.isEmpty else {
-            throw TextRewriteError.invalidAPIKey
-        }
-
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw TextRewriteError.noTextSelected
         }
 
-        let model = AppSettings.shared.selectedGPTModel
+        let settings = AppSettings.shared
 
         // Determine system prompt based on mode
         let systemPrompt: String
         switch mode {
         case .dictate:
-            // For dictate mode, the customPrompt contains the voice-transcribed instruction
             systemPrompt = customPrompt ?? "Process the following text as instructed."
         case .translate:
-            let language = targetLanguage ?? AppSettings.shared.defaultTranslationLanguage
+            let language = targetLanguage ?? settings.defaultTranslationLanguage
             systemPrompt = "You are a translator. Translate the following text to \(language). Return only the translated text without any explanations or additional text."
         case .custom:
             systemPrompt = customPrompt ?? ""
@@ -153,12 +150,30 @@ class TextRewriteService {
             systemPrompt = mode.systemPrompt
         }
 
-        var request = URLRequest(url: URL(string: baseURL)!)
+        switch settings.textProcessingProvider {
+        case .openAI:
+            return try await rewriteWithOpenAI(text: text, systemPrompt: systemPrompt, settings: settings)
+        case .anthropic:
+            return try await rewriteWithAnthropic(text: text, systemPrompt: systemPrompt, settings: settings)
+        }
+    }
+
+    // MARK: - OpenAI
+
+    private func rewriteWithOpenAI(text: String, systemPrompt: String, settings: AppSettings) async throws -> String {
+        // Use dedicated text processing API key if set, otherwise fall back to main API key
+        let apiKey = settings.textProcessingOpenAIApiKey.isEmpty ? settings.apiKey : settings.textProcessingOpenAIApiKey
+        guard !apiKey.isEmpty else {
+            throw TextRewriteError.invalidAPIKey
+        }
+
+        let model = settings.selectedGPTModel
+
+        var request = URLRequest(url: URL(string: openAIBaseURL)!)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // Build request body
         var requestBody: [String: Any] = [
             "model": model.rawValue,
             "messages": [
@@ -167,12 +182,10 @@ class TextRewriteService {
             ]
         ]
 
-        // Only add temperature for models that support it
         if model.supportsCustomTemperature {
             requestBody["temperature"] = 0.7
         }
 
-        // GPT-5 and GPT-5.2 use max_completion_tokens instead of max_tokens
         if model.usesMaxCompletionTokens {
             requestBody["max_completion_tokens"] = 2048
         } else {
@@ -181,6 +194,61 @@ class TextRewriteService {
 
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
 
+        let (data, _) = try await executeRequest(request, data: nil)
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let choices = json["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextRewriteError.noResponse
+        }
+
+        return content.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Anthropic
+
+    private func rewriteWithAnthropic(text: String, systemPrompt: String, settings: AppSettings) async throws -> String {
+        let apiKey = settings.anthropicApiKey
+        guard !apiKey.isEmpty else {
+            throw TextRewriteError.invalidAPIKey
+        }
+
+        let model = settings.selectedAnthropicModel
+
+        var request = URLRequest(url: URL(string: anthropicBaseURL)!)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let requestBody: [String: Any] = [
+            "model": model.rawValue,
+            "max_tokens": 2048,
+            "system": systemPrompt,
+            "messages": [
+                ["role": "user", "content": text]
+            ]
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+
+        let (data, _) = try await executeRequest(request, data: nil)
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let content = json["content"] as? [[String: Any]],
+              let firstBlock = content.first,
+              let responseText = firstBlock["text"] as? String else {
+            throw TextRewriteError.noResponse
+        }
+
+        return responseText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Common
+
+    private func executeRequest(_ request: URLRequest, data: Data?) async throws -> (Data, URLResponse) {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -193,21 +261,20 @@ class TextRewriteService {
             }
 
             if httpResponse.statusCode != 200 {
+                // Try OpenAI error format
                 if let errorJson = try? JSONDecoder().decode(OpenAIErrorResponse.self, from: data) {
                     throw TextRewriteError.apiError(errorJson.error.message)
+                }
+                // Try Anthropic error format
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? [String: Any],
+                   let message = error["message"] as? String {
+                    throw TextRewriteError.apiError(message)
                 }
                 throw TextRewriteError.apiError("HTTP \(httpResponse.statusCode)")
             }
 
-            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let choices = json["choices"] as? [[String: Any]],
-                  let firstChoice = choices.first,
-                  let message = firstChoice["message"] as? [String: Any],
-                  let content = message["content"] as? String else {
-                throw TextRewriteError.noResponse
-            }
-
-            return content.trimmingCharacters(in: .whitespacesAndNewlines)
+            return (data, response)
         } catch let error as TextRewriteError {
             throw error
         } catch {
