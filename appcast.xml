@@ -12,6 +12,46 @@
         -->
 
         <item>
+            <title>Version 2.0</title>
+            <pubDate>Sun, 13 Apr 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>10</sparkle:version>
+            <sparkle:shortVersionString>2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.0</h2>
+                <p>Major update with multi-provider support for both speech recognition and text processing!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Multi-Provider Speech Recognition</strong>: Choose between OpenAI API, local Whisper server, or Apple Speech (on-device) for transcription</li>
+                    <li><strong>Apple Speech (On-Device)</strong>: Use macOS built-in speech recognition — no API key or server required</li>
+                    <li><strong>Multi-Provider Text Processing</strong>: Choose between OpenAI API, Anthropic API, Ollama (local), or Apple Intelligence for text rewriting</li>
+                    <li><strong>Anthropic API Support</strong>: Use Claude models (Sonnet 4.6, Opus 4.6, Haiku 4.5) for text rewriting</li>
+                    <li><strong>Ollama Integration</strong>: Use local Ollama models for text processing — models are fetched automatically from the server</li>
+                    <li><strong>Apple Intelligence</strong>: Use the on-device Foundation Model for text rewriting on supported devices — no API key required</li>
+                    <li><strong>Separate API Keys</strong>: Optionally use a different OpenAI API key for text processing than for transcription</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Redesigned Settings</strong>: Unified "Speech Model Configuration" and "Text Processing" sections with provider dropdowns</li>
+                    <li><strong>Redesigned Onboarding</strong>: New onboarding screen lets you configure speech and text processing providers right from the start</li>
+                    <li><strong>Updated GPT Models</strong>: Replaced GPT-5/5.2 with GPT-5.4, GPT-5.4 Mini, and GPT-5.4 Nano</li>
+                    <li><strong>Wider Rewrite Popup</strong>: Text rewrite popup is now wider to prevent mode tabs from being cut off</li>
+                    <li>API key is now optional during onboarding — use local providers without any API key</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.0/SpeechToType.dmg"
+                sparkle:edSignature="E8KNGGprKLn6LBpK+p7LKxChxy2AqINAm/3zlQNG1te8f8Ulckh6m12s4l7GuP9R8BluoUgGRkh8LkNxE7NtAQ=="
+                length="5508478"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.6</title>
             <pubDate>Mon, 03 Feb 2026 12:00:00 +0100</pubDate>
             <sparkle:version>7</sparkle:version>

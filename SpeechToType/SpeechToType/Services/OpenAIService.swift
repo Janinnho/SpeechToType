@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Speech
 
 enum OpenAIError: Error, LocalizedError {
     case invalidAPIKey
@@ -13,6 +14,7 @@ enum OpenAIError: Error, LocalizedError {
     case invalidResponse
     case apiError(String)
     case noTranscription
+    case speechRecognitionUnavailable
     
     var errorDescription: String? {
         switch self {
@@ -26,6 +28,8 @@ enum OpenAIError: Error, LocalizedError {
             return "API-Fehler: \(message)"
         case .noTranscription:
             return "Keine Transkription erhalten."
+        case .speechRecognitionUnavailable:
+            return String(localized: "appleSpeechUnavailable")
         }
     }
 }
@@ -40,10 +44,13 @@ class OpenAIService {
     func transcribe(audioURL: URL, model: TranscriptionModel) async throws -> String {
         let settings = AppSettings.shared
 
-        if settings.useLocalWhisperServer {
-            return try await transcribeWithWhisperServer(audioURL: audioURL, settings: settings)
-        } else {
+        switch settings.speechModelProvider {
+        case .openAI:
             return try await transcribeWithOpenAI(audioURL: audioURL, model: model, settings: settings)
+        case .local:
+            return try await transcribeWithWhisperServer(audioURL: audioURL, settings: settings)
+        case .appleSpeech:
+            return try await transcribeWithAppleSpeech(audioURL: audioURL)
         }
     }
 
@@ -137,6 +144,49 @@ class OpenAIService {
         request.httpBody = body
 
         return try await executeTranscriptionRequest(request)
+    }
+
+    // MARK: - Apple Speech (On-Device)
+
+    private func transcribeWithAppleSpeech(audioURL: URL) async throws -> String {
+        guard let recognizer = SFSpeechRecognizer(), recognizer.isAvailable else {
+            throw OpenAIError.speechRecognitionUnavailable
+        }
+
+        // Request authorization if needed
+        let authStatus = await withCheckedContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { status in
+                continuation.resume(returning: status)
+            }
+        }
+
+        guard authStatus == .authorized else {
+            throw OpenAIError.apiError(String(localized: "appleSpeechNotAuthorized"))
+        }
+
+        let request = SFSpeechURLRecognitionRequest(url: audioURL)
+        request.requiresOnDeviceRecognition = true
+        request.shouldReportPartialResults = false
+
+        return try await withCheckedThrowingContinuation { continuation in
+            recognizer.recognitionTask(with: request) { result, error in
+                if let error = error {
+                    continuation.resume(throwing: OpenAIError.apiError(error.localizedDescription))
+                    return
+                }
+
+                guard let result = result, result.isFinal else {
+                    return
+                }
+
+                let text = result.bestTranscription.formattedString
+                if text.isEmpty {
+                    continuation.resume(throwing: OpenAIError.noTranscription)
+                } else {
+                    continuation.resume(returning: text)
+                }
+            }
+        }
     }
 
     // MARK: - Common Request Execution

@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleIconFile</key>
 	<string>SpeechToTypeIcon</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>SpeechToType uses speech recognition to transcribe your voice recordings into text.</string>
 	<key>SUAutomaticallyUpdate</key>
 	<false/>
 	<key>SUEnableAutomaticChecks</key>

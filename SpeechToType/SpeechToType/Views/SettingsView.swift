@@ -8,12 +8,16 @@
 import SwiftUI
 import Carbon.HIToolbox
 import Sparkle
+import FoundationModels
 
 struct SettingsView: View {
     @ObservedObject var settings = AppSettings.shared
     @State private var showingAPIKey = false
     @State private var showingTextProcessingAPIKey = false
     @State private var showingAnthropicAPIKey = false
+    @State private var ollamaModels: [String] = []
+    @State private var isLoadingOllamaModels = false
+    @State private var ollamaModelError: String?
     @State private var accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
     @State private var isRecordingDirectDictationShortcut = false
     @State private var isRecordingContinuousShortcut = false
@@ -39,7 +43,8 @@ struct SettingsView: View {
                     }
                 }
 
-                if settings.speechModelProvider == .openAI {
+                switch settings.speechModelProvider {
+                case .openAI:
                     VStack(alignment: .leading, spacing: 8) {
                         Text("openApiKey")
                             .font(.headline)
@@ -84,8 +89,8 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-                } else {
-                    // Local Whisper Server config
+
+                case .local:
                     VStack(alignment: .leading, spacing: 4) {
                         Text("whisperServerURL")
                             .font(.caption)
@@ -113,6 +118,11 @@ struct SettingsView: View {
                     Text("whisperServerDescription")
                         .font(.caption)
                         .foregroundColor(.secondary)
+
+                case .appleSpeech:
+                    Text("appleSpeechDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             } header: {
                 Text("speechModelConfigSection")
@@ -129,7 +139,8 @@ struct SettingsView: View {
                         }
                     }
 
-                    if settings.textProcessingProvider == .openAI {
+                    switch settings.textProcessingProvider {
+                    case .openAI:
                         VStack(alignment: .leading, spacing: 8) {
                             Text("textProcessingOpenAIApiKey")
                                 .font(.headline)
@@ -163,8 +174,8 @@ struct SettingsView: View {
                         Text("gptModelDescription")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                    } else {
-                        // Anthropic API config
+
+                    case .anthropic:
                         VStack(alignment: .leading, spacing: 8) {
                             Text("anthropicApiKey")
                                 .font(.headline)
@@ -194,6 +205,106 @@ struct SettingsView: View {
                                 Text(model.displayName).tag(model)
                             }
                         }
+
+                    case .ollama:
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("ollamaServerURL")
+                                .font(.headline)
+
+                            TextField("http://localhost:11434", text: $settings.ollamaServerURL)
+                                .textFieldStyle(.roundedBorder)
+                                .onChange(of: settings.ollamaServerURL) { _, _ in
+                                    loadOllamaModels()
+                                }
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("ollamaModel")
+                                    .font(.headline)
+                                Spacer()
+                                if isLoadingOllamaModels {
+                                    ProgressView()
+                                        .scaleEffect(0.7)
+                                }
+                                Button {
+                                    loadOllamaModels()
+                                } label: {
+                                    Image(systemName: "arrow.clockwise")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+
+                            if ollamaModels.isEmpty && !isLoadingOllamaModels {
+                                if let error = ollamaModelError {
+                                    Text(error)
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                } else {
+                                    Text("ollamaNoModels")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            } else {
+                                Picker("", selection: $settings.selectedOllamaModel) {
+                                    if settings.selectedOllamaModel.isEmpty {
+                                        Text("ollamaSelectModel").tag("")
+                                    }
+                                    ForEach(ollamaModels, id: \.self) { model in
+                                        Text(model).tag(model)
+                                    }
+                                }
+                                .labelsHidden()
+                            }
+                        }
+
+                        Text("ollamaDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                    case .appleIntelligence:
+                        let model = SystemLanguageModel.default
+                        switch model.availability {
+                        case .available:
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("appleIntelligenceAvailable")
+                                    .foregroundColor(.green)
+                            }
+                        case .unavailable(.deviceNotEligible):
+                            HStack {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.red)
+                                Text("appleIntelligenceNotEligible")
+                                    .foregroundColor(.red)
+                            }
+                        case .unavailable(.appleIntelligenceNotEnabled):
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("appleIntelligenceNotEnabled")
+                                    .foregroundColor(.orange)
+                            }
+                        case .unavailable(.modelNotReady):
+                            HStack {
+                                ProgressView()
+                                    .scaleEffect(0.7)
+                                Text("appleIntelligenceNotReady")
+                                    .foregroundColor(.secondary)
+                            }
+                        default:
+                            HStack {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .foregroundColor(.secondary)
+                                Text("appleIntelligenceUnavailable")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+
+                        Text("appleIntelligenceDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
 
                     Picker("defaultTranslationLanguage", selection: $settings.defaultTranslationLanguage) {
@@ -355,6 +466,39 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
+            if settings.textProcessingProvider == .ollama {
+                loadOllamaModels()
+            }
+        }
+        .onChange(of: settings.textProcessingProvider) { _, newValue in
+            if newValue == .ollama {
+                loadOllamaModels()
+            }
+        }
+    }
+
+    private func loadOllamaModels() {
+        isLoadingOllamaModels = true
+        ollamaModelError = nil
+
+        Task {
+            do {
+                let models = try await TextRewriteService.fetchOllamaModels(serverURL: settings.ollamaServerURL)
+                await MainActor.run {
+                    ollamaModels = models
+                    isLoadingOllamaModels = false
+                    // Auto-select first model if none selected
+                    if settings.selectedOllamaModel.isEmpty, let first = models.first {
+                        settings.selectedOllamaModel = first
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    ollamaModels = []
+                    ollamaModelError = String(localized: "ollamaConnectionError")
+                    isLoadingOllamaModels = false
+                }
+            }
         }
     }
 }

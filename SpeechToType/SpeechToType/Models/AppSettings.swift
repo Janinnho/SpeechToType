@@ -13,11 +13,13 @@ import Combine
 enum SpeechModelProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case local = "local"
+    case appleSpeech = "appleSpeech"
 
     var displayName: String {
         switch self {
         case .openAI: return "OpenAI API"
         case .local: return String(localized: "localProvider")
+        case .appleSpeech: return "Apple Speech"
         }
     }
 }
@@ -25,11 +27,15 @@ enum SpeechModelProvider: String, CaseIterable, Codable {
 enum TextProcessingProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case anthropic = "anthropic"
+    case ollama = "ollama"
+    case appleIntelligence = "appleIntelligence"
 
     var displayName: String {
         switch self {
         case .openAI: return "OpenAI API"
         case .anthropic: return "Anthropic API"
+        case .ollama: return "Ollama"
+        case .appleIntelligence: return "Apple Intelligence"
         }
     }
 }
@@ -346,6 +352,18 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(selectedAnthropicModel.rawValue, forKey: "selectedAnthropicModel") }
     }
 
+    // MARK: - Ollama Settings
+
+    /// Ollama server URL
+    @Published var ollamaServerURL: String {
+        didSet { defaults.set(ollamaServerURL, forKey: "ollamaServerURL") }
+    }
+
+    /// Selected Ollama model name
+    @Published var selectedOllamaModel: String {
+        didSet { defaults.set(selectedOllamaModel, forKey: "selectedOllamaModel") }
+    }
+
     var isConfigured: Bool {
         let speechConfigured: Bool
         switch speechModelProvider {
@@ -353,6 +371,8 @@ final class AppSettings: ObservableObject {
             speechConfigured = !apiKey.isEmpty
         case .local:
             speechConfigured = !whisperServerURL.isEmpty
+        case .appleSpeech:
+            speechConfigured = true
         }
 
         // Text processing is optional, but if enabled, check the provider
@@ -362,6 +382,10 @@ final class AppSettings: ObservableObject {
                 return speechConfigured && !apiKey.isEmpty
             case .anthropic:
                 return speechConfigured && !anthropicApiKey.isEmpty
+            case .ollama:
+                return speechConfigured && !ollamaServerURL.isEmpty
+            case .appleIntelligence:
+                return speechConfigured
             }
         }
 
@@ -432,6 +456,10 @@ final class AppSettings: ObservableObject {
         self.textProcessingOpenAIApiKey = defaults.string(forKey: "textProcessingOpenAIApiKey") ?? ""
         self.anthropicApiKey = defaults.string(forKey: "anthropicApiKey") ?? ""
         self.selectedAnthropicModel = AnthropicModel(rawValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claude4Sonnet
+
+        // Ollama settings
+        self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
+        self.selectedOllamaModel = defaults.string(forKey: "selectedOllamaModel") ?? ""
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil

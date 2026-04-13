@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FoundationModels
 
 enum RewriteMode: String, CaseIterable, Codable {
     case dictate = "dictate"
@@ -155,6 +156,10 @@ class TextRewriteService {
             return try await rewriteWithOpenAI(text: text, systemPrompt: systemPrompt, settings: settings)
         case .anthropic:
             return try await rewriteWithAnthropic(text: text, systemPrompt: systemPrompt, settings: settings)
+        case .ollama:
+            return try await rewriteWithOllama(text: text, systemPrompt: systemPrompt, settings: settings)
+        case .appleIntelligence:
+            return try await rewriteWithAppleIntelligence(text: text, systemPrompt: systemPrompt)
         }
     }
 
@@ -244,6 +249,90 @@ class TextRewriteService {
         }
 
         return responseText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Ollama
+
+    private func rewriteWithOllama(text: String, systemPrompt: String, settings: AppSettings) async throws -> String {
+        let serverURL = settings.ollamaServerURL
+        let modelName = settings.selectedOllamaModel
+
+        guard !serverURL.isEmpty, !modelName.isEmpty else {
+            throw TextRewriteError.apiError(String(localized: "ollamaConfigError"))
+        }
+
+        guard let url = URL(string: "\(serverURL)/api/chat") else {
+            throw TextRewriteError.apiError(String(localized: "ollamaURLInvalid"))
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let requestBody: [String: Any] = [
+            "model": modelName,
+            "stream": false,
+            "messages": [
+                ["role": "system", "content": systemPrompt],
+                ["role": "user", "content": text]
+            ]
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+
+        let (data, _) = try await executeRequest(request, data: nil)
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let message = json["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextRewriteError.noResponse
+        }
+
+        return content.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Fetches available models from an Ollama server
+    static func fetchOllamaModels(serverURL: String) async throws -> [String] {
+        guard !serverURL.isEmpty, let url = URL(string: "\(serverURL)/api/tags") else {
+            return []
+        }
+
+        let request = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            return []
+        }
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let models = json["models"] as? [[String: Any]] else {
+            return []
+        }
+
+        return models.compactMap { $0["name"] as? String }.sorted()
+    }
+
+    // MARK: - Apple Intelligence
+
+    private func rewriteWithAppleIntelligence(text: String, systemPrompt: String) async throws -> String {
+        let model = SystemLanguageModel.default
+
+        guard model.availability == .available else {
+            throw TextRewriteError.apiError(String(localized: "appleIntelligenceUnavailable"))
+        }
+
+        let instructions = """
+        You are a text editing assistant. You receive text from the user and edit it according to the task described below. \
+        Return ONLY the edited text. Do NOT include any explanations, code, markdown, or extra commentary. \
+        Do NOT generate code. Output plain text only.
+
+        Task: \(systemPrompt)
+        """
+
+        let session = LanguageModelSession(instructions: instructions)
+        let prompt = "Edit the following text according to the task:\n\n\(text)"
+        let response = try await session.respond(to: prompt)
+        return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // MARK: - Common
