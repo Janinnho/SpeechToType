@@ -7,26 +7,29 @@
 
 import SwiftUI
 import AVFoundation
+import FoundationModels
 
 struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
-    @State private var currentStep = 0
     @State private var microphoneGranted = false
     @State private var accessibilityGranted = false
-    @State private var apiKey = ""
     @State private var showingAPIKey = false
+    @State private var showingTextProcessingAPIKey = false
+    @State private var showingAnthropicAPIKey = false
+    @State private var ollamaModels: [String] = []
+    @State private var isLoadingOllamaModels = false
     @ObservedObject private var settings = AppSettings.shared
 
     private var canProceed: Bool {
-        microphoneGranted && accessibilityGranted && !apiKey.trimmingCharacters(in: .whitespaces).isEmpty
+        microphoneGranted && accessibilityGranted
     }
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 0) {
             // Header
             VStack(spacing: 8) {
                 Image(systemName: "waveform.circle.fill")
-                    .font(.system(size: 60))
+                    .font(.system(size: 50))
                     .foregroundStyle(.blue)
 
                 Text("onboardingTitle")
@@ -37,128 +40,230 @@ struct OnboardingView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
-            .padding(.top, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
 
             Divider()
 
-            // Steps
-            VStack(alignment: .leading, spacing: 20) {
-                // Step 1: Microphone
-                PermissionRow(
-                    icon: "mic.fill",
-                    iconColor: .red,
-                    title: String(localized: "microphoneAccess"),
-                    description: String(localized: "microphoneDescription"),
-                    isGranted: microphoneGranted,
-                    buttonTitle: String(localized: "grantAccess"),
-                    action: requestMicrophoneAccess
-                )
+            // Scrollable content
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // MARK: - Permissions
+                    Text("onboardingPermissions")
+                        .font(.headline)
+                        .padding(.top, 8)
 
-                // Step 2: Accessibility
-                PermissionRow(
-                    icon: "hand.raised.fill",
-                    iconColor: .blue,
-                    title: String(localized: "accessibilityAccess"),
-                    description: String(localized: "accessibilityOnboardingDescription"),
-                    isGranted: accessibilityGranted,
-                    buttonTitle: String(localized: "openInSettings"),
-                    action: requestAccessibilityAccess
-                )
+                    PermissionRow(
+                        icon: "mic.fill",
+                        iconColor: .red,
+                        title: String(localized: "microphoneAccess"),
+                        description: String(localized: "microphoneDescription"),
+                        isGranted: microphoneGranted,
+                        buttonTitle: String(localized: "grantAccess"),
+                        action: requestMicrophoneAccess
+                    )
 
-                // Step 3: API Key Input
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "key.fill")
-                            .font(.title2)
-                            .foregroundColor(apiKey.isEmpty ? .orange : .green)
-                            .frame(width: 30)
+                    PermissionRow(
+                        icon: "hand.raised.fill",
+                        iconColor: .blue,
+                        title: String(localized: "accessibilityAccess"),
+                        description: String(localized: "accessibilityOnboardingDescription"),
+                        isGranted: accessibilityGranted,
+                        buttonTitle: String(localized: "openInSettings"),
+                        action: requestAccessibilityAccess
+                    )
 
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("openApiKey")
-                                .font(.headline)
-                            Text("openApiKeyDescription")
+                    Divider()
+                        .padding(.vertical, 4)
+
+                    // MARK: - Speech Model Provider
+                    Text("speechModelConfigSection")
+                        .font(.headline)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Picker("speechModelProviderPicker", selection: $settings.speechModelProvider) {
+                            ForEach(SpeechModelProvider.allCases, id: \.self) { provider in
+                                Text(provider.displayName).tag(provider)
+                            }
+                        }
+
+                        switch settings.speechModelProvider {
+                        case .openAI:
+                            apiKeyField(
+                                title: "openApiKey",
+                                placeholder: "sk-...",
+                                text: $settings.apiKey,
+                                showing: $showingAPIKey,
+                                description: "openApiKeyDescription"
+                            )
+
+                        case .local:
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("whisperServerURL")
+                                    .font(.caption).fontWeight(.semibold)
+                                TextField("http://yourserver/v1/audio/transcriptions", text: $settings.whisperServerURL)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("whisperServerModel")
+                                    .font(.caption).fontWeight(.semibold)
+                                TextField("whisper-1", text: $settings.whisperServerModel)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                        case .appleSpeech:
+                            Text("appleSpeechDescription")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+                    }
+                    .padding()
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(10)
 
-                        Spacer()
+                    Divider()
+                        .padding(.vertical, 4)
 
-                        if !apiKey.isEmpty {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                                .font(.title2)
+                    // MARK: - Text Processing Provider
+                    Text("textRewriteSection")
+                        .font(.headline)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
+
+                        if settings.textRewriteEnabled {
+                            Picker("textProcessingProviderPicker", selection: $settings.textProcessingProvider) {
+                                ForEach(TextProcessingProvider.allCases, id: \.self) { provider in
+                                    Text(provider.displayName).tag(provider)
+                                }
+                            }
+
+                            switch settings.textProcessingProvider {
+                            case .openAI:
+                                apiKeyField(
+                                    title: "textProcessingOpenAIApiKey",
+                                    placeholder: "sk-...",
+                                    text: $settings.textProcessingOpenAIApiKey,
+                                    showing: $showingTextProcessingAPIKey,
+                                    description: "textProcessingOpenAIApiKeyDescription"
+                                )
+
+                            case .anthropic:
+                                apiKeyField(
+                                    title: "anthropicApiKey",
+                                    placeholder: "sk-ant-...",
+                                    text: $settings.anthropicApiKey,
+                                    showing: $showingAnthropicAPIKey,
+                                    description: "anthropicApiKeyDescription"
+                                )
+
+                            case .ollama:
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("ollamaServerURL")
+                                        .font(.caption).fontWeight(.semibold)
+                                    TextField("http://localhost:11434", text: $settings.ollamaServerURL)
+                                        .textFieldStyle(.roundedBorder)
+                                }
+                                Text("ollamaDescription")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+
+                            case .appleIntelligence:
+                                let model = SystemLanguageModel.default
+                                HStack {
+                                    if case .available = model.availability {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                        Text("appleIntelligenceAvailable")
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Image(systemName: "exclamationmark.triangle.fill")
+                                            .foregroundColor(.orange)
+                                        Text("appleIntelligenceUnavailable")
+                                            .foregroundColor(.orange)
+                                    }
+                                }
+                                .font(.caption)
+
+                                Text("appleIntelligenceDescription")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
-
-                    HStack {
-                        if showingAPIKey {
-                            TextField("sk-...", text: $apiKey)
-                                .textFieldStyle(.roundedBorder)
-                        } else {
-                            SecureField("sk-...", text: $apiKey)
-                                .textFieldStyle(.roundedBorder)
-                        }
-
-                        Button(action: { showingAPIKey.toggle() }) {
-                            Image(systemName: showingAPIKey ? "eye.slash" : "eye")
-                        }
-                        .buttonStyle(.borderless)
-                    }
+                    .padding()
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(10)
                 }
-                .padding()
-                .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(!apiKey.isEmpty ? Color.green.opacity(0.5) : Color.clear, lineWidth: 2)
-                )
+                .padding(.horizontal)
+                .padding(.vertical, 8)
             }
-            .padding(.horizontal)
 
-            Spacer()
+            Divider()
 
             // Continue Button
-            VStack(spacing: 12) {
+            VStack(spacing: 8) {
                 if !canProceed {
-                    Text(missingRequirementsMessage)
+                    Text("grantAllPermissions")
                         .font(.caption)
                         .foregroundColor(.orange)
-                        .multilineTextAlignment(.center)
                 }
 
                 Button(action: completeOnboarding) {
                     Text("done")
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 10)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .disabled(!canProceed)
             }
             .padding(.horizontal)
-            .padding(.bottom, 20)
+            .padding(.vertical, 12)
         }
-        .frame(width: 500, height: 600)
+        .frame(width: 520, height: 680)
         .onAppear {
             checkPermissions()
-            apiKey = settings.apiKey
         }
     }
 
-    private var missingRequirementsMessage: LocalizedStringKey {
-        if !microphoneGranted || !accessibilityGranted {
-            return "grantAllPermissions"
-        } else if apiKey.trimmingCharacters(in: .whitespaces).isEmpty {
-            return "enterApiKey"
+    // MARK: - Reusable API Key Field
+
+    @ViewBuilder
+    private func apiKeyField(
+        title: LocalizedStringKey,
+        placeholder: String,
+        text: Binding<String>,
+        showing: Binding<Bool>,
+        description: LocalizedStringKey
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption).fontWeight(.semibold)
+            HStack {
+                if showing.wrappedValue {
+                    TextField(placeholder, text: text)
+                        .textFieldStyle(.roundedBorder)
+                } else {
+                    SecureField(placeholder, text: text)
+                        .textFieldStyle(.roundedBorder)
+                }
+                Button(action: { showing.wrappedValue.toggle() }) {
+                    Image(systemName: showing.wrappedValue ? "eye.slash" : "eye")
+                }
+                .buttonStyle(.borderless)
+            }
+            Text(description)
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
-        return ""
     }
+
+    // MARK: - Helpers
 
     private func checkPermissions() {
-        // Check microphone
         microphoneGranted = AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
-
-        // Check accessibility
         accessibilityGranted = AXIsProcessTrusted()
     }
 
@@ -175,7 +280,6 @@ struct OnboardingView: View {
         let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true] as CFDictionary
         AXIsProcessTrustedWithOptions(options)
 
-        // Check periodically if permission was granted
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if AXIsProcessTrusted() {
                 accessibilityGranted = true
@@ -185,9 +289,6 @@ struct OnboardingView: View {
     }
 
     private func completeOnboarding() {
-        // Save API key
-        settings.apiKey = apiKey.trimmingCharacters(in: .whitespaces)
-
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         isOnboardingComplete = true
     }
@@ -201,14 +302,14 @@ struct PermissionRow: View {
     let isGranted: Bool
     let buttonTitle: String
     let action: () -> Void
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(iconColor)
                 .frame(width: 30)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
@@ -216,9 +317,9 @@ struct PermissionRow: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
-            
+
             if isGranted {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)

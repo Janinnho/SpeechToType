@@ -31,7 +31,7 @@ class TextRewriteWindowController: NSObject, ObservableObject {
         let hostingView = NSHostingView(rootView: contentView)
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 450, height: 450),
+            contentRect: NSRect(x: 0, y: 0, width: 530, height: 450),
             styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
@@ -398,7 +398,7 @@ struct TextRewritePopupView: View {
             }
         }
         .padding()
-        .frame(width: 450, height: 450)
+        .frame(width: 530, height: 450)
         .overlay {
             if isProcessing {
                 ZStack {

@@ -180,6 +180,57 @@
         }
       }
     },
+    "anthropicApiKey" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic API-Key"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic API Key"
+          }
+        }
+      }
+    },
+    "anthropicApiKeyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du benötigst einen API-Key von Anthropic. Hole dir einen unter console.anthropic.com"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You need an API key from Anthropic. Get one at console.anthropic.com"
+          }
+        }
+      }
+    },
+    "anthropicModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic-Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic Model"
+          }
+        }
+      }
+    },
     "API-Konfiguration" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -244,6 +295,159 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "API key not configured"
+          }
+        }
+      }
+    },
+    "appleIntelligenceAvailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence available"
+          }
+        }
+      }
+    },
+    "appleIntelligenceDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzt das On-Device Foundation Model von Apple Intelligence. Kein API-Key erforderlich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses the on-device Foundation Model from Apple Intelligence. No API key required."
+          }
+        }
+      }
+    },
+    "appleIntelligenceNotEligible" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Gerät unterstützt Apple Intelligence nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device does not support Apple Intelligence."
+          }
+        }
+      }
+    },
+    "appleIntelligenceNotEnabled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence ist nicht aktiviert. Bitte in den Systemeinstellungen aktivieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence is not enabled. Please enable it in System Settings."
+          }
+        }
+      }
+    },
+    "appleIntelligenceNotReady" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modell wird heruntergeladen oder vorbereitet..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model is downloading or being prepared..."
+          }
+        }
+      }
+    },
+    "appleIntelligenceUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence ist nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence is not available."
+          }
+        }
+      }
+    },
+    "appleSpeechDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzt die integrierte Apple Speech-to-Text-Erkennung direkt auf dem Gerät. Kein API-Key oder Server erforderlich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses the built-in Apple Speech-to-Text recognition directly on-device. No API key or server required."
+          }
+        }
+      }
+    },
+    "appleSpeechNotAuthorized" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff auf Apple Spracherkennung nicht erlaubt. Bitte in den Systemeinstellungen erlauben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to Apple Speech Recognition not authorized. Please allow in System Settings."
+          }
+        }
+      }
+    },
+    "appleSpeechUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Spracherkennung ist auf diesem Gerät nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Speech Recognition is not available on this device."
           }
         }
       }
@@ -979,6 +1183,9 @@
         }
       }
     },
+    "http://localhost:11434" : {
+
+    },
     "http://yourserver/v1/audio/transcriptions" : {
 
     },
@@ -1012,6 +1219,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Key"
+          }
+        }
+      }
+    },
+    "localProvider" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokal"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
           }
         }
       }
@@ -1257,6 +1481,142 @@
         }
       }
     },
+    "ollamaConfigError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ollama-Server-URL oder Modell nicht konfiguriert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ollama server URL or model not configured."
+          }
+        }
+      }
+    },
+    "ollamaConnectionError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung zum Ollama-Server fehlgeschlagen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to connect to Ollama server."
+          }
+        }
+      }
+    },
+    "ollamaDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwende einen lokalen Ollama-Server für die Textverarbeitung. Die verfügbaren Modelle werden automatisch abgerufen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use a local Ollama server for text processing. Available models are fetched automatically."
+          }
+        }
+      }
+    },
+    "ollamaModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model"
+          }
+        }
+      }
+    },
+    "ollamaNoModels" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Modelle gefunden. Stelle sicher, dass Ollama läuft."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No models found. Make sure Ollama is running."
+          }
+        }
+      }
+    },
+    "ollamaSelectModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modell auswählen..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select model..."
+          }
+        }
+      }
+    },
+    "ollamaServerURL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ollama Server-URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ollama Server URL"
+          }
+        }
+      }
+    },
+    "ollamaURLInvalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ungültige Ollama-Server-URL."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid Ollama server URL."
+          }
+        }
+      }
+    },
     "onboardingApiKeyHint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1270,6 +1630,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You can enter your API key later in the settings."
+          }
+        }
+      }
+    },
+    "onboardingPermissions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechtigungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permissions"
           }
         }
       }
@@ -1375,6 +1752,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open main window"
+          }
+        }
+      }
+    },
+    "optional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional"
           }
         }
       }
@@ -2181,6 +2575,9 @@
     "sk-..." : {
 
     },
+    "sk-ant-..." : {
+
+    },
     "spacebar" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2194,6 +2591,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spacebar"
+          }
+        }
+      }
+    },
+    "speechModelConfigSection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprachmodellkonfiguration"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speech Model Configuration"
+          }
+        }
+      }
+    },
+    "speechModelProviderPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anbieter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
           }
         }
       }
@@ -2316,6 +2747,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Successfully transcribed!"
+          }
+        }
+      }
+    },
+    "textProcessingOpenAIApiKey" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI API-Key (Textverarbeitung)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI API Key (Text Processing)"
+          }
+        }
+      }
+    },
+    "textProcessingOpenAIApiKeyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optionaler separater API-Key für Textverarbeitung. Wenn leer, wird der Sprachmodell-API-Key verwendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional separate API key for text processing. If empty, the speech model API key will be used."
+          }
+        }
+      }
+    },
+    "textProcessingProviderPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anbieter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
           }
         }
       }

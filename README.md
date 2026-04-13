@@ -1,74 +1,87 @@
+<div align="center">
+
 # SpeechToType
 
-A native macOS menu bar app for speech-to-text transcription using OpenAI's API. Simply hold a key to dictate, and your speech is instantly transcribed and inserted at your cursor position.
+**A powerful native macOS menu bar app that turns your voice into text — instantly.**
 
-[![Download](https://img.shields.io/badge/Download-Latest%20Release-blue)](https://github.com/Janinnho/SpeechToType/releases/latest/download/SpeechToType.dmg)
+Hold a key, speak, and your words appear right where your cursor is. Fast, private, and fully customizable.
+
+<br>
+
+<img src="Github-Assets/Screenshot SpeechtoType-App.png" alt="SpeechToType Screenshot" width="700">
+
+<br><br>
+
+<a href="https://github.com/Janinnho/SpeechToType/releases/latest/download/SpeechToType.dmg">
+  <img src="Github-Assets/Download_for_macOS-Button.png" alt="Download for macOS" width="280">
+</a>
+
+<br>
+
+*Requires macOS 26.2 or later*
+
+</div>
+
+---
+
+## What it does
+
+SpeechToType lives in your menu bar and lets you dictate text into any application. Hold your shortcut key, speak, release — and the transcribed text is inserted at your cursor. No switching apps, no copy-pasting.
 
 ## Features
 
-- **Instant Dictation**: Hold the Control key (or a custom shortcut) to record, release to transcribe and insert text
-- **Double-Tap for Continuous Recording**: Double-tap the hotkey to toggle continuous recording mode for longer dictations
-- **Visual Recording Indicator**: A floating overlay with sound wave animation shows when recording is active
-- **Text Rewriting**: Select any text and use a shortcut to rewrite it with AI assistance (grammar correction, elaboration, or custom prompts)
-- **Multiple Transcription Models**: Choose between GPT-4o Mini (fast), GPT-4o (higher quality), or GPT-4o with speaker diarization
-- **Customizable Shortcuts**: Configure your own keyboard shortcuts for recording and text rewriting
-- **Transcription History**: Browse, search, and reuse your past transcriptions
-- **Auto-Delete**: Optionally delete old transcriptions after a set period
-- **Native macOS Experience**: Built with SwiftUI for a seamless Mac experience
-- **Menu Bar Integration**: Quick access from your menu bar
-- **Auto-Updates**: Automatic update checking via Sparkle
+### Speech-to-Text
+- **Hold-to-Record**: Hold a key to record, release to transcribe and insert text instantly
+- **Double-Tap Continuous Mode**: Double-tap for hands-free continuous recording — tap again to stop
+- **Visual Recording Indicator**: Floating overlay with sound wave animation shows when you're recording
+- **Transcription History**: Browse, search, and reuse past transcriptions with optional auto-delete
 
-## Requirements
+### Multiple Speech Providers
+- **OpenAI Whisper** — High-accuracy cloud transcription with multiple model options
+- **Apple Speech** — Fully on-device transcription using macOS built-in speech recognition, no API key needed
+- **Local Whisper Server** — Connect to your own self-hosted Whisper instance for full privacy
 
-- macOS 14.0 or later
-- OpenAI API key
+### AI Text Rewriting
+Select any text and rewrite it with AI — fix grammar, elaborate, or apply custom prompts.
+
+- **OpenAI** (GPT-5.4, GPT-5.4-mini, GPT-5.4-nano, GPT-4o, GPT-4o-mini)
+- **Anthropic** (Claude Sonnet 4, Claude Opus 4, Claude Haiku)
+- **Apple Intelligence** — On-device text processing via the FoundationModels framework, no API key required
+- **Ollama** — Use any local model running on your machine
+
+### Customizable
+- **Custom Keyboard Shortcuts** for recording and text rewriting
+- **Choose your providers** independently for speech and text processing
+- **Guided Onboarding** walks you through permissions and provider setup
+
+### Native macOS Experience
+- Built with SwiftUI for a fast, lightweight menu bar app
+- Automatic updates via Sparkle
+- Runs entirely in the menu bar — no dock icon, no clutter
 
 ## Installation
 
-1. [Download the latest release](https://github.com/Janinnho/SpeechToType/releases/latest/download/SpeechToType.dmg)
+1. **[Download the latest release](https://github.com/Janinnho/SpeechToType/releases/latest/download/SpeechToType.dmg)**
 2. Open the DMG and drag SpeechToType to your Applications folder
-3. Launch SpeechToType
-4. Grant the required permissions (Microphone and Accessibility)
-5. Enter your OpenAI API key
+3. Launch SpeechToType and follow the onboarding setup
+4. Grant Microphone and Accessibility permissions
+5. Choose your preferred speech and text processing providers
 
 ## Usage
 
-### Basic Dictation
-- **Hold** the Control key (default) to start recording
-- **Release** to stop recording and transcribe
-- The transcribed text is automatically inserted at your cursor position
-
-### Continuous Recording
-- **Double-tap** the recording hotkey to enable continuous mode
-- Recording continues until you tap the hotkey again
-- Perfect for longer dictations
-
-### Text Rewriting
-- **Select** any text in any application
-- Press **Cmd+R** (default) to open the rewrite popup
-- Choose from:
-  - **Grammar**: Fix spelling and grammar errors
-  - **Elaborate**: Expand and improve the text
-  - **Custom**: Enter your own prompt for custom transformations
-- Click "Insert" to replace the selected text with the result
-
-## Settings
-
-Access settings from the menu bar icon or press **Cmd+,**:
-
-- **API Configuration**: Enter your OpenAI API key
-- **Transcription Model**: Choose your preferred transcription model
-- **Text Rewriting**: Enable/disable and select GPT model (GPT-4o, GPT-5, GPT-5.2)
-- **Shortcuts**: Customize recording and rewrite keyboard shortcuts
-- **History**: Configure auto-delete period for transcriptions
-- **Updates**: Manage automatic update settings
+| Action | How |
+|---|---|
+| **Dictate** | Hold your recording shortcut (default: Control key) |
+| **Continuous recording** | Double-tap the recording shortcut |
+| **Rewrite text** | Select text, then press your rewrite shortcut (default: Cmd+R) |
+| **Open settings** | Click the menu bar icon or press Cmd+, |
 
 ## Privacy
 
-- Your audio recordings are processed directly via OpenAI's API
-- Recordings are temporarily stored and deleted after transcription
-- Your API key is stored locally on your Mac
-- No data is collected or shared by the app itself
+- **On-device options available**: Use Apple Speech and Apple Intelligence for fully offline operation
+- Audio recordings are temporarily stored and deleted immediately after transcription
+- API keys are stored locally on your Mac
+- No data is collected or shared by the app
 
 ## License
 
@@ -77,5 +90,6 @@ MIT License
 ## Acknowledgments
 
 - Built with SwiftUI
-- Transcription powered by OpenAI
+- Transcription powered by OpenAI, Apple Speech Recognition
+- Text processing powered by OpenAI, Anthropic, Apple Intelligence, Ollama
 - Auto-updates via [Sparkle](https://sparkle-project.org/)
