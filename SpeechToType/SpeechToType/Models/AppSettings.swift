@@ -14,12 +14,14 @@ enum SpeechModelProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case local = "local"
     case appleSpeech = "appleSpeech"
+    case gemini = "gemini"
 
     var displayName: String {
         switch self {
         case .openAI: return "OpenAI API"
         case .local: return String(localized: "localProvider")
         case .appleSpeech: return "Apple Speech"
+        case .gemini: return "Google Gemini"
         }
     }
 }
@@ -29,6 +31,7 @@ enum TextProcessingProvider: String, CaseIterable, Codable {
     case anthropic = "anthropic"
     case ollama = "ollama"
     case appleIntelligence = "appleIntelligence"
+    case gemini = "gemini"
 
     var displayName: String {
         switch self {
@@ -36,6 +39,19 @@ enum TextProcessingProvider: String, CaseIterable, Codable {
         case .anthropic: return "Anthropic API"
         case .ollama: return "Ollama"
         case .appleIntelligence: return "Apple Intelligence"
+        case .gemini: return "Google Gemini"
+        }
+    }
+}
+
+enum GeminiModel: String, CaseIterable, Codable {
+    case gemini35Flash = "gemini-3.5-flash"
+    case gemini31Pro = "gemini-3.1-pro"
+
+    var displayName: String {
+        switch self {
+        case .gemini35Flash: return "Gemini 3.5 Flash"
+        case .gemini31Pro: return "Gemini 3.1 Pro"
         }
     }
 }
@@ -364,6 +380,23 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(selectedOllamaModel, forKey: "selectedOllamaModel") }
     }
 
+    // MARK: - Gemini Settings
+
+    /// Google Gemini API key (shared between speech transcription and text rewriting)
+    @Published var geminiApiKey: String {
+        didSet { defaults.set(geminiApiKey, forKey: "geminiApiKey") }
+    }
+
+    /// Selected Gemini model for speech transcription
+    @Published var selectedGeminiSpeechModel: GeminiModel {
+        didSet { defaults.set(selectedGeminiSpeechModel.rawValue, forKey: "selectedGeminiSpeechModel") }
+    }
+
+    /// Selected Gemini model for text rewriting
+    @Published var selectedGeminiTextModel: GeminiModel {
+        didSet { defaults.set(selectedGeminiTextModel.rawValue, forKey: "selectedGeminiTextModel") }
+    }
+
     var isConfigured: Bool {
         let speechConfigured: Bool
         switch speechModelProvider {
@@ -373,6 +406,8 @@ final class AppSettings: ObservableObject {
             speechConfigured = !whisperServerURL.isEmpty
         case .appleSpeech:
             speechConfigured = true
+        case .gemini:
+            speechConfigured = !geminiApiKey.isEmpty
         }
 
         // Text processing is optional, but if enabled, check the provider
@@ -386,6 +421,8 @@ final class AppSettings: ObservableObject {
                 return speechConfigured && !ollamaServerURL.isEmpty
             case .appleIntelligence:
                 return speechConfigured
+            case .gemini:
+                return speechConfigured && !geminiApiKey.isEmpty
             }
         }
 
@@ -460,6 +497,11 @@ final class AppSettings: ObservableObject {
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
         self.selectedOllamaModel = defaults.string(forKey: "selectedOllamaModel") ?? ""
+
+        // Gemini settings
+        self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
+        self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini35Flash
+        self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini35Flash
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil

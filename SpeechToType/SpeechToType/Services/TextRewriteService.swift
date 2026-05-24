@@ -127,6 +127,7 @@ class TextRewriteService {
 
     private let openAIBaseURL = "https://api.openai.com/v1/chat/completions"
     private let anthropicBaseURL = "https://api.anthropic.com/v1/messages"
+    private let geminiBaseURL = "https://generativelanguage.googleapis.com/v1beta/models"
 
     private init() {}
 
@@ -160,6 +161,8 @@ class TextRewriteService {
             return try await rewriteWithOllama(text: text, systemPrompt: systemPrompt, settings: settings)
         case .appleIntelligence:
             return try await rewriteWithAppleIntelligence(text: text, systemPrompt: systemPrompt)
+        case .gemini:
+            return try await rewriteWithGemini(text: text, systemPrompt: systemPrompt, settings: settings)
         }
     }
 
@@ -245,6 +248,54 @@ class TextRewriteService {
               let content = json["content"] as? [[String: Any]],
               let firstBlock = content.first,
               let responseText = firstBlock["text"] as? String else {
+            throw TextRewriteError.noResponse
+        }
+
+        return responseText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Gemini
+
+    private func rewriteWithGemini(text: String, systemPrompt: String, settings: AppSettings) async throws -> String {
+        let apiKey = settings.geminiApiKey
+        guard !apiKey.isEmpty else {
+            throw TextRewriteError.invalidAPIKey
+        }
+
+        let model = settings.selectedGeminiTextModel
+        guard let url = URL(string: "\(geminiBaseURL)/\(model.rawValue):generateContent") else {
+            throw TextRewriteError.invalidResponse
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let requestBody: [String: Any] = [
+            "systemInstruction": [
+                "parts": [["text": systemPrompt]]
+            ],
+            "contents": [[
+                "role": "user",
+                "parts": [["text": text]]
+            ]],
+            "generationConfig": [
+                "temperature": 0.7,
+                "maxOutputTokens": 2048
+            ]
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+
+        let (data, _) = try await executeRequest(request, data: nil)
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let candidates = json["candidates"] as? [[String: Any]],
+              let firstCandidate = candidates.first,
+              let content = firstCandidate["content"] as? [String: Any],
+              let parts = content["parts"] as? [[String: Any]],
+              let responseText = parts.first?["text"] as? String else {
             throw TextRewriteError.noResponse
         }
 
@@ -345,7 +396,7 @@ class TextRewriteService {
                 throw TextRewriteError.invalidResponse
             }
 
-            if httpResponse.statusCode == 401 {
+            if httpResponse.statusCode == 401 || httpResponse.statusCode == 403 {
                 throw TextRewriteError.invalidAPIKey
             }
 

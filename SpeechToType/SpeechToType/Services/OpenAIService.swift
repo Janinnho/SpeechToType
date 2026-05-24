@@ -38,6 +38,7 @@ class OpenAIService {
     static let shared = OpenAIService()
 
     private let openAIBaseURL = "https://api.openai.com/v1/audio/transcriptions"
+    private let geminiBaseURL = "https://generativelanguage.googleapis.com/v1beta/models"
 
     private init() {}
 
@@ -51,6 +52,8 @@ class OpenAIService {
             return try await transcribeWithWhisperServer(audioURL: audioURL, settings: settings)
         case .appleSpeech:
             return try await transcribeWithAppleSpeech(audioURL: audioURL)
+        case .gemini:
+            return try await transcribeWithGemini(audioURL: audioURL, settings: settings)
         }
     }
 
@@ -144,6 +147,83 @@ class OpenAIService {
         request.httpBody = body
 
         return try await executeTranscriptionRequest(request)
+    }
+
+    // MARK: - Google Gemini Transcription
+
+    private func transcribeWithGemini(audioURL: URL, settings: AppSettings) async throws -> String {
+        let apiKey = settings.geminiApiKey
+        guard !apiKey.isEmpty else {
+            throw OpenAIError.invalidAPIKey
+        }
+
+        let model = settings.selectedGeminiSpeechModel
+        guard let url = URL(string: "\(geminiBaseURL)/\(model.rawValue):generateContent") else {
+            throw OpenAIError.invalidResponse
+        }
+
+        let audioData = try Data(contentsOf: audioURL)
+        let base64Audio = audioData.base64EncodedString()
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let requestBody: [String: Any] = [
+            "contents": [[
+                "role": "user",
+                "parts": [
+                    ["inlineData": ["mimeType": "audio/mp4", "data": base64Audio]],
+                    ["text": "Transcribe this audio verbatim in German. Return only the transcription without any commentary, formatting, or quotation marks."]
+                ]
+            ]],
+            "generationConfig": [
+                "temperature": 0.0
+            ]
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw OpenAIError.invalidResponse
+            }
+
+            if httpResponse.statusCode == 401 || httpResponse.statusCode == 403 {
+                throw OpenAIError.invalidAPIKey
+            }
+
+            if httpResponse.statusCode != 200 {
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? [String: Any],
+                   let message = error["message"] as? String {
+                    throw OpenAIError.apiError(message)
+                }
+                throw OpenAIError.apiError("HTTP \(httpResponse.statusCode)")
+            }
+
+            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let candidates = json["candidates"] as? [[String: Any]],
+                  let firstCandidate = candidates.first,
+                  let content = firstCandidate["content"] as? [String: Any],
+                  let parts = content["parts"] as? [[String: Any]],
+                  let text = parts.first?["text"] as? String else {
+                throw OpenAIError.noTranscription
+            }
+
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty {
+                throw OpenAIError.noTranscription
+            }
+            return trimmed
+        } catch let error as OpenAIError {
+            throw error
+        } catch {
+            throw OpenAIError.networkError(error)
+        }
     }
 
     // MARK: - Apple Speech (On-Device)
