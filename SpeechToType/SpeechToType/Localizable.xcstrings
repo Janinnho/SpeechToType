@@ -180,6 +180,9 @@
         }
       }
     },
+    "AIza..." : {
+
+    },
     "anthropicApiKey" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -996,6 +999,74 @@
         }
       }
     },
+    "geminiApiKey" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemini API-Key"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemini API Key"
+          }
+        }
+      }
+    },
+    "geminiApiKeyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du benötigst einen API-Key von Google. Hole dir einen unter aistudio.google.com/apikey"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You need an API key from Google. Get one at aistudio.google.com/apikey"
+          }
+        }
+      }
+    },
+    "geminiModel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemini-Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemini Model"
+          }
+        }
+      }
+    },
+    "geminiSharedKeyHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Schlüssel wird mit der Sprachmodell-Konfiguration geteilt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This key is shared with the speech model configuration."
+          }
+        }
+      }
+    },
     "gptModel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1229,13 +1300,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lokal"
+            "value" : "Self-Hosted"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Local"
+            "value" : "Self-Hosted"
           }
         }
       }

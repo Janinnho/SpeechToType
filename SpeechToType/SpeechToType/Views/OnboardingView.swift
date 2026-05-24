@@ -16,6 +16,7 @@ struct OnboardingView: View {
     @State private var showingAPIKey = false
     @State private var showingTextProcessingAPIKey = false
     @State private var showingAnthropicAPIKey = false
+    @State private var showingGeminiAPIKey = false
     @State private var ollamaModels: [String] = []
     @State private var isLoadingOllamaModels = false
     @ObservedObject private var settings = AppSettings.shared
@@ -115,6 +116,20 @@ struct OnboardingView: View {
                             Text("appleSpeechDescription")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
+
+                        case .gemini:
+                            apiKeyField(
+                                title: "geminiApiKey",
+                                placeholder: "AIza...",
+                                text: $settings.geminiApiKey,
+                                showing: $showingGeminiAPIKey,
+                                description: "geminiApiKeyDescription"
+                            )
+                            Picker("geminiModel", selection: $settings.selectedGeminiSpeechModel) {
+                                ForEach(GeminiModel.allCases, id: \.self) { model in
+                                    Text(model.displayName).tag(model)
+                                }
+                            }
                         }
                     }
                     .padding()
@@ -186,6 +201,23 @@ struct OnboardingView: View {
                                 .font(.caption)
 
                                 Text("appleIntelligenceDescription")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+
+                            case .gemini:
+                                apiKeyField(
+                                    title: "geminiApiKey",
+                                    placeholder: "AIza...",
+                                    text: $settings.geminiApiKey,
+                                    showing: $showingGeminiAPIKey,
+                                    description: "geminiApiKeyDescription"
+                                )
+                                Picker("geminiModel", selection: $settings.selectedGeminiTextModel) {
+                                    ForEach(GeminiModel.allCases, id: \.self) { model in
+                                        Text(model.displayName).tag(model)
+                                    }
+                                }
+                                Text("geminiSharedKeyHint")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }

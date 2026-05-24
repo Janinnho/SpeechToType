@@ -12,6 +12,34 @@
         -->
 
         <item>
+            <title>Version 2.1</title>
+            <pubDate>Sun, 24 May 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>11</sparkle:version>
+            <sparkle:shortVersionString>2.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.1</h2>
+                <p>Google Gemini joins the provider lineup for both speech recognition and text processing!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Google Gemini for Speech</strong>: Transcribe your recordings directly with Gemini's multimodal API</li>
+                    <li><strong>Google Gemini for Text Rewriting</strong>: Use Gemini for grammar, elaboration, translation, and custom rewrites</li>
+                    <li><strong>Model Selection</strong>: Choose between Gemini 3.5 Flash (fast and cost-effective) and Gemini 3.1 Pro (highest quality) — independently for speech and text</li>
+                    <li><strong>Shared API Key</strong>: One Gemini API key powers both speech transcription and text rewriting</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li>Renamed the "Local" speech provider to "Self-Hosted" for clarity</li>
+                </ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.1/SpeechToType.dmg"
+                sparkle:edSignature="iUhpT8tS9WZdK4QNs6QifaTMcWzvRB9qyw/zdd51OlB7+df6JhRoO4HIE6YQn3Ljspc49/ipwIidvY7yA5guAg=="
+                length="4783527"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.0</title>
             <pubDate>Sun, 13 Apr 2026 12:00:00 +0200</pubDate>
             <sparkle:version>10</sparkle:version>

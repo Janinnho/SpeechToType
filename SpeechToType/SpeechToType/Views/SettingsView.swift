@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State private var showingAPIKey = false
     @State private var showingTextProcessingAPIKey = false
     @State private var showingAnthropicAPIKey = false
+    @State private var showingGeminiAPIKey = false
     @State private var ollamaModels: [String] = []
     @State private var isLoadingOllamaModels = false
     @State private var ollamaModelError: String?
@@ -123,6 +124,37 @@ struct SettingsView: View {
                     Text("appleSpeechDescription")
                         .font(.caption)
                         .foregroundColor(.secondary)
+
+                case .gemini:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("geminiApiKey")
+                            .font(.headline)
+
+                        HStack {
+                            if showingGeminiAPIKey {
+                                TextField("AIza...", text: $settings.geminiApiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            } else {
+                                SecureField("AIza...", text: $settings.geminiApiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                            Button(action: { showingGeminiAPIKey.toggle() }) {
+                                Image(systemName: showingGeminiAPIKey ? "eye.slash" : "eye")
+                            }
+                            .buttonStyle(.borderless)
+                        }
+
+                        Text("geminiApiKeyDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Picker("geminiModel", selection: $settings.selectedGeminiSpeechModel) {
+                        ForEach(GeminiModel.allCases, id: \.self) { model in
+                            Text(model.displayName).tag(model)
+                        }
+                    }
                 }
             } header: {
                 Text("speechModelConfigSection")
@@ -305,6 +337,41 @@ struct SettingsView: View {
                         Text("appleIntelligenceDescription")
                             .font(.caption)
                             .foregroundColor(.secondary)
+
+                    case .gemini:
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("geminiApiKey")
+                                .font(.headline)
+
+                            HStack {
+                                if showingGeminiAPIKey {
+                                    TextField("AIza...", text: $settings.geminiApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                } else {
+                                    SecureField("AIza...", text: $settings.geminiApiKey)
+                                        .textFieldStyle(.roundedBorder)
+                                }
+
+                                Button(action: { showingGeminiAPIKey.toggle() }) {
+                                    Image(systemName: showingGeminiAPIKey ? "eye.slash" : "eye")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+
+                            Text("geminiApiKeyDescription")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Text("geminiSharedKeyHint")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Picker("geminiModel", selection: $settings.selectedGeminiTextModel) {
+                            ForEach(GeminiModel.allCases, id: \.self) { model in
+                                Text(model.displayName).tag(model)
+                            }
+                        }
                     }
 
                     Picker("defaultTranslationLanguage", selection: $settings.defaultTranslationLanguage) {
