@@ -10,6 +10,12 @@ import SwiftUI
 import Carbon.HIToolbox
 import Combine
 
+struct HTTPHeader: Codable, Equatable, Identifiable {
+    var id = UUID()
+    var name: String = ""
+    var value: String = ""
+}
+
 enum SpeechModelProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case local = "local"
@@ -59,12 +65,16 @@ enum GeminiModel: String, CaseIterable, Codable {
 enum AnthropicModel: String, CaseIterable, Codable {
     case claude4Sonnet = "claude-sonnet-4-6"
     case claude4Opus = "claude-opus-4-6"
+    case claude4Opus47 = "claude-opus-4-7"
+    case claude4Opus48 = "claude-opus-4-8"
     case claudeHaiku = "claude-haiku-4-5-20251001"
 
     var displayName: String {
         switch self {
         case .claude4Sonnet: return "Claude Sonnet 4.6"
         case .claude4Opus: return "Claude Opus 4.6"
+        case .claude4Opus47: return "Claude Opus 4.7"
+        case .claude4Opus48: return "Claude Opus 4.8"
         case .claudeHaiku: return "Claude Haiku 4.5"
         }
     }
@@ -335,6 +345,15 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(whisperServerBearerToken, forKey: "whisperServerBearerToken") }
     }
 
+    /// Custom HTTP headers for the Whisper server (e.g. behind Cloudflare Access)
+    @Published var whisperServerCustomHeaders: [HTTPHeader] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(whisperServerCustomHeaders) {
+                defaults.set(encoded, forKey: "whisperServerCustomHeaders")
+            }
+        }
+    }
+
     // MARK: - Provider Settings
 
     /// Speech model provider (OpenAI API or Local)
@@ -380,6 +399,15 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(selectedOllamaModel, forKey: "selectedOllamaModel") }
     }
 
+    /// Custom HTTP headers for the Ollama server (e.g. behind Cloudflare Access)
+    @Published var ollamaCustomHeaders: [HTTPHeader] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(ollamaCustomHeaders) {
+                defaults.set(encoded, forKey: "ollamaCustomHeaders")
+            }
+        }
+    }
+
     // MARK: - Gemini Settings
 
     /// Google Gemini API key (shared between speech transcription and text rewriting)
@@ -395,6 +423,54 @@ final class AppSettings: ObservableObject {
     /// Selected Gemini model for text rewriting
     @Published var selectedGeminiTextModel: GeminiModel {
         didSet { defaults.set(selectedGeminiTextModel.rawValue, forKey: "selectedGeminiTextModel") }
+    }
+
+    // MARK: - Dictionary (Custom Vocabulary) Settings
+
+    /// Custom words/spellings the system should recognize
+    @Published var dictionaryWords: [String] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(dictionaryWords) {
+                defaults.set(encoded, forKey: "dictionaryWords")
+            }
+        }
+    }
+
+    /// General free-text instructions added to the prompt
+    @Published var dictionaryInstructions: String {
+        didSet { defaults.set(dictionaryInstructions, forKey: "dictionaryInstructions") }
+    }
+
+    /// Whether to pass the dictionary to the local Whisper server (default off)
+    @Published var applyDictionaryToLocalWhisper: Bool {
+        didSet { defaults.set(applyDictionaryToLocalWhisper, forKey: "applyDictionaryToLocalWhisper") }
+    }
+
+    /// For the local Whisper server: send only the words (comma-separated), not the instructions
+    @Published var dictionarySimpleModeLocalWhisper: Bool {
+        didSet { defaults.set(dictionarySimpleModeLocalWhisper, forKey: "dictionarySimpleModeLocalWhisper") }
+    }
+
+    /// Whether to inject the dictionary into the text-rewrite system prompt (default off)
+    @Published var applyDictionaryToRewrite: Bool {
+        didSet { defaults.set(applyDictionaryToRewrite, forKey: "applyDictionaryToRewrite") }
+    }
+
+    /// Only the words (comma-separated); empty if no words are set
+    var dictionaryWordsText: String {
+        dictionaryWords
+            .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+            .joined(separator: ", ")
+    }
+
+    /// Combined dictionary prompt text (words + instructions); empty if nothing is set
+    var dictionaryPromptText: String {
+        var parts: [String] = []
+        let words = dictionaryWordsText
+        if !words.isEmpty { parts.append(words) }
+        let instr = dictionaryInstructions.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !instr.isEmpty { parts.append(instr) }
+        return parts.joined(separator: "\n")
     }
 
     var isConfigured: Bool {
@@ -478,6 +554,12 @@ final class AppSettings: ObservableObject {
         self.whisperServerURL = defaults.string(forKey: "whisperServerURL") ?? ""
         self.whisperServerModel = defaults.string(forKey: "whisperServerModel") ?? "whisper-1"
         self.whisperServerBearerToken = defaults.string(forKey: "whisperServerBearerToken") ?? ""
+        if let headerData = defaults.data(forKey: "whisperServerCustomHeaders"),
+           let headers = try? JSONDecoder().decode([HTTPHeader].self, from: headerData) {
+            self.whisperServerCustomHeaders = headers
+        } else {
+            self.whisperServerCustomHeaders = []
+        }
 
         // Provider settings - derive from existing useLocalWhisperServer if no explicit setting
         if let providerRaw = defaults.string(forKey: "speechModelProvider"),
@@ -497,11 +579,29 @@ final class AppSettings: ObservableObject {
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
         self.selectedOllamaModel = defaults.string(forKey: "selectedOllamaModel") ?? ""
+        if let headerData = defaults.data(forKey: "ollamaCustomHeaders"),
+           let headers = try? JSONDecoder().decode([HTTPHeader].self, from: headerData) {
+            self.ollamaCustomHeaders = headers
+        } else {
+            self.ollamaCustomHeaders = []
+        }
 
         // Gemini settings
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
         self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini35Flash
         self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini35Flash
+
+        // Dictionary settings
+        if let dictData = defaults.data(forKey: "dictionaryWords"),
+           let words = try? JSONDecoder().decode([String].self, from: dictData) {
+            self.dictionaryWords = words
+        } else {
+            self.dictionaryWords = []
+        }
+        self.dictionaryInstructions = defaults.string(forKey: "dictionaryInstructions") ?? ""
+        self.applyDictionaryToLocalWhisper = defaults.object(forKey: "applyDictionaryToLocalWhisper") as? Bool ?? false
+        self.dictionarySimpleModeLocalWhisper = defaults.object(forKey: "dictionarySimpleModeLocalWhisper") as? Bool ?? false
+        self.applyDictionaryToRewrite = defaults.object(forKey: "applyDictionaryToRewrite") as? Bool ?? false
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil
@@ -551,6 +651,16 @@ final class AppSettings: ObservableObject {
             if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultRewrite) {
                 defaults.set(encoded, forKey: "rewriteShortcut")
             }
+        }
+    }
+}
+
+extension URLRequest {
+    mutating func applyCustomHeaders(_ headers: [HTTPHeader]) {
+        for header in headers {
+            let name = header.name.trimmingCharacters(in: .whitespaces)
+            guard !name.isEmpty else { continue }
+            setValue(header.value, forHTTPHeaderField: name)
         }
     }
 }

@@ -61,6 +61,7 @@ enum GPTModel: String, CaseIterable, Codable {
     case gpt54 = "gpt-5.4"
     case gpt54mini = "gpt-5.4-mini"
     case gpt54nano = "gpt-5.4-nano"
+    case gpt55 = "gpt-5.5"
 
     var displayName: String {
         switch self {
@@ -72,6 +73,8 @@ enum GPTModel: String, CaseIterable, Codable {
             return "GPT-5.4 Mini"
         case .gpt54nano:
             return "GPT-5.4 Nano"
+        case .gpt55:
+            return "GPT-5.5"
         }
     }
 
@@ -80,7 +83,7 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return false
-        case .gpt54, .gpt54mini, .gpt54nano:
+        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
             return true
         }
     }
@@ -90,7 +93,7 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return true
-        case .gpt54, .gpt54mini, .gpt54nano:
+        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
             return false
         }
     }
@@ -139,7 +142,7 @@ class TextRewriteService {
         let settings = AppSettings.shared
 
         // Determine system prompt based on mode
-        let systemPrompt: String
+        var systemPrompt: String
         switch mode {
         case .dictate:
             systemPrompt = customPrompt ?? "Process the following text as instructed."
@@ -150,6 +153,14 @@ class TextRewriteService {
             systemPrompt = customPrompt ?? ""
         default:
             systemPrompt = mode.systemPrompt
+        }
+
+        // Inject dictionary (custom vocabulary / instructions) if enabled
+        if settings.applyDictionaryToRewrite {
+            let dictionaryPrompt = settings.dictionaryPromptText
+            if !dictionaryPrompt.isEmpty {
+                systemPrompt = "Custom vocabulary and instructions to respect: \(dictionaryPrompt)\n\n" + systemPrompt
+            }
         }
 
         switch settings.textProcessingProvider {
@@ -319,6 +330,7 @@ class TextRewriteService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.applyCustomHeaders(settings.ollamaCustomHeaders)
 
         let requestBody: [String: Any] = [
             "model": modelName,
@@ -348,7 +360,8 @@ class TextRewriteService {
             return []
         }
 
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        request.applyCustomHeaders(AppSettings.shared.ollamaCustomHeaders)
         let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {

@@ -85,6 +85,14 @@ class OpenAIService {
         body.append("Content-Disposition: form-data; name=\"language\"\r\n\r\n".data(using: .utf8)!)
         body.append("de\r\n".data(using: .utf8)!)
 
+        // Add dictionary prompt (custom vocabulary / instructions)
+        let dictionaryPrompt = settings.dictionaryPromptText
+        if !dictionaryPrompt.isEmpty {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(dictionaryPrompt)\r\n".data(using: .utf8)!)
+        }
+
         // Add audio file
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"file\"; filename=\"audio.m4a\"\r\n".data(using: .utf8)!)
@@ -120,6 +128,7 @@ class OpenAIService {
         if !bearerToken.isEmpty {
             request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         }
+        request.applyCustomHeaders(settings.whisperServerCustomHeaders)
 
         let audioData = try Data(contentsOf: audioURL)
         var body = Data()
@@ -133,6 +142,17 @@ class OpenAIService {
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"language\"\r\n\r\n".data(using: .utf8)!)
         body.append("de\r\n".data(using: .utf8)!)
+
+        // Add dictionary prompt only if enabled for the local server.
+        // In simple mode only the words (comma-separated) are sent, without instructions.
+        let dictionaryPrompt = settings.dictionarySimpleModeLocalWhisper
+            ? settings.dictionaryWordsText
+            : settings.dictionaryPromptText
+        if settings.applyDictionaryToLocalWhisper && !dictionaryPrompt.isEmpty {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(dictionaryPrompt)\r\n".data(using: .utf8)!)
+        }
 
         // Add audio file
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -170,12 +190,18 @@ class OpenAIService {
         request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
+        let baseInstruction = "Transcribe this audio verbatim in German. Return only the transcription without any commentary, formatting, or quotation marks."
+        let dictionaryPrompt = settings.dictionaryPromptText
+        let instruction = dictionaryPrompt.isEmpty
+            ? baseInstruction
+            : "Use the following custom vocabulary and spellings where applicable: \(dictionaryPrompt)\n\n\(baseInstruction)"
+
         let requestBody: [String: Any] = [
             "contents": [[
                 "role": "user",
                 "parts": [
                     ["inlineData": ["mimeType": "audio/mp4", "data": base64Audio]],
-                    ["text": "Transcribe this audio verbatim in German. Return only the transcription without any commentary, formatting, or quotation marks."]
+                    ["text": instruction]
                 ]
             ]],
             "generationConfig": [

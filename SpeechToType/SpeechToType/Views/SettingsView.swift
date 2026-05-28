@@ -120,6 +120,16 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
 
+                    Toggle("dictionaryApplyLocalWhisper", isOn: $settings.applyDictionaryToLocalWhisper)
+
+                    Toggle("dictionarySimpleModeLocalWhisper", isOn: $settings.dictionarySimpleModeLocalWhisper)
+                        .disabled(!settings.applyDictionaryToLocalWhisper)
+                    Text("dictionarySimpleModeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    CustomHeadersEditor(headers: $settings.whisperServerCustomHeaders)
+
                 case .appleSpeech:
                     Text("appleSpeechDescription")
                         .font(.caption)
@@ -165,6 +175,8 @@ struct SettingsView: View {
                 Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
 
                 if settings.textRewriteEnabled {
+                    Toggle("dictionaryApplyRewrite", isOn: $settings.applyDictionaryToRewrite)
+
                     Picker("textProcessingProviderPicker", selection: $settings.textProcessingProvider) {
                         ForEach(TextProcessingProvider.allCases, id: \.self) { provider in
                             Text(provider.displayName).tag(provider)
@@ -293,6 +305,8 @@ struct SettingsView: View {
                         Text("ollamaDescription")
                             .font(.caption)
                             .foregroundColor(.secondary)
+
+                        CustomHeadersEditor(headers: $settings.ollamaCustomHeaders)
 
                     case .appleIntelligence:
                         let model = SystemLanguageModel.default
@@ -566,6 +580,46 @@ struct SettingsView: View {
                     isLoadingOllamaModels = false
                 }
             }
+        }
+    }
+}
+
+// MARK: - Custom HTTP Headers Editor
+
+struct CustomHeadersEditor: View {
+    @Binding var headers: [HTTPHeader]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("customHeadersTitle")
+                .font(.caption)
+                .fontWeight(.semibold)
+
+            ForEach($headers) { $header in
+                HStack {
+                    TextField(String(localized: "customHeaderNamePlaceholder"), text: $header.name)
+                        .textFieldStyle(.roundedBorder)
+                    TextField(String(localized: "customHeaderValuePlaceholder"), text: $header.value)
+                        .textFieldStyle(.roundedBorder)
+                    Button(action: { headers.removeAll { $0.id == header.id } }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.borderless)
+                }
+            }
+
+            Button(action: { headers.append(HTTPHeader()) }) {
+                HStack {
+                    Image(systemName: "plus")
+                    Text("customHeadersAdd")
+                }
+            }
+            .buttonStyle(.bordered)
+
+            Text("customHeadersDescription")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
     }
 }

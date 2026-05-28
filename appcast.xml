@@ -12,6 +12,39 @@
         -->
 
         <item>
+            <title>Version 2.2</title>
+            <pubDate>Thu, 28 May 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>12</sparkle:version>
+            <sparkle:shortVersionString>2.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.2</h2>
+                <p>Custom vocabulary, self-hosted authentication headers, and new models!</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Dictionary</strong>: New sidebar tab to add custom words/spellings and general instructions that are passed to speech recognition via the prompt parameter (OpenAI and Gemini always, self-hosted Whisper and rewriting optional)</li>
+                    <li><strong>Simple Mode Dictionary</strong>: For self-hosted Whisper, optionally send only the words (comma-separated) without instructions</li>
+                    <li><strong>Custom HTTP Headers</strong>: Add custom headers for the self-hosted Whisper server and Ollama — works behind reverse proxies like Cloudflare Access</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>New OpenAI Model</strong>: GPT-5.5 is now available for text rewriting</li>
+                    <li><strong>New Anthropic Models</strong>: Claude Opus 4.7 and Claude Opus 4.8 added for text rewriting</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.2/SpeechToType.dmg"
+                sparkle:edSignature="uPj3+6yzqln1UNqjh0XywA3GcqlcU9GO0PHTfunBKz98s+KkcatyaQYK/VD+/ToaeJY7uH1UIAMFEafkhyPFAA=="
+                length="4889607"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.1</title>
             <pubDate>Sun, 24 May 2026 12:00:00 +0200</pubDate>
             <sparkle:version>11</sparkle:version>

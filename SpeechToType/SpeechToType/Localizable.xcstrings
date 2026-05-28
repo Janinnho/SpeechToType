@@ -642,6 +642,91 @@
         }
       }
     },
+    "customHeaderNamePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name, z. B. CF-Access-Client-Id"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name, e.g. CF-Access-Client-Id"
+          }
+        }
+      }
+    },
+    "customHeaderValuePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
+    },
+    "customHeadersAdd" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Header hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add header"
+          }
+        }
+      }
+    },
+    "customHeadersDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zusätzliche HTTP-Header für Reverse-Proxies (z. B. Cloudflare Access). Bei Cloudflare beide Token-Header eintragen: CF-Access-Client-Id und CF-Access-Client-Secret."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additional HTTP headers for reverse proxies (e.g. Cloudflare Access). For Cloudflare add both token headers: CF-Access-Client-Id and CF-Access-Client-Secret."
+          }
+        }
+      }
+    },
+    "customHeadersTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP-Header"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP Headers"
+          }
+        }
+      }
+    },
     "customKey" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -791,6 +876,210 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This action cannot be undone."
+          }
+        }
+      }
+    },
+    "dictionary" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörterbuch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictionary"
+          }
+        }
+      }
+    },
+    "dictionaryAdd" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "dictionaryApplyLocalWhisper" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörterbuch an lokalen Whisper-Server übergeben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pass dictionary to local Whisper server"
+          }
+        }
+      }
+    },
+    "dictionaryApplyRewrite" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörterbuch beim Umschreiben verwenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use dictionary when rewriting"
+          }
+        }
+      }
+    },
+    "dictionaryDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörter und Anweisungen werden über den Prompt an die Spracherkennung übergeben (OpenAI und Gemini immer, lokaler Whisper-Server und Umschreiben je nach Einstellung)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words and instructions are passed to speech recognition via the prompt (OpenAI and Gemini always, local Whisper server and rewriting depending on settings)."
+          }
+        }
+      }
+    },
+    "dictionaryEmptyWords" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Wörter hinzugefügt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No words added yet."
+          }
+        }
+      }
+    },
+    "dictionarySimpleModeDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es werden nur die Wörter (kommagetrennt) übertragen, ohne die allgemeinen Anweisungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the words (comma-separated) are sent, without the general instructions."
+          }
+        }
+      }
+    },
+    "dictionarySimpleModeLocalWhisper" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Mode Wörterbuch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Mode Dictionary"
+          }
+        }
+      }
+    },
+    "dictionaryInstructionsPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "z. B. Schreibe Zahlen als Ziffern, verwende formelle Anrede ..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Write numbers as digits, use formal tone ..."
+          }
+        }
+      }
+    },
+    "dictionaryInstructionsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allgemeine Anweisungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General Instructions"
+          }
+        }
+      }
+    },
+    "dictionaryWordPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wort hinzufügen ..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add word ..."
+          }
+        }
+      }
+    },
+    "dictionaryWordsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words"
           }
         }
       }
@@ -2146,6 +2435,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Describe how the text should be changed..."
+          }
+        }
+      }
+    },
+    "rewriteClear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
+    "rewriteInputLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingabetext:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Input text:"
+          }
+        }
+      }
+    },
+    "rewriteInputPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text hier einfügen oder eintippen..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste or type text here..."
           }
         }
       }
