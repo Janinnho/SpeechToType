@@ -327,6 +327,7 @@ class TextRewriteService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.applyCustomHeaders(settings.ollamaCustomHeaders)
 
         let requestBody: [String: Any] = [
             "model": modelName,
@@ -356,7 +357,8 @@ class TextRewriteService {
             return []
         }
 
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        request.applyCustomHeaders(AppSettings.shared.ollamaCustomHeaders)
         let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {

@@ -10,6 +10,12 @@ import SwiftUI
 import Carbon.HIToolbox
 import Combine
 
+struct HTTPHeader: Codable, Equatable, Identifiable {
+    var id = UUID()
+    var name: String = ""
+    var value: String = ""
+}
+
 enum SpeechModelProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case local = "local"
@@ -335,6 +341,15 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(whisperServerBearerToken, forKey: "whisperServerBearerToken") }
     }
 
+    /// Custom HTTP headers for the Whisper server (e.g. behind Cloudflare Access)
+    @Published var whisperServerCustomHeaders: [HTTPHeader] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(whisperServerCustomHeaders) {
+                defaults.set(encoded, forKey: "whisperServerCustomHeaders")
+            }
+        }
+    }
+
     // MARK: - Provider Settings
 
     /// Speech model provider (OpenAI API or Local)
@@ -378,6 +393,15 @@ final class AppSettings: ObservableObject {
     /// Selected Ollama model name
     @Published var selectedOllamaModel: String {
         didSet { defaults.set(selectedOllamaModel, forKey: "selectedOllamaModel") }
+    }
+
+    /// Custom HTTP headers for the Ollama server (e.g. behind Cloudflare Access)
+    @Published var ollamaCustomHeaders: [HTTPHeader] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(ollamaCustomHeaders) {
+                defaults.set(encoded, forKey: "ollamaCustomHeaders")
+            }
+        }
     }
 
     // MARK: - Gemini Settings
@@ -526,6 +550,12 @@ final class AppSettings: ObservableObject {
         self.whisperServerURL = defaults.string(forKey: "whisperServerURL") ?? ""
         self.whisperServerModel = defaults.string(forKey: "whisperServerModel") ?? "whisper-1"
         self.whisperServerBearerToken = defaults.string(forKey: "whisperServerBearerToken") ?? ""
+        if let headerData = defaults.data(forKey: "whisperServerCustomHeaders"),
+           let headers = try? JSONDecoder().decode([HTTPHeader].self, from: headerData) {
+            self.whisperServerCustomHeaders = headers
+        } else {
+            self.whisperServerCustomHeaders = []
+        }
 
         // Provider settings - derive from existing useLocalWhisperServer if no explicit setting
         if let providerRaw = defaults.string(forKey: "speechModelProvider"),
@@ -545,6 +575,12 @@ final class AppSettings: ObservableObject {
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
         self.selectedOllamaModel = defaults.string(forKey: "selectedOllamaModel") ?? ""
+        if let headerData = defaults.data(forKey: "ollamaCustomHeaders"),
+           let headers = try? JSONDecoder().decode([HTTPHeader].self, from: headerData) {
+            self.ollamaCustomHeaders = headers
+        } else {
+            self.ollamaCustomHeaders = []
+        }
 
         // Gemini settings
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
@@ -611,6 +647,16 @@ final class AppSettings: ObservableObject {
             if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultRewrite) {
                 defaults.set(encoded, forKey: "rewriteShortcut")
             }
+        }
+    }
+}
+
+extension URLRequest {
+    mutating func applyCustomHeaders(_ headers: [HTTPHeader]) {
+        for header in headers {
+            let name = header.name.trimmingCharacters(in: .whitespaces)
+            guard !name.isEmpty else { continue }
+            setValue(header.value, forHTTPHeaderField: name)
         }
     }
 }

@@ -642,6 +642,91 @@
         }
       }
     },
+    "customHeaderNamePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name, z. B. CF-Access-Client-Id"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name, e.g. CF-Access-Client-Id"
+          }
+        }
+      }
+    },
+    "customHeaderValuePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
+    },
+    "customHeadersAdd" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Header hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add header"
+          }
+        }
+      }
+    },
+    "customHeadersDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zusätzliche HTTP-Header für Reverse-Proxies (z. B. Cloudflare Access). Bei Cloudflare beide Token-Header eintragen: CF-Access-Client-Id und CF-Access-Client-Secret."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additional HTTP headers for reverse proxies (e.g. Cloudflare Access). For Cloudflare add both token headers: CF-Access-Client-Id and CF-Access-Client-Secret."
+          }
+        }
+      }
+    },
+    "customHeadersTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP-Header"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP Headers"
+          }
+        }
+      }
+    },
     "customKey" : {
       "extractionState" : "manual",
       "localizations" : {

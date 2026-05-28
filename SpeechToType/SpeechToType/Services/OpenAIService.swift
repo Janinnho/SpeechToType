@@ -128,6 +128,7 @@ class OpenAIService {
         if !bearerToken.isEmpty {
             request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         }
+        request.applyCustomHeaders(settings.whisperServerCustomHeaders)
 
         let audioData = try Data(contentsOf: audioURL)
         var body = Data()
