@@ -9,13 +9,16 @@ import SwiftUI
 
 enum ContentTab: String, CaseIterable {
     case status = "status"
+    case rewrite = "rewrite"
     case history = "history"
     case settings = "settings"
-    
+
     var icon: String {
         switch self {
         case .status:
             return "waveform"
+        case .rewrite:
+            return "wand.and.stars"
         case .history:
             return "clock"
         case .settings:
@@ -55,6 +58,8 @@ struct ContentView: View {
                 switch selectedTab {
                 case .status:
                     StatusView()
+                case .rewrite:
+                    RewriteView()
                 case .history:
                     HistoryView()
                 case .settings:
