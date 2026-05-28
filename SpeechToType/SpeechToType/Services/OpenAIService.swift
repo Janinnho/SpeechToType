@@ -142,8 +142,11 @@ class OpenAIService {
         body.append("Content-Disposition: form-data; name=\"language\"\r\n\r\n".data(using: .utf8)!)
         body.append("de\r\n".data(using: .utf8)!)
 
-        // Add dictionary prompt only if enabled for the local server
-        let dictionaryPrompt = settings.dictionaryPromptText
+        // Add dictionary prompt only if enabled for the local server.
+        // In simple mode only the words (comma-separated) are sent, without instructions.
+        let dictionaryPrompt = settings.dictionarySimpleModeLocalWhisper
+            ? settings.dictionaryWordsText
+            : settings.dictionaryPromptText
         if settings.applyDictionaryToLocalWhisper && !dictionaryPrompt.isEmpty {
             body.append("--\(boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n".data(using: .utf8)!)

@@ -897,6 +897,40 @@
         }
       }
     },
+    "dictionarySimpleModeDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es werden nur die Wörter (kommagetrennt) übertragen, ohne die allgemeinen Anweisungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the words (comma-separated) are sent, without the general instructions."
+          }
+        }
+      }
+    },
+    "dictionarySimpleModeLocalWhisper" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Mode Wörterbuch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simple Mode Dictionary"
+          }
+        }
+      }
+    },
     "dictionaryInstructionsPlaceholder" : {
       "extractionState" : "manual",
       "localizations" : {

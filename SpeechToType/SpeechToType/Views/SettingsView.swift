@@ -122,6 +122,12 @@ struct SettingsView: View {
 
                     Toggle("dictionaryApplyLocalWhisper", isOn: $settings.applyDictionaryToLocalWhisper)
 
+                    Toggle("dictionarySimpleModeLocalWhisper", isOn: $settings.dictionarySimpleModeLocalWhisper)
+                        .disabled(!settings.applyDictionaryToLocalWhisper)
+                    Text("dictionarySimpleModeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
                 case .appleSpeech:
                     Text("appleSpeechDescription")
                         .font(.caption)

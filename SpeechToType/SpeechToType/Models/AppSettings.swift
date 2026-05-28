@@ -418,16 +418,28 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(applyDictionaryToLocalWhisper, forKey: "applyDictionaryToLocalWhisper") }
     }
 
+    /// For the local Whisper server: send only the words (comma-separated), not the instructions
+    @Published var dictionarySimpleModeLocalWhisper: Bool {
+        didSet { defaults.set(dictionarySimpleModeLocalWhisper, forKey: "dictionarySimpleModeLocalWhisper") }
+    }
+
     /// Whether to inject the dictionary into the text-rewrite system prompt (default off)
     @Published var applyDictionaryToRewrite: Bool {
         didSet { defaults.set(applyDictionaryToRewrite, forKey: "applyDictionaryToRewrite") }
     }
 
+    /// Only the words (comma-separated); empty if no words are set
+    var dictionaryWordsText: String {
+        dictionaryWords
+            .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+            .joined(separator: ", ")
+    }
+
     /// Combined dictionary prompt text (words + instructions); empty if nothing is set
     var dictionaryPromptText: String {
         var parts: [String] = []
-        let words = dictionaryWords.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
-        if !words.isEmpty { parts.append(words.joined(separator: ", ")) }
+        let words = dictionaryWordsText
+        if !words.isEmpty { parts.append(words) }
         let instr = dictionaryInstructions.trimmingCharacters(in: .whitespacesAndNewlines)
         if !instr.isEmpty { parts.append(instr) }
         return parts.joined(separator: "\n")
@@ -548,6 +560,7 @@ final class AppSettings: ObservableObject {
         }
         self.dictionaryInstructions = defaults.string(forKey: "dictionaryInstructions") ?? ""
         self.applyDictionaryToLocalWhisper = defaults.object(forKey: "applyDictionaryToLocalWhisper") as? Bool ?? false
+        self.dictionarySimpleModeLocalWhisper = defaults.object(forKey: "dictionarySimpleModeLocalWhisper") as? Bool ?? false
         self.applyDictionaryToRewrite = defaults.object(forKey: "applyDictionaryToRewrite") as? Bool ?? false
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
