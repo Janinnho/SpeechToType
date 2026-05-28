@@ -65,12 +65,16 @@ enum GeminiModel: String, CaseIterable, Codable {
 enum AnthropicModel: String, CaseIterable, Codable {
     case claude4Sonnet = "claude-sonnet-4-6"
     case claude4Opus = "claude-opus-4-6"
+    case claude4Opus47 = "claude-opus-4-7"
+    case claude4Opus48 = "claude-opus-4-8"
     case claudeHaiku = "claude-haiku-4-5-20251001"
 
     var displayName: String {
         switch self {
         case .claude4Sonnet: return "Claude Sonnet 4.6"
         case .claude4Opus: return "Claude Opus 4.6"
+        case .claude4Opus47: return "Claude Opus 4.7"
+        case .claude4Opus48: return "Claude Opus 4.8"
         case .claudeHaiku: return "Claude Haiku 4.5"
         }
     }

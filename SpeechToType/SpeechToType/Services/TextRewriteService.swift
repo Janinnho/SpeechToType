@@ -61,6 +61,7 @@ enum GPTModel: String, CaseIterable, Codable {
     case gpt54 = "gpt-5.4"
     case gpt54mini = "gpt-5.4-mini"
     case gpt54nano = "gpt-5.4-nano"
+    case gpt55 = "gpt-5.5"
 
     var displayName: String {
         switch self {
@@ -72,6 +73,8 @@ enum GPTModel: String, CaseIterable, Codable {
             return "GPT-5.4 Mini"
         case .gpt54nano:
             return "GPT-5.4 Nano"
+        case .gpt55:
+            return "GPT-5.5"
         }
     }
 
@@ -80,7 +83,7 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return false
-        case .gpt54, .gpt54mini, .gpt54nano:
+        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
             return true
         }
     }
@@ -90,7 +93,7 @@ enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt4o:
             return true
-        case .gpt54, .gpt54mini, .gpt54nano:
+        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
             return false
         }
     }
