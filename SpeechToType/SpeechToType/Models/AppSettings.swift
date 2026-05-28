@@ -397,6 +397,42 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(selectedGeminiTextModel.rawValue, forKey: "selectedGeminiTextModel") }
     }
 
+    // MARK: - Dictionary (Custom Vocabulary) Settings
+
+    /// Custom words/spellings the system should recognize
+    @Published var dictionaryWords: [String] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(dictionaryWords) {
+                defaults.set(encoded, forKey: "dictionaryWords")
+            }
+        }
+    }
+
+    /// General free-text instructions added to the prompt
+    @Published var dictionaryInstructions: String {
+        didSet { defaults.set(dictionaryInstructions, forKey: "dictionaryInstructions") }
+    }
+
+    /// Whether to pass the dictionary to the local Whisper server (default off)
+    @Published var applyDictionaryToLocalWhisper: Bool {
+        didSet { defaults.set(applyDictionaryToLocalWhisper, forKey: "applyDictionaryToLocalWhisper") }
+    }
+
+    /// Whether to inject the dictionary into the text-rewrite system prompt (default off)
+    @Published var applyDictionaryToRewrite: Bool {
+        didSet { defaults.set(applyDictionaryToRewrite, forKey: "applyDictionaryToRewrite") }
+    }
+
+    /// Combined dictionary prompt text (words + instructions); empty if nothing is set
+    var dictionaryPromptText: String {
+        var parts: [String] = []
+        let words = dictionaryWords.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        if !words.isEmpty { parts.append(words.joined(separator: ", ")) }
+        let instr = dictionaryInstructions.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !instr.isEmpty { parts.append(instr) }
+        return parts.joined(separator: "\n")
+    }
+
     var isConfigured: Bool {
         let speechConfigured: Bool
         switch speechModelProvider {
@@ -502,6 +538,17 @@ final class AppSettings: ObservableObject {
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
         self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini35Flash
         self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini35Flash
+
+        // Dictionary settings
+        if let dictData = defaults.data(forKey: "dictionaryWords"),
+           let words = try? JSONDecoder().decode([String].self, from: dictData) {
+            self.dictionaryWords = words
+        } else {
+            self.dictionaryWords = []
+        }
+        self.dictionaryInstructions = defaults.string(forKey: "dictionaryInstructions") ?? ""
+        self.applyDictionaryToLocalWhisper = defaults.object(forKey: "applyDictionaryToLocalWhisper") as? Bool ?? false
+        self.applyDictionaryToRewrite = defaults.object(forKey: "applyDictionaryToRewrite") as? Bool ?? false
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil

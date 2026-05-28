@@ -139,7 +139,7 @@ class TextRewriteService {
         let settings = AppSettings.shared
 
         // Determine system prompt based on mode
-        let systemPrompt: String
+        var systemPrompt: String
         switch mode {
         case .dictate:
             systemPrompt = customPrompt ?? "Process the following text as instructed."
@@ -150,6 +150,14 @@ class TextRewriteService {
             systemPrompt = customPrompt ?? ""
         default:
             systemPrompt = mode.systemPrompt
+        }
+
+        // Inject dictionary (custom vocabulary / instructions) if enabled
+        if settings.applyDictionaryToRewrite {
+            let dictionaryPrompt = settings.dictionaryPromptText
+            if !dictionaryPrompt.isEmpty {
+                systemPrompt = "Custom vocabulary and instructions to respect: \(dictionaryPrompt)\n\n" + systemPrompt
+            }
         }
 
         switch settings.textProcessingProvider {

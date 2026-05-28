@@ -120,6 +120,8 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
 
+                    Toggle("dictionaryApplyLocalWhisper", isOn: $settings.applyDictionaryToLocalWhisper)
+
                 case .appleSpeech:
                     Text("appleSpeechDescription")
                         .font(.caption)
@@ -165,6 +167,8 @@ struct SettingsView: View {
                 Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
 
                 if settings.textRewriteEnabled {
+                    Toggle("dictionaryApplyRewrite", isOn: $settings.applyDictionaryToRewrite)
+
                     Picker("textProcessingProviderPicker", selection: $settings.textProcessingProvider) {
                         ForEach(TextProcessingProvider.allCases, id: \.self) { provider in
                             Text(provider.displayName).tag(provider)

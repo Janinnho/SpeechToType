@@ -10,6 +10,7 @@ import SwiftUI
 enum ContentTab: String, CaseIterable {
     case status = "status"
     case rewrite = "rewrite"
+    case dictionary = "dictionary"
     case history = "history"
     case settings = "settings"
 
@@ -19,6 +20,8 @@ enum ContentTab: String, CaseIterable {
             return "waveform"
         case .rewrite:
             return "wand.and.stars"
+        case .dictionary:
+            return "character.book.closed"
         case .history:
             return "clock"
         case .settings:
@@ -60,6 +63,8 @@ struct ContentView: View {
                     StatusView()
                 case .rewrite:
                     RewriteView()
+                case .dictionary:
+                    DictionaryView()
                 case .history:
                     HistoryView()
                 case .settings:
