@@ -304,6 +304,12 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(saveRewritesToHistory, forKey: "saveRewritesToHistory") }
     }
 
+    /// When true, text is inserted via the clipboard (copy + Cmd+V). When false, text is
+    /// typed directly without ever touching the clipboard.
+    @Published var copyToClipboardOnInsert: Bool {
+        didSet { defaults.set(copyToClipboardOnInsert, forKey: "copyToClipboardOnInsert") }
+    }
+
     /// Default language for translation
     @Published var defaultTranslationLanguage: String {
         didSet { defaults.set(defaultTranslationLanguage, forKey: "defaultTranslationLanguage") }
@@ -459,6 +465,30 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(azureBiasingWeight, forKey: "azureBiasingWeight") }
     }
 
+    /// Enable real-time/streaming transcription via the Azure Speech SDK (standard models,
+    /// not MAI-Transcribe). Only relevant when the speech provider is Azure Foundry.
+    @Published var azureRealtimeEnabled: Bool {
+        didSet { defaults.set(azureRealtimeEnabled, forKey: "azureRealtimeEnabled") }
+    }
+
+    /// Recognition language (BCP-47 locale, e.g. "de-DE") for real-time transcription
+    @Published var azureRealtimeLanguage: String {
+        didSet { defaults.set(azureRealtimeLanguage, forKey: "azureRealtimeLanguage") }
+    }
+
+    /// Common locales offered in the real-time language picker
+    static let azureRealtimeLocales: [(code: String, name: String)] = [
+        ("de-DE", "Deutsch (de-DE)"),
+        ("en-US", "English (en-US)"),
+        ("en-GB", "English UK (en-GB)"),
+        ("fr-FR", "Français (fr-FR)"),
+        ("es-ES", "Español (es-ES)"),
+        ("it-IT", "Italiano (it-IT)"),
+        ("nl-NL", "Nederlands (nl-NL)"),
+        ("pt-PT", "Português (pt-PT)"),
+        ("pl-PL", "Polski (pl-PL)")
+    ]
+
     // MARK: - Dictionary (Custom Vocabulary) Settings
 
     /// Custom words/spellings the system should recognize
@@ -594,6 +624,7 @@ final class AppSettings: ObservableObject {
 
         self.textRewriteEnabled = defaults.object(forKey: "textRewriteEnabled") as? Bool ?? true
         self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
+        self.copyToClipboardOnInsert = defaults.object(forKey: "copyToClipboardOnInsert") as? Bool ?? true
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
         // Whisper server settings
@@ -654,6 +685,8 @@ final class AppSettings: ObservableObject {
         }
         self.applyDictionaryToAzure = defaults.object(forKey: "applyDictionaryToAzure") as? Bool ?? false
         self.azureBiasingWeight = defaults.object(forKey: "azureBiasingWeight") as? Double ?? 5.0
+        self.azureRealtimeEnabled = defaults.object(forKey: "azureRealtimeEnabled") as? Bool ?? false
+        self.azureRealtimeLanguage = defaults.string(forKey: "azureRealtimeLanguage") ?? "de-DE"
 
         // Dictionary settings
         if let dictData = defaults.data(forKey: "dictionaryWords"),

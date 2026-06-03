@@ -238,6 +238,21 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
                     .disabled(!settings.applyDictionaryToAzure)
+
+                    Divider()
+
+                    Toggle("azureRealtimeEnabled", isOn: $settings.azureRealtimeEnabled)
+
+                    Picker("azureRealtimeLanguage", selection: $settings.azureRealtimeLanguage) {
+                        ForEach(AppSettings.azureRealtimeLocales, id: \.code) { locale in
+                            Text(locale.name).tag(locale.code)
+                        }
+                    }
+                    .disabled(!settings.azureRealtimeEnabled)
+
+                    Text("azureRealtimeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             } header: {
                 Text("speechModelConfigSection")
@@ -584,6 +599,16 @@ struct SettingsView: View {
                     .foregroundColor(.secondary)
             } header: {
                 Text("historySection")
+            }
+
+            Section {
+                Toggle("copyToClipboardOnInsert", isOn: $settings.copyToClipboardOnInsert)
+
+                Text("copyToClipboardOnInsertDescription")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("insertionSection")
             }
 
             Section {

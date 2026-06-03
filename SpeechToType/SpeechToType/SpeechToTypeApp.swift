@@ -75,6 +75,11 @@ struct SpeechToTypeApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    // Real-time (streaming) transcription state
+    private var liveSession: LiveTypingSession?
+    private var isRealtimeActive = false
+    private var realtimeStart: Date?
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize TextInputService early to track app switching
         _ = TextInputService.shared
@@ -101,7 +106,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let settings = AppSettings.shared
         let historyManager = TranscriptionHistoryManager.shared
         
-        hotkeyManager.onRecordingStarted = {
+        hotkeyManager.onRecordingStarted = { [weak self] in
+            // Real-time streaming path (Azure SDK) instead of record→REST.
+            if settings.speechModelProvider == .azureFoundry,
+               settings.azureRealtimeEnabled,
+               AzureRealtimeService.isAvailable {
+                self?.startRealtime()
+                return
+            }
+
             do {
                 try audioRecorder.startRecording()
             } catch {
@@ -109,8 +122,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 hotkeyManager.statusMessage = "Fehler bei der Aufnahme"
             }
         }
-        
-        hotkeyManager.onRecordingStopped = {
+
+        hotkeyManager.onRecordingStopped = { [weak self] in
+            if self?.isRealtimeActive == true {
+                self?.stopRealtime()
+                return
+            }
+
             guard let (audioURL, duration) = audioRecorder.stopRecording() else {
                 hotkeyManager.statusMessage = "Keine Aufnahme verfügbar"
                 return
@@ -165,6 +183,83 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
 
                 audioRecorder.cleanupRecording(at: audioURL)
+            }
+        }
+    }
+
+    // MARK: - Real-time transcription
+
+    private func startRealtime() {
+        let hotkeyManager = HotkeyManager.shared
+        let session = LiveTypingSession()
+        liveSession = session
+        isRealtimeActive = true
+        realtimeStart = Date()
+
+        Task { @MainActor in
+            RecordingOverlayWindowController.shared.showLive()
+        }
+        hotkeyManager.statusMessage = String(localized: "liveTranscription")
+
+        AzureRealtimeService.shared.start(
+            onPartial: { text in
+                session.updatePartial(text)
+            },
+            onFinal: { text in
+                session.commitFinal(text)
+            },
+            onError: { [weak self] error in
+                DispatchQueue.main.async {
+                    RecordingOverlayWindowController.shared.hide()
+                    hotkeyManager.statusMessage = String(localized: "error")
+                    hotkeyManager.lastError = error.localizedDescription
+                }
+                self?.isRealtimeActive = false
+                self?.liveSession = nil
+                AzureRealtimeService.shared.stop()
+            }
+        )
+    }
+
+    private func stopRealtime() {
+        guard isRealtimeActive else { return }
+        isRealtimeActive = false
+
+        let session = liveSession
+        liveSession = nil
+        let duration = Date().timeIntervalSince(realtimeStart ?? Date())
+        realtimeStart = nil
+
+        let hotkeyManager = HotkeyManager.shared
+        let language = AppSettings.shared.azureRealtimeLanguage
+
+        // Stop recognition (blocks until the session ends and the last final is flushed),
+        // then insert the complete text once. Done off the main thread to avoid blocking UI.
+        DispatchQueue.global(qos: .userInitiated).async {
+            AzureRealtimeService.shared.stop()
+            let fullText = session?.fullText() ?? ""
+
+            DispatchQueue.main.async {
+                RecordingOverlayWindowController.shared.hide()
+
+                if !fullText.isEmpty {
+                    TextInputService.shared.insertText(fullText)
+
+                    let record = TranscriptionRecord(
+                        text: fullText,
+                        duration: duration,
+                        model: "Azure Realtime (\(language))"
+                    )
+                    TranscriptionHistoryManager.shared.addRecord(record)
+                }
+
+                hotkeyManager.statusMessage = "Erfolgreich!"
+                hotkeyManager.lastError = nil
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    if !hotkeyManager.isRecording {
+                        hotkeyManager.statusMessage = String(localized: "ready")
+                    }
+                }
             }
         }
     }

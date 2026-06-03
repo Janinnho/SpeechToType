@@ -3772,6 +3772,159 @@
           }
         }
       }
+    },
+    "azureRealtimeEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Echtzeit-Transkription (live)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real-time transcription (live)"
+          }
+        }
+      }
+    },
+    "azureRealtimeLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language"
+          }
+        }
+      }
+    },
+    "azureRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst wenn du die Taste loslässt (bzw. die Aufnahme stoppst), wird der komplette, korrekt formatierte Text auf einmal eingefügt. Nutzt Azure-Standardmodelle – nicht MAI-Transcribe."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. Only when you release the key (or stop recording) is the complete, correctly formatted text inserted at once. Uses Azure standard models – not MAI-Transcribe."
+          }
+        }
+      }
+    },
+    "azureRealtimeSDKUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Azure Speech SDK ist in diesem Build nicht eingebunden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Azure Speech SDK is not included in this build."
+          }
+        }
+      }
+    },
+    "liveTranscription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        }
+      }
+    },
+    "overlayListening": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Höre zu …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening …"
+          }
+        }
+      }
+    },
+    "insertionSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text insertion"
+          }
+        }
+      }
+    },
+    "copyToClipboardOnInsert": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über Zwischenablage einfügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert via clipboard"
+          }
+        }
+      }
+    },
+    "copyToClipboardOnInsertDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An: Text wird per Zwischenablage (Cmd+V) eingefügt und die vorherige Zwischenablage danach wiederhergestellt. Aus: Text wird direkt getippt, ohne die Zwischenablage zu verändern."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On: text is inserted via the clipboard (Cmd+V) and your previous clipboard is restored afterwards. Off: text is typed directly without ever touching the clipboard."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
