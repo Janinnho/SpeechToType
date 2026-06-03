@@ -21,6 +21,7 @@ enum SpeechModelProvider: String, CaseIterable, Codable {
     case local = "local"
     case appleSpeech = "appleSpeech"
     case gemini = "gemini"
+    case azureFoundry = "azureFoundry"
 
     var displayName: String {
         switch self {
@@ -28,6 +29,7 @@ enum SpeechModelProvider: String, CaseIterable, Codable {
         case .local: return String(localized: "localProvider")
         case .appleSpeech: return "Apple Speech"
         case .gemini: return "Google Gemini"
+        case .azureFoundry: return "Azure Foundry MAI"
         }
     }
 }
@@ -425,6 +427,38 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(selectedGeminiTextModel.rawValue, forKey: "selectedGeminiTextModel") }
     }
 
+    // MARK: - Azure Foundry MAI Settings
+
+    /// Azure resource endpoint (e.g. https://<resource>.cognitiveservices.azure.com/)
+    @Published var azureFoundryEndpoint: String {
+        didSet { defaults.set(azureFoundryEndpoint, forKey: "azureFoundryEndpoint") }
+    }
+
+    /// Azure Speech resource subscription key
+    @Published var azureFoundryApiKey: String {
+        didSet { defaults.set(azureFoundryApiKey, forKey: "azureFoundryApiKey") }
+    }
+
+    /// Azure fast-transcription API version
+    @Published var azureFoundryApiVersion: String {
+        didSet { defaults.set(azureFoundryApiVersion, forKey: "azureFoundryApiVersion") }
+    }
+
+    /// Azure Foundry model name (free-text, e.g. MAI-Transcribe-1.5)
+    @Published var azureFoundryModel: String {
+        didSet { defaults.set(azureFoundryModel, forKey: "azureFoundryModel") }
+    }
+
+    /// Whether to pass the dictionary to Azure Foundry MAI (default off)
+    @Published var applyDictionaryToAzure: Bool {
+        didSet { defaults.set(applyDictionaryToAzure, forKey: "applyDictionaryToAzure") }
+    }
+
+    /// Biasing weight for the Azure phraseList (valid range 1.0...20.0)
+    @Published var azureBiasingWeight: Double {
+        didSet { defaults.set(azureBiasingWeight, forKey: "azureBiasingWeight") }
+    }
+
     // MARK: - Dictionary (Custom Vocabulary) Settings
 
     /// Custom words/spellings the system should recognize
@@ -463,6 +497,18 @@ final class AppSettings: ObservableObject {
             .joined(separator: ", ")
     }
 
+    /// The dictionary words trimmed, blanks removed (for Azure phraseList)
+    var dictionaryPhrases: [String] {
+        dictionaryWords
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+    }
+
+    /// Azure biasing weight clamped to the valid 1.0...20.0 range
+    var azureBiasingWeightClamped: Double {
+        min(max(azureBiasingWeight, 1.0), 20.0)
+    }
+
     /// Combined dictionary prompt text (words + instructions); empty if nothing is set
     var dictionaryPromptText: String {
         var parts: [String] = []
@@ -484,6 +530,8 @@ final class AppSettings: ObservableObject {
             speechConfigured = true
         case .gemini:
             speechConfigured = !geminiApiKey.isEmpty
+        case .azureFoundry:
+            speechConfigured = !azureFoundryEndpoint.isEmpty && !azureFoundryApiKey.isEmpty
         }
 
         // Text processing is optional, but if enabled, check the provider
@@ -590,6 +638,22 @@ final class AppSettings: ObservableObject {
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
         self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini35Flash
         self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini35Flash
+
+        // Azure Foundry MAI settings
+        self.azureFoundryEndpoint = defaults.string(forKey: "azureFoundryEndpoint") ?? ""
+        self.azureFoundryApiKey = defaults.string(forKey: "azureFoundryApiKey") ?? ""
+        self.azureFoundryApiVersion = defaults.string(forKey: "azureFoundryApiVersion") ?? "2025-10-15"
+        // Azure expects the lowercase model id (e.g. mai-transcribe-1.5). Migrate the
+        // previously shipped wrong-cased default if it was persisted.
+        let storedAzureModel = defaults.string(forKey: "azureFoundryModel")
+        if storedAzureModel == nil || storedAzureModel == "MAI-Transcribe-1.5" {
+            self.azureFoundryModel = "mai-transcribe-1.5"
+            defaults.set("mai-transcribe-1.5", forKey: "azureFoundryModel")
+        } else {
+            self.azureFoundryModel = storedAzureModel!
+        }
+        self.applyDictionaryToAzure = defaults.object(forKey: "applyDictionaryToAzure") as? Bool ?? false
+        self.azureBiasingWeight = defaults.object(forKey: "azureBiasingWeight") as? Double ?? 5.0
 
         // Dictionary settings
         if let dictData = defaults.data(forKey: "dictionaryWords"),
