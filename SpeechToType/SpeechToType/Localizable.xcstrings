@@ -1,3595 +1,3965 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "" : {
-
+  "sourceLanguage": "en",
+  "strings": {
+    "": {},
+    "(2x)": {},
+    "(Standard)": {},
+    "2025-10-15": {},
+    "about": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        }
+      }
+    },
+    "accessibilityAccess": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedienungshilfen-Zugriff"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility access"
+          }
+        }
+      }
+    },
+    "accessibilityDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedienungshilfen-Zugriff wird benötigt, um globale Tastenkürzel zu erkennen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility access is required to detect global hotkeys."
+          }
+        }
+      }
+    },
+    "accessibilityOnboardingDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird benötigt für globale Tastenkürzel und Text-Eingabe."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Required for global hotkeys and text input."
+          }
+        }
+      }
+    },
+    "accessibilityRequired": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedienungshilfen-Zugriff erforderlich"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility access required"
+          }
+        }
+      }
+    },
+    "activate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktivieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable"
+          }
+        }
+      }
+    },
+    "after1Day": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach 1 Tag"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After 1 day"
+          }
+        }
+      }
+    },
+    "after1Month": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach 1 Monat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After 1 month"
+          }
+        }
+      }
+    },
+    "after1Week": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach 1 Woche"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After 1 week"
+          }
+        }
+      }
+    },
+    "after3Months": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach 3 Monaten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After 3 months"
+          }
+        }
+      }
+    },
+    "AIza...": {},
+    "anthropicApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthropic API-Key"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthropic API Key"
+          }
+        }
+      }
+    },
+    "anthropicApiKeyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du benötigst einen API-Key von Anthropic. Hole dir einen unter console.anthropic.com"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need an API key from Anthropic. Get one at console.anthropic.com"
+          }
+        }
+      }
     },
-    "(2x)" : {
-
+    "anthropicModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthropic-Modell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthropic Model"
+          }
+        }
+      }
     },
-    "(Standard)" : {
-
+    "API-Konfiguration": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Konfiguration"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API Configuration"
+          }
+        }
+      }
     },
-    "about" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Über"
+    "apiConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API konfiguriert"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "About"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API configured"
           }
         }
       }
     },
-    "accessibilityAccess" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedienungshilfen-Zugriff"
+    "apiKeyMissing": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Key fehlt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility access"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API key missing"
           }
         }
       }
     },
-    "accessibilityDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedienungshilfen-Zugriff wird benötigt, um globale Tastenkürzel zu erkennen."
+    "apiKeyNotConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Key nicht konfiguriert"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility access is required to detect global hotkeys."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API key not configured"
           }
         }
       }
     },
-    "accessibilityOnboardingDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird benötigt für globale Tastenkürzel und Text-Eingabe."
+    "appleIntelligenceAvailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence verfügbar"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Required for global hotkeys and text input."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence available"
           }
         }
       }
     },
-    "accessibilityRequired" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedienungshilfen-Zugriff erforderlich"
+    "appleIntelligenceDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutzt das On-Device Foundation Model von Apple Intelligence. Kein API-Key erforderlich."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accessibility access required"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses the on-device Foundation Model from Apple Intelligence. No API key required."
           }
         }
       }
     },
-    "activate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktivieren"
+    "appleIntelligenceNotEligible": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Gerät unterstützt Apple Intelligence nicht."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This device does not support Apple Intelligence."
           }
         }
       }
     },
-    "after1Day" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach 1 Tag"
+    "appleIntelligenceNotEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence ist nicht aktiviert. Bitte in den Systemeinstellungen aktivieren."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "After 1 day"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence is not enabled. Please enable it in System Settings."
           }
         }
       }
     },
-    "after1Month" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach 1 Monat"
+    "appleIntelligenceNotReady": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell wird heruntergeladen oder vorbereitet..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "After 1 month"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model is downloading or being prepared..."
           }
         }
       }
     },
-    "after1Week" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach 1 Woche"
+    "appleIntelligenceUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence ist nicht verfügbar."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "After 1 week"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence is not available."
           }
         }
       }
     },
-    "after3Months" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach 3 Monaten"
+    "appleSpeechDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutzt die integrierte Apple Speech-to-Text-Erkennung direkt auf dem Gerät. Kein API-Key oder Server erforderlich."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "After 3 months"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses the built-in Apple Speech-to-Text recognition directly on-device. No API key or server required."
           }
         }
       }
     },
-    "AIza..." : {
-
+    "appleSpeechNotAuthorized": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugriff auf Apple Spracherkennung nicht erlaubt. Bitte in den Systemeinstellungen erlauben."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access to Apple Speech Recognition not authorized. Please allow in System Settings."
+          }
+        }
+      }
     },
-    "anthropicApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anthropic API-Key"
+    "appleSpeechUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Spracherkennung ist auf diesem Gerät nicht verfügbar."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anthropic API Key"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Speech Recognition is not available on this device."
           }
         }
       }
     },
-    "anthropicApiKeyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du benötigst einen API-Key von Anthropic. Hole dir einen unter console.anthropic.com"
+    "autoCheckUpdates": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch nach Updates suchen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You need an API key from Anthropic. Get one at console.anthropic.com"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically check for updates"
           }
         }
       }
     },
-    "anthropicModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anthropic-Modell"
+    "autoDelete": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch löschen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anthropic Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-delete"
           }
         }
       }
     },
-    "API-Konfiguration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-Konfiguration"
+    "autoDeleteDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alte Transkriptionen werden automatisch nach der gewählten Zeit gelöscht."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API Configuration"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Old transcriptions will be automatically deleted after the selected time."
           }
         }
       }
     },
-    "apiConfigured" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API konfiguriert"
+    "autoDownloadUpdates": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates automatisch herunterladen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API configured"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically download updates"
           }
         }
       }
     },
-    "apiKeyMissing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-Key fehlt"
+    "azureApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Schlüssel"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API key missing"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API Key"
           }
         }
       }
     },
-    "apiKeyNotConfigured" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-Key nicht konfiguriert"
+    "azureApiKeyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den Schlüssel und Endpunkt findest du in deiner Azure-Speech-Ressource."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API key not configured"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can find the key and endpoint in your Azure Speech resource."
           }
         }
       }
     },
-    "appleIntelligenceAvailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence verfügbar"
+    "azureApiKeyPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonnementschlüssel"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence available"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subscription key"
           }
         }
       }
     },
-    "appleIntelligenceDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nutzt das On-Device Foundation Model von Apple Intelligence. Kein API-Key erforderlich."
+    "azureApiVersion": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Version"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uses the on-device Foundation Model from Apple Intelligence. No API key required."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API version"
           }
         }
       }
     },
-    "appleIntelligenceNotEligible" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieses Gerät unterstützt Apple Intelligence nicht."
+    "azureBiasingWeight": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewichtung (biasing weight)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This device does not support Apple Intelligence."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biasing weight"
           }
         }
       }
     },
-    "appleIntelligenceNotEnabled" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence ist nicht aktiviert. Bitte in den Systemeinstellungen aktivieren."
+    "azureBiasingWeightDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewichtung der phraseList (1,0–20,0). Höhere Werte erhöhen die Priorität der Wörterbuch-Begriffe."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence is not enabled. Please enable it in System Settings."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weighting of the phraseList (1.0–20.0). Higher values increase priority of dictionary terms."
           }
         }
       }
     },
-    "appleIntelligenceNotReady" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell wird heruntergeladen oder vorbereitet..."
+    "azureDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutzt das LLM-Speech-Modell (enhancedMode) der Azure-Fast-Transcription-API. Endpunkt und Schlüssel werden nicht vorbelegt."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model is downloading or being prepared..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses Azure's LLM Speech model (enhancedMode) of the fast transcription API. Endpoint and key are not pre-filled."
           }
         }
       }
     },
-    "appleIntelligenceUnavailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence ist nicht verfügbar."
+    "azureEndpoint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endpunkt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence is not available."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endpoint"
           }
         }
       }
     },
-    "appleSpeechDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nutzt die integrierte Apple Speech-to-Text-Erkennung direkt auf dem Gerät. Kein API-Key oder Server erforderlich."
+    "azureEndpointInvalid": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ungültiger Azure-Endpunkt. Bitte überprüfe deine Einstellungen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uses the built-in Apple Speech-to-Text recognition directly on-device. No API key or server required."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid Azure endpoint. Please check your settings."
           }
         }
       }
     },
-    "appleSpeechNotAuthorized" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zugriff auf Apple Spracherkennung nicht erlaubt. Bitte in den Systemeinstellungen erlauben."
+    "azureModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modellname"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Access to Apple Speech Recognition not authorized. Please allow in System Settings."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model name"
           }
         }
       }
     },
-    "appleSpeechUnavailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Spracherkennung ist auf diesem Gerät nicht verfügbar."
+    "cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Speech Recognition is not available on this device."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
     },
-    "autoCheckUpdates" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatisch nach Updates suchen"
+    "checkForUpdates": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Updates suchen..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatically check for updates"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates..."
           }
         }
       }
     },
-    "autoDelete" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatisch löschen"
+    "clipboardEmpty": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zwischenablage leer"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto-delete"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clipboard empty"
           }
         }
       }
     },
-    "autoDeleteDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alte Transkriptionen werden automatisch nach der gewählten Zeit gelöscht."
+    "clipboardEmptyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte kopiere zuerst einen Text in die Zwischenablage."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Old transcriptions will be automatically deleted after the selected time."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please copy some text to the clipboard first."
           }
         }
       }
     },
-    "autoDownloadUpdates" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updates automatisch herunterladen"
+    "continuousRecordingDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doppelt tippen zum Starten/Stoppen der Daueraufnahme."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatically download updates"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Double-tap to start/stop continuous recording."
           }
         }
       }
     },
-    "cancel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abbrechen"
+    "continuousRecordingShortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daueraufnahme"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuous Recording"
           }
         }
       }
     },
-    "checkForUpdates" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach Updates suchen..."
+    "copy": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check for updates..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
           }
         }
       }
     },
-    "clipboardEmpty" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zwischenablage leer"
+    "customHeaderNamePlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name, z. B. CF-Access-Client-Id"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clipboard empty"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name, e.g. CF-Access-Client-Id"
           }
         }
       }
     },
-    "clipboardEmptyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte kopiere zuerst einen Text in die Zwischenablage."
+    "customHeadersAdd": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Header hinzufügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please copy some text to the clipboard first."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add header"
           }
         }
       }
     },
-    "continuousRecordingDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doppelt tippen zum Starten/Stoppen der Daueraufnahme."
+    "customHeadersDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zusätzliche HTTP-Header für Reverse-Proxies (z. B. Cloudflare Access). Bei Cloudflare beide Token-Header eintragen: CF-Access-Client-Id und CF-Access-Client-Secret."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double-tap to start/stop continuous recording."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Additional HTTP headers for reverse proxies (e.g. Cloudflare Access). For Cloudflare add both token headers: CF-Access-Client-Id and CF-Access-Client-Secret."
           }
         }
       }
     },
-    "continuousRecordingShortcut" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daueraufnahme"
+    "customHeadersTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP-Header"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuous Recording"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP Headers"
           }
         }
       }
     },
-    "copy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopieren"
+    "customHeaderValuePlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wert"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Value"
           }
         }
       }
     },
-    "customHeaderNamePlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name, z. B. CF-Access-Client-Id"
+    "customKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benutzerdefinierte Taste:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name, e.g. CF-Access-Client-Id"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom key:"
           }
         }
       }
     },
-    "customHeaderValuePlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wert"
+    "customKeyHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Taste zum Auslösen kann im Code angepasst werden."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Value"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The trigger key can be customized in the code."
           }
         }
       }
     },
-    "customHeadersAdd" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Header hinzufügen"
+    "defaultMicrophone": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard-Mikrofon"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add header"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default microphone"
           }
         }
       }
     },
-    "customHeadersDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zusätzliche HTTP-Header für Reverse-Proxies (z. B. Cloudflare Access). Bei Cloudflare beide Token-Header eintragen: CF-Access-Client-Id und CF-Access-Client-Secret."
+    "defaultTranslationLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard-Übersetzungssprache"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Additional HTTP headers for reverse proxies (e.g. Cloudflare Access). For Cloudflare add both token headers: CF-Access-Client-Id and CF-Access-Client-Secret."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default translation language"
           }
         }
       }
     },
-    "customHeadersTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HTTP-Header"
+    "defaultTranslationLanguageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Standardsprache für Übersetzungen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HTTP Headers"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The default language for translations."
           }
         }
       }
     },
-    "customKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benutzerdefinierte Taste:"
+    "delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom key:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
           }
         }
       }
     },
-    "customKeyHint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Taste zum Auslösen kann im Code angepasst werden."
+    "deleteAll": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle löschen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The trigger key can be customized in the code."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all"
           }
         }
       }
     },
-    "defaultMicrophone" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standard-Mikrofon"
+    "deleteAllConfirmation": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Transkriptionen löschen?"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default microphone"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all transcriptions?"
           }
         }
       }
     },
-    "defaultTranslationLanguage" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standard-Übersetzungssprache"
+    "deleteAllWarning": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Aktion kann nicht rückgängig gemacht werden."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default translation language"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This action cannot be undone."
           }
         }
       }
     },
-    "defaultTranslationLanguageDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Standardsprache für Übersetzungen."
+    "dictionary": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The default language for translations."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary"
           }
         }
       }
     },
-    "delete" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Löschen"
+    "dictionaryAdd": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
           }
         }
       }
     },
-    "deleteAll" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle löschen"
+    "dictionaryApplyAzure": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch an Azure Foundry MAI übergeben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pass dictionary to Azure Foundry MAI"
           }
         }
       }
     },
-    "deleteAllConfirmation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Transkriptionen löschen?"
+    "dictionaryApplyLocalWhisper": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch an lokalen Whisper-Server übergeben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete all transcriptions?"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pass dictionary to local Whisper server"
           }
         }
       }
     },
-    "deleteAllWarning" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Aktion kann nicht rückgängig gemacht werden."
+    "dictionaryApplyRewrite": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch beim Umschreiben verwenden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This action cannot be undone."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use dictionary when rewriting"
           }
         }
       }
     },
-    "dictionary" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörterbuch"
+    "dictionaryDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörter und Anweisungen werden über den Prompt an die Spracherkennung übergeben (OpenAI und Gemini immer, lokaler Whisper-Server und Umschreiben je nach Einstellung)."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dictionary"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words and instructions are passed to speech recognition via the prompt (OpenAI and Gemini always, local Whisper server and rewriting depending on settings)."
           }
         }
       }
     },
-    "dictionaryAdd" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinzufügen"
+    "dictionaryEmptyWords": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Wörter hinzugefügt."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No words added yet."
           }
         }
       }
     },
-    "dictionaryApplyLocalWhisper" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörterbuch an lokalen Whisper-Server übergeben"
+    "dictionaryInstructionsPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z. B. Schreibe Zahlen als Ziffern, verwende formelle Anrede ..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pass dictionary to local Whisper server"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "e.g. Write numbers as digits, use formal tone ..."
           }
         }
       }
     },
-    "dictionaryApplyRewrite" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörterbuch beim Umschreiben verwenden"
+    "dictionaryInstructionsTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allgemeine Anweisungen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use dictionary when rewriting"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General Instructions"
           }
         }
       }
     },
-    "dictionaryDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörter und Anweisungen werden über den Prompt an die Spracherkennung übergeben (OpenAI und Gemini immer, lokaler Whisper-Server und Umschreiben je nach Einstellung)."
+    "dictionarySimpleModeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es werden nur die Wörter (kommagetrennt) übertragen, ohne die allgemeinen Anweisungen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Words and instructions are passed to speech recognition via the prompt (OpenAI and Gemini always, local Whisper server and rewriting depending on settings)."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the words (comma-separated) are sent, without the general instructions."
           }
         }
       }
     },
-    "dictionaryEmptyWords" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch keine Wörter hinzugefügt."
+    "dictionarySimpleModeLocalWhisper": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simple Mode Wörterbuch"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No words added yet."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simple Mode Dictionary"
           }
         }
       }
     },
-    "dictionarySimpleModeDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es werden nur die Wörter (kommagetrennt) übertragen, ohne die allgemeinen Anweisungen."
+    "dictionaryWordPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wort hinzufügen ..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the words (comma-separated) are sent, without the general instructions."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add word ..."
           }
         }
       }
     },
-    "dictionarySimpleModeLocalWhisper" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simple Mode Wörterbuch"
+    "dictionaryWordsTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörter"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simple Mode Dictionary"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words"
           }
         }
       }
     },
-    "dictionaryInstructionsPlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "z. B. Schreibe Zahlen als Ziffern, verwende formelle Anrede ..."
+    "directDictationDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halte die Taste gedrückt, um zu diktieren. Lasse los, um zu transkribieren."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "e.g. Write numbers as digits, use formal tone ..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the key to dictate. Release to transcribe."
           }
         }
       }
     },
-    "dictionaryInstructionsTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allgemeine Anweisungen"
+    "directDictationShortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Direktes Diktieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "General Instructions"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Direct Dictation"
           }
         }
       }
     },
-    "dictionaryWordPlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wort hinzufügen ..."
+    "done": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add word ..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
           }
         }
       }
     },
-    "dictionaryWordsTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörter"
+    "doubleTapForContinuous": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doppelt tippen für Daueraufnahme"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Words"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Double-tap for continuous recording"
           }
         }
       }
     },
-    "directDictationDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Halte die Taste gedrückt, um zu diktieren. Lasse los, um zu transkribieren."
+    "doubleTapShortcutForContinuous %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doppelt %@ für Daueraufnahme"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hold the key to dictate. Release to transcribe."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Double-tap %@ for continuous"
           }
         }
       }
     },
-    "directDictationShortcut" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Direktes Diktieren"
+    "enterApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte gib deinen OpenAI API-Key ein."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Direct Dictation"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please enter your OpenAI API key."
           }
         }
       }
     },
-    "done" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertig"
+    "error": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fehler"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Done"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
           }
         }
       }
     },
-    "doubleTapForContinuous" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doppelt tippen für Daueraufnahme"
+    "eventTapError": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Event-Tap konnte nicht erstellt werden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double-tap for continuous recording"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not create event tap"
           }
         }
       }
     },
-    "doubleTapShortcutForContinuous %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doppelt %@ für Daueraufnahme"
+    "eventTapFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Event-Tap konnte nicht erstellt werden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double-tap %@ for continuous"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not create event tap"
           }
         }
       }
     },
-    "enterApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte gib deinen OpenAI API-Key ein."
+    "filterAll": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please enter your OpenAI API key."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
           }
         }
       }
     },
-    "error" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fehler"
+    "filterRewrites": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umschreibungen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrites"
           }
         }
       }
     },
-    "eventTapError" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Event-Tap konnte nicht erstellt werden"
+    "filterTranscriptions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkriptionen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Could not create event tap"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcriptions"
           }
         }
       }
     },
-    "eventTapFailed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Event-Tap konnte nicht erstellt werden"
+    "geminiApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini API-Key"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Could not create event tap"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini API Key"
           }
         }
       }
     },
-    "filterAll" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle"
+    "geminiApiKeyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du benötigst einen API-Key von Google. Hole dir einen unter aistudio.google.com/apikey"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need an API key from Google. Get one at aistudio.google.com/apikey"
           }
         }
       }
     },
-    "filterRewrites" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umschreibungen"
+    "geminiModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini-Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrites"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini Model"
           }
         }
       }
     },
-    "filterTranscriptions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkriptionen"
+    "geminiSharedKeyHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieser Schlüssel wird mit der Sprachmodell-Konfiguration geteilt."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcriptions"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This key is shared with the speech model configuration."
           }
         }
       }
     },
-    "geminiApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemini API-Key"
+    "gptModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPT-Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemini API Key"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPT Model"
           }
         }
       }
     },
-    "geminiApiKeyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du benötigst einen API-Key von Google. Hole dir einen unter aistudio.google.com/apikey"
+    "gptModelDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle das GPT-Modell für das Umschreiben von Texten."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You need an API key from Google. Get one at aistudio.google.com/apikey"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select the GPT model for text rewriting."
           }
         }
       }
     },
-    "geminiModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemini-Modell"
+    "grantAccess": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugriff erlauben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemini Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grant access"
           }
         }
       }
     },
-    "geminiSharedKeyHint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieser Schlüssel wird mit der Sprachmodell-Konfiguration geteilt."
+    "grantAllPermissions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte erlaube alle Berechtigungen, um fortzufahren."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This key is shared with the speech model configuration."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please grant all permissions to continue."
           }
         }
       }
     },
-    "gptModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GPT-Modell"
+    "granted": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktiviert"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GPT Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enabled"
           }
         }
       }
     },
-    "gptModelDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle das GPT-Modell für das Umschreiben von Texten."
+    "history": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlauf"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select the GPT model for text rewriting."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History"
           }
         }
       }
     },
-    "grantAccess" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zugriff erlauben"
+    "historySection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlauf"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grant access"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History"
           }
         }
       }
     },
-    "grantAllPermissions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte erlaube alle Berechtigungen, um fortzufahren."
+    "holdControlToDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halte ⌃ Control gedrückt zum Diktieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please grant all permissions to continue."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold ⌃ Control to dictate"
           }
         }
       }
     },
-    "granted" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktiviert"
+    "holdShortcutToDictate %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halte %@ gedrückt zum Diktieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enabled"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold %@ to dictate"
           }
         }
       }
     },
-    "history" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verlauf"
+    "holdToDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halte die Control-Taste gedrückt, um zu diktieren."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the Control key to dictate."
           }
         }
       }
     },
-    "historySection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verlauf"
+    "hotkey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tastenkürzel"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotkey"
           }
         }
       }
     },
-    "holdControlToDictate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Halte ⌃ Control gedrückt zum Diktieren"
+    "http://localhost:11434": {},
+    "http://yourserver/v1/audio/transcriptions": {},
+    "https://<resource>.cognitiveservices.azure.com/": {},
+    "insert": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hold ⌃ Control to dictate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert"
           }
         }
       }
     },
-    "holdShortcutToDictate %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Halte %@ gedrückt zum Diktieren"
+    "key": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taste"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hold %@ to dictate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key"
           }
         }
       }
     },
-    "holdToDictate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Halte die Control-Taste gedrückt, um zu diktieren."
+    "localProvider": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-Hosted"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hold the Control key to dictate."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-Hosted"
           }
         }
       }
     },
-    "hotkey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkürzel"
+    "mai-transcribe-1.5": {},
+    "microphone": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hotkey"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone"
           }
         }
       }
     },
-    "http://localhost:11434" : {
-
+    "microphoneAccess": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofonzugriff"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone access"
+          }
+        }
+      }
     },
-    "http://yourserver/v1/audio/transcriptions" : {
-
+    "microphoneDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird benötigt, um deine Sprache aufzunehmen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Required to record your voice."
+          }
+        }
+      }
     },
-    "insert" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einfügen"
+    "minutesSaved": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Min. gespart"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Insert"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Min. saved"
           }
         }
       }
     },
-    "key" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taste"
+    "model": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Key"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
           }
         }
       }
     },
-    "localProvider" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Self-Hosted"
+    "modelInfo": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell-Info:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Self-Hosted"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model info:"
           }
         }
       }
     },
-    "microphone" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mikrofon"
+    "modelInfoDiarize": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o Diarize: Mit Sprechererkennung"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o Diarize: With speaker recognition"
           }
         }
       }
     },
-    "microphoneAccess" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mikrofonzugriff"
+    "modelInfoMini": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o Mini: Schnell und günstig"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Microphone access"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o Mini: Fast and affordable"
           }
         }
       }
     },
-    "microphoneDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird benötigt, um deine Sprache aufzunehmen."
+    "modelInfoStandard": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o: Höhere Qualität"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Required to record your voice."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT-4o: Higher quality"
           }
         }
       }
     },
-    "minutesSaved" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Min. gespart"
+    "Nach Updates suchen...": {},
+    "never": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Min. saved"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never"
           }
         }
       }
     },
-    "model" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell"
+    "noRecordingAvailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Aufnahme verfügbar"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No recording available"
           }
         }
       }
     },
-    "modelInfo" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell-Info:"
+    "noResults": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Ergebnisse"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model info:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results"
           }
         }
       }
     },
-    "modelInfoDiarize" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o Diarize: Mit Sprechererkennung"
+    "noTranscriptions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Transkriptionen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o Diarize: With speaker recognition"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No transcriptions yet"
           }
         }
       }
     },
-    "modelInfoMini" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o Mini: Schnell und günstig"
+    "ok": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o Mini: Fast and affordable"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         }
       }
     },
-    "modelInfoStandard" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o: Höhere Qualität"
+    "ollamaConfigError": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama-Server-URL oder Modell nicht konfiguriert."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• GPT-4o: Higher quality"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama server URL or model not configured."
           }
         }
       }
     },
-    "Nach Updates suchen..." : {
-
+    "ollamaConnectionError": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbindung zum Ollama-Server fehlgeschlagen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to connect to Ollama server."
+          }
+        }
+      }
     },
-    "never" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nie"
+    "ollamaDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwende einen lokalen Ollama-Server für die Textverarbeitung. Die verfügbaren Modelle werden automatisch abgerufen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Never"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use a local Ollama server for text processing. Available models are fetched automatically."
           }
         }
       }
     },
-    "noRecordingAvailable" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Aufnahme verfügbar"
+    "ollamaModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No recording available"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
           }
         }
       }
     },
-    "noResults" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Ergebnisse"
+    "ollamaNoModels": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Modelle gefunden. Stelle sicher, dass Ollama läuft."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No results"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No models found. Make sure Ollama is running."
           }
         }
       }
     },
-    "noTranscriptions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch keine Transkriptionen"
+    "ollamaSelectModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell auswählen..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No transcriptions yet"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select model..."
           }
         }
       }
     },
-    "ok" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+    "ollamaServerURL": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama Server-URL"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama Server URL"
           }
         }
       }
     },
-    "ollamaConfigError" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ollama-Server-URL oder Modell nicht konfiguriert."
+    "ollamaURLInvalid": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ungültige Ollama-Server-URL."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ollama server URL or model not configured."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid Ollama server URL."
           }
         }
       }
     },
-    "ollamaConnectionError" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbindung zum Ollama-Server fehlgeschlagen."
+    "onboardingApiKeyHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du kannst deinen API-Key später in den Einstellungen eingeben."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to connect to Ollama server."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can enter your API key later in the settings."
           }
         }
       }
     },
-    "ollamaDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verwende einen lokalen Ollama-Server für die Textverarbeitung. Die verfügbaren Modelle werden automatisch abgerufen."
+    "onboardingPermissions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berechtigungen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use a local Ollama server for text processing. Available models are fetched automatically."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permissions"
           }
         }
       }
     },
-    "ollamaModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell"
+    "onboardingSubtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Richte die App in wenigen Schritten ein"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up the app in a few steps"
           }
         }
       }
     },
-    "ollamaNoModels" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Modelle gefunden. Stelle sicher, dass Ollama läuft."
+    "onboardingTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Willkommen bei SpeechToType"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No models found. Make sure Ollama is running."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome to SpeechToType"
           }
         }
       }
     },
-    "ollamaSelectModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell auswählen..."
+    "OpenAI API Documentation": {},
+    "openApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI API-Key"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select model..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI API Key"
           }
         }
       }
     },
-    "ollamaServerURL" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ollama Server-URL"
+    "openApiKeyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du benötigst einen API-Key von OpenAI. Hole dir einen unter platform.openai.com"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ollama Server URL"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need an API key from OpenAI. Get one at platform.openai.com"
           }
         }
       }
     },
-    "ollamaURLInvalid" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ungültige Ollama-Server-URL."
+    "openInSettings": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Einstellungen öffnen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid Ollama server URL."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in Settings"
           }
         }
       }
     },
-    "onboardingApiKeyHint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du kannst deinen API-Key später in den Einstellungen eingeben."
+    "openMainWindow": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hauptfenster öffnen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can enter your API key later in the settings."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open main window"
           }
         }
       }
     },
-    "onboardingPermissions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berechtigungen"
+    "optional": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permissions"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional"
           }
         }
       }
     },
-    "onboardingSubtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Richte die App in wenigen Schritten ein"
+    "pressAndHold": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drücke und halte"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Set up the app in a few steps"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Press and hold"
           }
         }
       }
     },
-    "onboardingTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Willkommen bei SpeechToType"
+    "pressKeys": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tasten drücken..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome to SpeechToType"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Press keys..."
           }
         }
       }
     },
-    "OpenAI API Documentation" : {
-
+    "processing": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verarbeite..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Processing..."
+          }
+        }
+      }
     },
-    "openApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OpenAI API-Key"
+    "quit": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beenden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OpenAI API Key"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit"
           }
         }
       }
     },
-    "openApiKeyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du benötigst einen API-Key von OpenAI. Hole dir einen unter platform.openai.com"
+    "ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereit"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You need an API key from OpenAI. Get one at platform.openai.com"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         }
       }
     },
-    "openInSettings" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In Einstellungen öffnen"
+    "readyHoldToRecord": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereit - Halte die Taste gedrückt zum Aufnehmen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open in Settings"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready - Hold the key to record"
           }
         }
       }
     },
-    "openMainWindow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hauptfenster öffnen"
+    "recording": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme läuft..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open main window"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording..."
           }
         }
       }
     },
-    "optional" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optional"
+    "recordingContinuous": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daueraufnahme..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optional"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuous recording..."
           }
         }
       }
     },
-    "pressAndHold" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drücke und halte"
+    "recordingError": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fehler bei der Aufnahme"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Press and hold"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording error"
           }
         }
       }
     },
-    "pressKeys" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tasten drücken..."
+    "recordingShortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme-Shortcut"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Press keys..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording shortcut"
           }
         }
       }
     },
-    "processing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verarbeite..."
+    "recordingTooShort": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme zu kurz"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Processing..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording too short"
           }
         }
       }
     },
-    "quit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beenden"
+    "resetShortcuts": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tastenkürzel zurücksetzen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quit"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset shortcuts"
           }
         }
       }
     },
-    "ready" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bereit"
+    "rewrite": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umschreibung"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite"
           }
         }
       }
     },
-    "readyHoldToRecord" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bereit - Halte die Taste gedrückt zum Aufnehmen"
+    "rewriteClear": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leeren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready - Hold the key to record"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
           }
         }
       }
     },
-    "recording" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme läuft..."
+    "rewriteClipboardText": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text aus Zwischenablage umschreiben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite text from clipboard"
           }
         }
       }
     },
-    "recordingContinuous" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daueraufnahme..."
+    "rewriteCopy": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuous recording..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
           }
         }
       }
     },
-    "recordingError" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fehler bei der Aufnahme"
+    "rewriteCustom": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigener Prompt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording error"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom prompt"
           }
         }
       }
     },
-    "recordingShortcut" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme-Shortcut"
+    "rewriteCustomPromptLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein eigener Prompt:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording shortcut"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your custom prompt:"
           }
         }
       }
     },
-    "recordingTooShort" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme zu kurz"
+    "rewriteCustomPromptPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibe, wie der Text verändert werden soll..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording too short"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Describe how the text should be changed..."
           }
         }
       }
     },
-    "resetShortcuts" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkürzel zurücksetzen"
+    "rewriteDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset shortcuts"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictate"
           }
         }
       }
     },
-    "rewrite" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umschreibung"
+    "rewriteDictateInstructions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktiere deine Anweisungen:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictate your instructions:"
           }
         }
       }
     },
-    "rewriteClipboardText" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text aus Zwischenablage umschreiben"
+    "rewriteElaborate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausformulieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite text from clipboard"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elaborate"
           }
         }
       }
     },
-    "rewriteCopy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopieren"
+    "rewriteErrorApi": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API-Fehler"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API error"
           }
         }
       }
     },
-    "rewriteCustom" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eigener Prompt"
+    "rewriteErrorApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ungültiger API-Key"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom prompt"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid API key"
           }
         }
       }
     },
-    "rewriteCustomPromptLabel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dein eigener Prompt:"
+    "rewriteErrorInvalidResponse": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ungültige Antwort vom Server"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your custom prompt:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid response from server"
           }
         }
       }
     },
-    "rewriteCustomPromptPlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibe, wie der Text verändert werden soll..."
+    "rewriteErrorNetwork": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Netzwerkfehler"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Describe how the text should be changed..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Network error"
           }
         }
       }
     },
-    "rewriteClear" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leeren"
+    "rewriteErrorNoResponse": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Antwort erhalten"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No response received"
           }
         }
       }
     },
-    "rewriteInputLabel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eingabetext:"
+    "rewriteErrorNoText": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Text ausgewählt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Input text:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No text selected"
           }
         }
       }
     },
-    "rewriteInputPlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text hier einfügen oder eintippen..."
+    "rewriteGrammar": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grammatik"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste or type text here..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grammar"
           }
         }
       }
     },
-    "rewriteDictate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diktieren"
+    "rewriteInputLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eingabetext:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dictate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Input text:"
           }
         }
       }
     },
-    "rewriteDictateInstructions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diktiere deine Anweisungen:"
+    "rewriteInputPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text hier einfügen oder eintippen..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dictate your instructions:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste or type text here..."
           }
         }
       }
     },
-    "rewriteElaborate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausformulieren"
+    "rewriteInsert": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elaborate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert"
           }
         }
       }
     },
-    "rewriteErrorApi" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-Fehler"
+    "rewriteProcess": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umschreiben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API error"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite"
           }
         }
       }
     },
-    "rewriteErrorApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ungültiger API-Key"
+    "rewriteProcessing": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verarbeite..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid API key"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Processing..."
           }
         }
       }
     },
-    "rewriteErrorInvalidResponse" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ungültige Antwort vom Server"
+    "rewriteResult": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ergebnis:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid response from server"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Result:"
           }
         }
       }
     },
-    "rewriteErrorNetwork" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Netzwerkfehler"
+    "rewriteSelectedText": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text umschreiben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Network error"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite text"
           }
         }
       }
     },
-    "rewriteErrorNoResponse" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Antwort erhalten"
+    "rewriteSelectMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modus auswählen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No response received"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select mode"
           }
         }
       }
     },
-    "rewriteErrorNoText" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Text ausgewählt"
+    "rewriteSelectTextFirst": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte wähle zuerst einen Text aus, den du umschreiben möchtest."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No text selected"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please select some text first that you want to rewrite."
           }
         }
       }
     },
-    "rewriteGrammar" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grammatik"
+    "rewriteShortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umschreiben-Shortcut"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grammar"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite shortcut"
           }
         }
       }
     },
-    "rewriteInsert" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einfügen"
+    "rewriteShortcutDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tastenkombination zum Umschreiben von markiertem Text."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Insert"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key combination to rewrite selected text."
           }
         }
       }
     },
-    "rewriteProcess" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umschreiben"
+    "rewriteStartDictation": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme starten"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start recording"
           }
         }
       }
     },
-    "rewriteProcessing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verarbeite..."
+    "rewriteTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text umschreiben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Processing..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite Text"
           }
         }
       }
     },
-    "rewriteResult" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ergebnis:"
+    "rewriteTranslate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersetzen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Result:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translate"
           }
         }
       }
     },
-    "rewriteSelectedText" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text umschreiben"
+    "rewriteTranslateTo": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übersetzen in:"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite text"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translate to:"
           }
         }
       }
     },
-    "rewriteSelectMode" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modus auswählen"
+    "saveRewritesToHistory": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umschreibungen im Verlauf speichern"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select mode"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save rewrites to history"
           }
         }
       }
     },
-    "rewriteSelectTextFirst" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bitte wähle zuerst einen Text aus, den du umschreiben möchtest."
+    "saveRewritesToHistoryDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichert umgeschriebene Texte zusammen mit Transkriptionen im Verlauf."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select some text first that you want to rewrite."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saves rewritten texts along with transcriptions in history."
           }
         }
       }
     },
-    "rewriteShortcut" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umschreiben-Shortcut"
+    "search": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suchen..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite shortcut"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search..."
           }
         }
       }
     },
-    "rewriteShortcutDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkombination zum Umschreiben von markiertem Text."
+    "settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Key combination to rewrite selected text."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
           }
         }
       }
     },
-    "rewriteStartDictation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme starten"
+    "shortcutsDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klicke auf ein Tastenkürzel und drücke die gewünschte Tastenkombination."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start recording"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click on a shortcut and press the desired key combination."
           }
         }
       }
     },
-    "rewriteTitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text umschreiben"
+    "shortcutsSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tastenkürzel"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite Text"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcuts"
           }
         }
       }
     },
-    "rewriteTranslate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übersetzen"
+    "sk-...": {},
+    "sk-ant-...": {},
+    "spacebar": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leertaste"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Translate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spacebar"
           }
         }
       }
     },
-    "rewriteTranslateTo" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Übersetzen in:"
+    "speechModelConfigSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprachmodellkonfiguration"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Translate to:"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech Model Configuration"
           }
         }
       }
     },
-    "saveRewritesToHistory" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umschreibungen im Verlauf speichern"
+    "speechModelProviderPicker": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anbieter"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save rewrites to history"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provider"
           }
         }
       }
     },
-    "saveRewritesToHistoryDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichert umgeschriebene Texte zusammen mit Transkriptionen im Verlauf."
+    "SpeechToType": {},
+    "startContinuousRecording": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daueraufnahme starten"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saves rewritten texts along with transcriptions in history."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start continuous recording"
           }
         }
       }
     },
-    "search" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchen..."
+    "statistics": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistiken"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistics"
           }
         }
       }
     },
-    "settings" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einstellungen"
+    "status": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
           }
         }
       }
     },
-    "shortcutsDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Klicke auf ein Tastenkürzel und drücke die gewünschte Tastenkombination."
+    "stopped": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestoppt"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Click on a shortcut and press the desired key combination."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopped"
           }
         }
       }
     },
-    "shortcutsSection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkürzel"
+    "stopRecording": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme stoppen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcuts"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop recording"
           }
         }
       }
     },
-    "sk-..." : {
-
+    "success": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgreich!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Success!"
+          }
+        }
+      }
     },
-    "sk-ant-..." : {
-
+    "successfullyTranscribed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfolgreich transkribiert!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Successfully transcribed!"
+          }
+        }
+      }
     },
-    "spacebar" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leertaste"
+    "textProcessingOpenAIApiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI API-Key (Textverarbeitung)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spacebar"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI API Key (Text Processing)"
           }
         }
       }
     },
-    "speechModelConfigSection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprachmodellkonfiguration"
+    "textProcessingOpenAIApiKeyDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optionaler separater API-Key für Textverarbeitung. Wenn leer, wird der Sprachmodell-API-Key verwendet."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speech Model Configuration"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional separate API key for text processing. If empty, the speech model API key will be used."
           }
         }
       }
     },
-    "speechModelProviderPicker" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anbieter"
+    "textProcessingProviderPicker": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anbieter"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Provider"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provider"
           }
         }
       }
     },
-    "SpeechToType" : {
-
+    "textRewriteEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text-Umschreiben aktivieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable text rewriting"
+          }
+        }
+      }
     },
-    "startContinuousRecording" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daueraufnahme starten"
+    "textRewriteSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text umschreiben"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start continuous recording"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text Rewriting"
           }
         }
       }
     },
-    "statistics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statistiken"
+    "toDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "um zu diktieren"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statistics"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "to dictate"
           }
         }
       }
     },
-    "status" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
+    "tokensUsed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tokens"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tokens"
           }
         }
       }
     },
-    "stopped" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gestoppt"
+    "transcribedTime": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahmezeit"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stopped"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Record time"
           }
         }
       }
     },
-    "stopRecording" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahme stoppen"
+    "transcribing": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkribiere..."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop recording"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribing..."
           }
         }
       }
     },
-    "success" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgreich!"
+    "transcription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkription"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Success!"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription"
           }
         }
       }
     },
-    "successfullyTranscribed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfolgreich transkribiert!"
+    "transcriptionHistory": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkriptions-Verlauf"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Successfully transcribed!"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription History"
           }
         }
       }
     },
-    "textProcessingOpenAIApiKey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OpenAI API-Key (Textverarbeitung)"
+    "transcriptionModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkriptions-Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OpenAI API Key (Text Processing)"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription model"
           }
         }
       }
     },
-    "textProcessingOpenAIApiKeyDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optionaler separater API-Key für Textverarbeitung. Wenn leer, wird der Sprachmodell-API-Key verwendet."
+    "transcriptionModelSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkriptions-Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Optional separate API key for text processing. If empty, the speech model API key will be used."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription Model"
           }
         }
       }
     },
-    "textProcessingProviderPicker" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anbieter"
+    "tryDifferentSearch": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versuche einen anderen Suchbegriff."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Provider"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try a different search term."
           }
         }
       }
     },
-    "textRewriteEnabled" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text-Umschreiben aktivieren"
+    "useControlKeyAsHotkey": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Control-Taste (⌃) als Hotkey verwenden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable text rewriting"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Control key (⌃) as hotkey"
           }
         }
       }
     },
-    "textRewriteSection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text umschreiben"
+    "useLocalWhisperServer": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokalen Whisper-Server verwenden"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text Rewriting"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use local Whisper server"
           }
         }
       }
     },
-    "toDictate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "um zu diktieren"
+    "version": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "to dictate"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
           }
         }
       }
     },
-    "tokensUsed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokens"
+    "whisper-1": {},
+    "whisperServerBearerToken": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearer Token (optional)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokens"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearer Token (optional)"
           }
         }
       }
     },
-    "transcribedTime" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufnahmezeit"
+    "whisperServerBearerTokenPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token eingeben (optional)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Record time"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter token (optional)"
           }
         }
       }
     },
-    "transcribing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkribiere..."
+    "whisperServerDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwende einen eigenen Whisper-Server anstatt der OpenAI API. Die Anfrage wird an die angegebene URL im OpenAI-kompatiblen Format gesendet."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcribing..."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use your own Whisper server instead of the OpenAI API. Requests are sent to the specified URL in OpenAI-compatible format."
           }
         }
       }
     },
-    "transcription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkription"
+    "whisperServerModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcription"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
           }
         }
       }
     },
-    "transcriptionHistory" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkriptions-Verlauf"
+    "whisperServerSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper-Server"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcription History"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whisper Server"
           }
         }
       }
     },
-    "transcriptionModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkriptions-Modell"
+    "whisperServerURL": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server-URL"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcription model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server URL"
           }
         }
       }
     },
-    "transcriptionModelSection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkriptions-Modell"
+    "whisperServerURLInvalid": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ungültige Whisper-Server-URL. Bitte überprüfe die Einstellungen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcription Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid Whisper server URL. Please check your settings."
           }
         }
       }
     },
-    "tryDifferentSearch" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versuche einen anderen Suchbegriff."
+    "wordsTranscribed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörter"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try a different search term."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Words"
           }
         }
       }
     },
-    "useControlKeyAsHotkey" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Control-Taste (⌃) als Hotkey verwenden"
+    "azureAudioConversionFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio konnte nicht ins WAV-Format konvertiert werden."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use Control key (⌃) as hotkey"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not convert audio to WAV format."
           }
         }
       }
     },
-    "useLocalWhisperServer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lokalen Whisper-Server verwenden"
+    "azureRealtimeEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Echtzeit-Transkription (live)"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use local Whisper server"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real-time transcription (live)"
           }
         }
       }
     },
-    "version" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version"
+    "azureRealtimeLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language"
           }
         }
       }
     },
-    "whisper-1" : {
-
+    "azureRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst wenn du die Taste loslässt (bzw. die Aufnahme stoppst), wird der komplette, korrekt formatierte Text auf einmal eingefügt. Nutzt Azure-Standardmodelle – nicht MAI-Transcribe."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. Only when you release the key (or stop recording) is the complete, correctly formatted text inserted at once. Uses Azure standard models – not MAI-Transcribe."
+          }
+        }
+      }
     },
-    "whisperServerBearerToken" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearer Token (optional)"
+    "azureRealtimeSDKUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Azure Speech SDK ist in diesem Build nicht eingebunden."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearer Token (optional)"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Azure Speech SDK is not included in this build."
           }
         }
       }
     },
-    "whisperServerBearerTokenPlaceholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Token eingeben (optional)"
+    "liveTranscription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter token (optional)"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
           }
         }
       }
     },
-    "whisperServerDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verwende einen eigenen Whisper-Server anstatt der OpenAI API. Die Anfrage wird an die angegebene URL im OpenAI-kompatiblen Format gesendet."
+    "overlayListening": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Höre zu …"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use your own Whisper server instead of the OpenAI API. Requests are sent to the specified URL in OpenAI-compatible format."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening …"
           }
         }
       }
     },
-    "whisperServerModel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modell"
+    "insertionSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Model"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text insertion"
           }
         }
       }
     },
-    "whisperServerSection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Whisper-Server"
+    "copyToClipboardOnInsert": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über Zwischenablage einfügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Whisper Server"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert via clipboard"
           }
         }
       }
     },
-    "whisperServerURL" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Server-URL"
+    "copyToClipboardOnInsertDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An: Text wird per Zwischenablage (Cmd+V) eingefügt und die vorherige Zwischenablage danach wiederhergestellt. Aus: Text wird direkt getippt, ohne die Zwischenablage zu verändern."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Server URL"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On: text is inserted via the clipboard (Cmd+V) and your previous clipboard is restored afterwards. Off: text is typed directly without ever touching the clipboard."
           }
         }
       }
     },
-    "whisperServerURLInvalid" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ungültige Whisper-Server-URL. Bitte überprüfe die Einstellungen."
+    "appleRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst (komplett on-device, ohne Internet). Beim Loslassen der Taste wird der gesamte Text eingefügt. Hinweis: Apples On-Device-Erkennung kann sehr lange Aufnahmen zeitlich begrenzen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid Whisper server URL. Please check your settings."
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak (fully on-device, no internet). The complete text is inserted when you release the key. Note: Apple's on-device recognition may time-limit very long recordings."
           }
         }
       }
     },
-    "wordsTranscribed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wörter"
+    "azureRealtimeNotConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure-Echtzeit ist nicht konfiguriert: Endpunkt und/oder API-Schlüssel fehlen."
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Words"
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure real-time is not configured: endpoint and/or API key is missing."
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

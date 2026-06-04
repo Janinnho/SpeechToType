@@ -7,6 +7,7 @@
 
 import Foundation
 import Speech
+import AVFoundation
 
 enum OpenAIError: Error, LocalizedError {
     case invalidAPIKey
@@ -54,6 +55,8 @@ class OpenAIService {
             return try await transcribeWithAppleSpeech(audioURL: audioURL)
         case .gemini:
             return try await transcribeWithGemini(audioURL: audioURL, settings: settings)
+        case .azureFoundry:
+            return try await transcribeWithAzureFoundry(audioURL: audioURL, settings: settings)
         }
     }
 
@@ -252,6 +255,120 @@ class OpenAIService {
         }
     }
 
+    // MARK: - Azure Foundry MAI (LLM Speech) Transcription
+
+    private func transcribeWithAzureFoundry(audioURL: URL, settings: AppSettings) async throws -> String {
+        let apiKey = settings.azureFoundryApiKey
+        guard !apiKey.isEmpty else {
+            throw OpenAIError.invalidAPIKey
+        }
+
+        // Build the request URL: <endpoint>/speechtotext/transcriptions:transcribe?api-version=...
+        let trimmedEndpoint = settings.azureFoundryEndpoint
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let base = trimmedEndpoint.hasSuffix("/") ? String(trimmedEndpoint.dropLast()) : trimmedEndpoint
+        let apiVersion = settings.azureFoundryApiVersion.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !base.isEmpty, !apiVersion.isEmpty,
+              let url = URL(string: "\(base)/speechtotext/transcriptions:transcribe?api-version=\(apiVersion)") else {
+            throw OpenAIError.apiError(String(localized: "azureEndpointInvalid"))
+        }
+
+        let boundary = UUID().uuidString
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "Ocp-Apim-Subscription-Key")
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        // Build the definition JSON.
+        // - With an explicit model (e.g. mai-transcribe-1.5): MAI-Transcribe style,
+        //   only `enabled` + `model` (no `task`; prompt-tuning is unsupported).
+        // - With an empty model field: fall back to the default LLM Speech request
+        //   (`enabled` + `task`), which is the request shape that worked before.
+        var enhancedMode: [String: Any] = ["enabled": true]
+        let modelName = settings.azureFoundryModel.trimmingCharacters(in: .whitespacesAndNewlines)
+        if modelName.isEmpty {
+            enhancedMode["task"] = "transcribe"
+        } else {
+            enhancedMode["model"] = modelName
+        }
+        var definition: [String: Any] = [:]
+
+        // Dictionary (custom vocabulary) — only when enabled and there are words.
+        // MAI-Transcribe-1.5 supports `phraseList` (entity biasing); this is the
+        // correct channel for custom vocabulary. The free-text instructions are not
+        // sent because prompt-tuning is unsupported by MAI-Transcribe.
+        if settings.applyDictionaryToAzure {
+            let phrases = settings.dictionaryPhrases
+            if !phrases.isEmpty {
+                definition["phraseList"] = [
+                    "phrases": phrases,
+                    "biasing_weight": settings.azureBiasingWeightClamped
+                ]
+            }
+        }
+
+        definition["enhancedMode"] = enhancedMode
+
+        let definitionData = try JSONSerialization.data(withJSONObject: definition)
+        let definitionString = String(data: definitionData, encoding: .utf8) ?? "{}"
+
+        // MAI-Transcribe only accepts WAV/MP3/FLAC, so convert the recorded m4a to WAV.
+        let wavURL = try convertToWav(audioURL)
+        defer { try? FileManager.default.removeItem(at: wavURL) }
+        let audioData = try Data(contentsOf: wavURL)
+        var body = Data()
+
+        // Add definition field (JSON string)
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"definition\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(definitionString)\r\n".data(using: .utf8)!)
+
+        // Add audio file (Azure expects the field name "audio")
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"audio\"; filename=\"audio.wav\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: audio/wav\r\n\r\n".data(using: .utf8)!)
+        body.append(audioData)
+        body.append("\r\n".data(using: .utf8)!)
+
+        // Close boundary
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+
+        return try await executeAzureTranscriptionRequest(request)
+    }
+
+    /// Converts an audio file (e.g. m4a/AAC) to a 16-bit PCM WAV file in a temp location.
+    /// MAI-Transcribe only accepts WAV/MP3/FLAC.
+    private func convertToWav(_ sourceURL: URL) throws -> URL {
+        let sourceFile = try AVAudioFile(forReading: sourceURL)
+        let processingFormat = sourceFile.processingFormat
+        let frameCount = AVAudioFrameCount(sourceFile.length)
+
+        guard frameCount > 0,
+              let buffer = AVAudioPCMBuffer(pcmFormat: processingFormat, frameCapacity: frameCount) else {
+            throw OpenAIError.apiError(String(localized: "azureAudioConversionFailed"))
+        }
+        try sourceFile.read(into: buffer)
+
+        let outputURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("wav")
+
+        let outputSettings: [String: Any] = [
+            AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: processingFormat.sampleRate,
+            AVNumberOfChannelsKey: processingFormat.channelCount,
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsFloatKey: false,
+            AVLinearPCMIsBigEndianKey: false
+        ]
+
+        let outputFile = try AVAudioFile(forWriting: outputURL, settings: outputSettings)
+        try outputFile.write(from: buffer)
+        return outputURL
+    }
+
     // MARK: - Apple Speech (On-Device)
 
     private func transcribeWithAppleSpeech(audioURL: URL) async throws -> String {
@@ -333,12 +450,67 @@ class OpenAIService {
             throw OpenAIError.networkError(error)
         }
     }
+
+    // MARK: - Azure Request Execution
+
+    private func executeAzureTranscriptionRequest(_ request: URLRequest) async throws -> String {
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw OpenAIError.invalidResponse
+            }
+
+            if httpResponse.statusCode == 401 || httpResponse.statusCode == 403 {
+                throw OpenAIError.invalidAPIKey
+            }
+
+            if httpResponse.statusCode != 200 {
+                if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let error = json["error"] as? [String: Any],
+                   let message = error["message"] as? String {
+                    throw OpenAIError.apiError(message)
+                }
+                // Surface the raw body so unexpected error shapes are still diagnosable.
+                if let body = String(data: data, encoding: .utf8)?
+                    .trimmingCharacters(in: .whitespacesAndNewlines), !body.isEmpty {
+                    throw OpenAIError.apiError("HTTP \(httpResponse.statusCode): \(body)")
+                }
+                throw OpenAIError.apiError("HTTP \(httpResponse.statusCode)")
+            }
+
+            guard let result = try? JSONDecoder().decode(AzureTranscriptionResponse.self, from: data) else {
+                throw OpenAIError.noTranscription
+            }
+
+            let text = result.combinedPhrases
+                .map { $0.text }
+                .joined(separator: " ")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+
+            if text.isEmpty {
+                throw OpenAIError.noTranscription
+            }
+            return text
+        } catch let error as OpenAIError {
+            throw error
+        } catch {
+            throw OpenAIError.networkError(error)
+        }
+    }
 }
 
 // MARK: - Response Models
 
 struct TranscriptionResponse: Codable {
     let text: String
+}
+
+struct AzureTranscriptionResponse: Codable {
+    struct CombinedPhrase: Codable {
+        let text: String
+    }
+    let combinedPhrases: [CombinedPhrase]
 }
 
 struct OpenAIErrorResponse: Codable {

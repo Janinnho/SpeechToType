@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var showingTextProcessingAPIKey = false
     @State private var showingAnthropicAPIKey = false
     @State private var showingGeminiAPIKey = false
+    @State private var showingAzureAPIKey = false
     @State private var ollamaModels: [String] = []
     @State private var isLoadingOllamaModels = false
     @State private var ollamaModelError: String?
@@ -135,6 +136,12 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
 
+                    Toggle("azureRealtimeEnabled", isOn: $settings.appleRealtimeEnabled)
+
+                    Text("appleRealtimeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
                 case .gemini:
                     VStack(alignment: .leading, spacing: 8) {
                         Text("geminiApiKey")
@@ -165,6 +172,93 @@ struct SettingsView: View {
                             Text(model.displayName).tag(model)
                         }
                     }
+
+                case .azureFoundry:
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("azureEndpoint")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        TextField("https://<resource>.cognitiveservices.azure.com/", text: $settings.azureFoundryEndpoint)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("azureApiKey")
+                            .font(.headline)
+
+                        HStack {
+                            if showingAzureAPIKey {
+                                TextField("azureApiKeyPlaceholder", text: $settings.azureFoundryApiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            } else {
+                                SecureField("azureApiKeyPlaceholder", text: $settings.azureFoundryApiKey)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                            Button(action: { showingAzureAPIKey.toggle() }) {
+                                Image(systemName: showingAzureAPIKey ? "eye.slash" : "eye")
+                            }
+                            .buttonStyle(.borderless)
+                        }
+
+                        Text("azureApiKeyDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("azureModel")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        TextField("mai-transcribe-1.5", text: $settings.azureFoundryModel)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("azureApiVersion")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        TextField("2025-10-15", text: $settings.azureFoundryApiVersion)
+                            .textFieldStyle(.roundedBorder)
+                    }
+
+                    Text("azureDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Toggle("dictionaryApplyAzure", isOn: $settings.applyDictionaryToAzure)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text("azureBiasingWeight")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(String(format: "%.1f", settings.azureBiasingWeight))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Slider(value: $settings.azureBiasingWeight, in: 1.0...20.0, step: 0.5)
+                        Text("azureBiasingWeightDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .disabled(!settings.applyDictionaryToAzure)
+
+                    Divider()
+
+                    Toggle("azureRealtimeEnabled", isOn: $settings.azureRealtimeEnabled)
+
+                    Picker("azureRealtimeLanguage", selection: $settings.azureRealtimeLanguage) {
+                        ForEach(AppSettings.azureRealtimeLocales, id: \.code) { locale in
+                            Text(locale.name).tag(locale.code)
+                        }
+                    }
+                    .disabled(!settings.azureRealtimeEnabled)
+
+                    Text("azureRealtimeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             } header: {
                 Text("speechModelConfigSection")
@@ -511,6 +605,16 @@ struct SettingsView: View {
                     .foregroundColor(.secondary)
             } header: {
                 Text("historySection")
+            }
+
+            Section {
+                Toggle("copyToClipboardOnInsert", isOn: $settings.copyToClipboardOnInsert)
+
+                Text("copyToClipboardOnInsertDescription")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("insertionSection")
             }
 
             Section {

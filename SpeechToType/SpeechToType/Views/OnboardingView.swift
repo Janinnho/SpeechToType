@@ -17,6 +17,7 @@ struct OnboardingView: View {
     @State private var showingTextProcessingAPIKey = false
     @State private var showingAnthropicAPIKey = false
     @State private var showingGeminiAPIKey = false
+    @State private var showingAzureAPIKey = false
     @State private var ollamaModels: [String] = []
     @State private var isLoadingOllamaModels = false
     @ObservedObject private var settings = AppSettings.shared
@@ -129,6 +130,27 @@ struct OnboardingView: View {
                                 ForEach(GeminiModel.allCases, id: \.self) { model in
                                     Text(model.displayName).tag(model)
                                 }
+                            }
+
+                        case .azureFoundry:
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("azureEndpoint")
+                                    .font(.caption).fontWeight(.semibold)
+                                TextField("https://<resource>.cognitiveservices.azure.com/", text: $settings.azureFoundryEndpoint)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+                            apiKeyField(
+                                title: "azureApiKey",
+                                placeholder: "azureApiKeyPlaceholder",
+                                text: $settings.azureFoundryApiKey,
+                                showing: $showingAzureAPIKey,
+                                description: "azureApiKeyDescription"
+                            )
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("azureModel")
+                                    .font(.caption).fontWeight(.semibold)
+                                TextField("mai-transcribe-1.5", text: $settings.azureFoundryModel)
+                                    .textFieldStyle(.roundedBorder)
                             }
                         }
                     }

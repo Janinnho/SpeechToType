@@ -70,6 +70,13 @@ class TextInputService {
     }
 
     func insertText(_ text: String) {
+        // When clipboard insertion is disabled, type the text directly so the clipboard
+        // is never touched.
+        guard AppSettings.shared.copyToClipboardOnInsert else {
+            typeText(text)
+            return
+        }
+
         // Use CGEvent to simulate keyboard input
         // First, copy text to clipboard
         let pasteboard = NSPasteboard.general
@@ -86,6 +93,40 @@ class TextInputService {
             if let previous = previousContent {
                 pasteboard.clearContents()
                 pasteboard.setString(previous, forType: .string)
+            }
+        }
+    }
+
+    /// Serial queue for direct (clipboard-free) typing so the main thread is never blocked
+    /// by long transcriptions and keystroke order stays deterministic.
+    private let typingQueue = DispatchQueue(label: "com.speechtotype.typing")
+
+    /// Types text directly via synthesized keyboard events, without using the clipboard.
+    /// Runs off the main thread and sends small chunks so long text is delivered reliably.
+    private func typeText(_ text: String) {
+        guard !text.isEmpty else { return }
+        let units = Array(text.utf16)
+        let chunkSize = 20
+
+        typingQueue.async {
+            let source = CGEventSource(stateID: .hidSystemState)
+            var index = 0
+            while index < units.count {
+                let end = min(index + chunkSize, units.count)
+                var chunk = Array(units[index..<end])
+
+                if let down = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: true),
+                   let up = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: false) {
+                    chunk.withUnsafeBufferPointer { buffer in
+                        if let base = buffer.baseAddress {
+                            down.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
+                            up.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
+                        }
+                    }
+                    down.post(tap: .cghidEventTap)
+                    up.post(tap: .cghidEventTap)
+                }
+                index = end
             }
         }
     }
@@ -272,6 +313,57 @@ class TextInputService {
         } else {
             // Fallback to paste method
             insertText(text)
+        }
+    }
+}
+
+/// Accumulates a live streaming transcription and shows it in the overlay only.
+///
+/// Nothing is written into the focused field while speaking — the running text is shown
+/// purely as a preview in the overlay. The caller inserts the complete text once, when
+/// dictation ends (see `fullText()`). This avoids any in-place rewriting of the target
+/// field, so finished or pre-existing text can never be overwritten.
+///
+/// Thread-safe: speech events arrive on background threads, while `fullText()` is read
+/// from another thread when dictation stops.
+final class LiveTypingSession {
+    private let lock = NSLock()
+    private var finalized: String = ""      // concatenated, correctly formatted final segments
+    private var lastPartial: String = ""    // current in-progress (raw) interim
+
+    func updatePartial(_ text: String) {
+        lock.lock()
+        lastPartial = text
+        let preview = finalized + text
+        lock.unlock()
+        updateOverlay(preview)
+    }
+
+    func commitFinal(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        lock.lock()
+        finalized += trimmed + " "
+        lastPartial = ""
+        let preview = finalized
+        lock.unlock()
+        updateOverlay(preview)
+    }
+
+    /// The full text to insert when dictation ends. Uses the formatted finals and falls
+    /// back to the last raw interim if a trailing segment never finalized.
+    func fullText() -> String {
+        lock.lock()
+        var result = finalized
+        let pending = lastPartial.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !pending.isEmpty { result += pending }
+        lock.unlock()
+        return result.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func updateOverlay(_ preview: String) {
+        DispatchQueue.main.async {
+            RecordingOverlayWindowController.shared.updateLive(preview)
         }
     }
 }

@@ -12,6 +12,38 @@
         -->
 
         <item>
+            <title>Version 2.3</title>
+            <pubDate>Wed, 03 Jun 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>13</sparkle:version>
+            <sparkle:shortVersionString>2.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.3</h2>
+                <p>Azure Foundry MAI, real-time live transcription, a redesigned overlay, and more control over insertion.</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Azure Foundry MAI</strong>: New speech provider using Azure's MAI-Transcribe model (fast transcription). Configure your own endpoint, API key, and model name; custom vocabulary is passed via Azure's phraseList with an adjustable biasing weight.</li>
+                    <li><strong>Real-time (live) transcription</strong>: Optional live mode powered by the Azure Speech SDK — watch your words appear live in the overlay while you speak; the complete, correctly formatted text is inserted once you finish.</li>
+                    <li><strong>Insert without clipboard</strong>: New setting to type transcribed text directly, without ever writing to or changing the clipboard.</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Redesigned overlay</strong>: Bottom-centered overlay that wraps long text and grows upward dynamically instead of running off the right edge of the screen.</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release:
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.3/SpeechToType.dmg"
+                sparkle:edSignature="NtDnE81OvUnvqFCLaubbwF6UPe/YUWTXe4+UHdgk2X1HdQgTR48dHTE2ZDnT0Rb0d0pxaym6rAeuGnsBGWJ3Dg=="
+                length="8634586"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.2</title>
             <pubDate>Thu, 28 May 2026 12:00:00 +0200</pubDate>
             <sparkle:version>12</sparkle:version>
