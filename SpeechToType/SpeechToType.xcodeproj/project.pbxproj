@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		686126D33DF8FBC4443118BA /* MicrosoftCognitiveServicesSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A170FB51D26477A1A265C5CE /* MicrosoftCognitiveServicesSpeech.xcframework */; };
-		7D126C6CC0BDCDC95003380E /* MicrosoftCognitiveServicesSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A170FB51D26477A1A265C5CE /* MicrosoftCognitiveServicesSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6DC11544E9DBFB7171B2BDEB /* MicrosoftSpeechSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5E814579BD9362EC1E5BD3E4 /* MicrosoftSpeechSDK */; };
 		97A23A552F1E2BD700682CB7 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 97A23A542F1E2BD700682CB7 /* Sparkle */; };
 /* End PBXBuildFile section */
 
@@ -29,25 +28,10 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		5492D1AF33B1F8610F14127E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				7D126C6CC0BDCDC95003380E /* MicrosoftCognitiveServicesSpeech.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		977709932F1D2448002C6491 /* SpeechToType.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechToType.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		977709A02F1D2449002C6491 /* SpeechToTypeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeechToTypeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		977709AA2F1D2449002C6491 /* SpeechToTypeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpeechToTypeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A170FB51D26477A1A265C5CE /* MicrosoftCognitiveServicesSpeech.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcframework; name = MicrosoftCognitiveServicesSpeech.xcframework; path = Frameworks/MicrosoftCognitiveServicesSpeech.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -71,11 +55,15 @@
 		};
 		977709A32F1D2449002C6491 /* SpeechToTypeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = SpeechToTypeTests;
 			sourceTree = "<group>";
 		};
 		977709AD2F1D2449002C6491 /* SpeechToTypeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = SpeechToTypeUITests;
 			sourceTree = "<group>";
 		};
@@ -87,7 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97A23A552F1E2BD700682CB7 /* Sparkle in Frameworks */,
-				686126D33DF8FBC4443118BA /* MicrosoftCognitiveServicesSpeech.xcframework in Frameworks */,
+				6DC11544E9DBFB7171B2BDEB /* MicrosoftSpeechSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,7 +120,6 @@
 		97A23A532F1E2BD300682CB7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A170FB51D26477A1A265C5CE /* MicrosoftCognitiveServicesSpeech.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = SOURCE_ROOT;
@@ -147,7 +134,6 @@
 				9777098F2F1D2448002C6491 /* Sources */,
 				977709902F1D2448002C6491 /* Frameworks */,
 				977709912F1D2448002C6491 /* Resources */,
-				5492D1AF33B1F8610F14127E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -159,6 +145,7 @@
 			name = SpeechToType;
 			packageProductDependencies = (
 				97A23A542F1E2BD700682CB7 /* Sparkle */,
+				5E814579BD9362EC1E5BD3E4 /* MicrosoftSpeechSDK */,
 			);
 			productName = SpeechToType;
 			productReference = 977709932F1D2448002C6491 /* SpeechToType.app */;
@@ -240,6 +227,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				97A23A512F1E28D500682CB7 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				49D7817B9B7AC9A608EFE40D /* XCLocalSwiftPackageReference "MicrosoftSpeechSDK" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 977709942F1D2448002C6491 /* Products */;
@@ -454,10 +442,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeechToType/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -497,10 +481,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeechToType/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -650,6 +630,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		49D7817B9B7AC9A608EFE40D /* XCLocalSwiftPackageReference "MicrosoftSpeechSDK" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MicrosoftSpeechSDK;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		97A23A512F1E28D500682CB7 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -662,6 +649,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5E814579BD9362EC1E5BD3E4 /* MicrosoftSpeechSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49D7817B9B7AC9A608EFE40D /* XCLocalSwiftPackageReference "MicrosoftSpeechSDK" */;
+			productName = MicrosoftSpeechSDK;
+		};
 		97A23A542F1E2BD700682CB7 /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 97A23A512F1E28D500682CB7 /* XCRemoteSwiftPackageReference "Sparkle" */;
