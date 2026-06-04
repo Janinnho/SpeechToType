@@ -77,6 +77,8 @@ struct SpeechToTypeApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     // Real-time (streaming) transcription state
     private var liveSession: LiveTypingSession?
+    private var activeTranscriber: RealtimeTranscriber?
+    private var realtimeModelLabel = "Realtime"
     private var isRealtimeActive = false
     private var realtimeStart: Date?
 
@@ -107,11 +109,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let historyManager = TranscriptionHistoryManager.shared
         
         hotkeyManager.onRecordingStarted = { [weak self] in
-            // Real-time streaming path (Azure SDK) instead of record→REST.
-            if settings.speechModelProvider == .azureFoundry,
-               settings.azureRealtimeEnabled,
-               AzureRealtimeService.isAvailable {
-                self?.startRealtime()
+            // Real-time streaming path (live preview, insert on release) instead of record→REST.
+            if let transcriber = self?.realtimeTranscriber(for: settings) {
+                self?.startRealtime(transcriber)
                 return
             }
 
@@ -189,10 +189,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Real-time transcription
 
-    private func startRealtime() {
+    /// Returns the live transcriber to use for the current provider, or nil for the
+    /// normal record→REST path. Also sets the history label for the active engine.
+    private func realtimeTranscriber(for settings: AppSettings) -> RealtimeTranscriber? {
+        if settings.speechModelProvider == .azureFoundry,
+           settings.azureRealtimeEnabled,
+           AzureRealtimeService.isAvailable {
+            realtimeModelLabel = "Azure Realtime (\(settings.azureRealtimeLanguage))"
+            return AzureRealtimeService.shared
+        }
+        if settings.speechModelProvider == .appleSpeech, settings.appleRealtimeEnabled {
+            realtimeModelLabel = "Apple Speech (Realtime)"
+            return AppleRealtimeService.shared
+        }
+        return nil
+    }
+
+    private func startRealtime(_ transcriber: RealtimeTranscriber) {
         let hotkeyManager = HotkeyManager.shared
         let session = LiveTypingSession()
         liveSession = session
+        activeTranscriber = transcriber
         isRealtimeActive = true
         realtimeStart = Date()
 
@@ -201,7 +218,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.statusMessage = String(localized: "liveTranscription")
 
-        AzureRealtimeService.shared.start(
+        transcriber.start(
             onPartial: { text in
                 session.updatePartial(text)
             },
@@ -216,7 +233,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 self?.isRealtimeActive = false
                 self?.liveSession = nil
-                AzureRealtimeService.shared.stop()
+                self?.activeTranscriber?.stop()
+                self?.activeTranscriber = nil
             }
         )
     }
@@ -227,16 +245,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let session = liveSession
         liveSession = nil
+        let transcriber = activeTranscriber
+        activeTranscriber = nil
         let duration = Date().timeIntervalSince(realtimeStart ?? Date())
         realtimeStart = nil
 
         let hotkeyManager = HotkeyManager.shared
-        let language = AppSettings.shared.azureRealtimeLanguage
+        let label = realtimeModelLabel
 
-        // Stop recognition (blocks until the session ends and the last final is flushed),
-        // then insert the complete text once. Done off the main thread to avoid blocking UI.
+        // Stop recognition, then insert the complete text once.
+        // Done off the main thread to avoid blocking UI.
         DispatchQueue.global(qos: .userInitiated).async {
-            AzureRealtimeService.shared.stop()
+            transcriber?.stop()
             let fullText = session?.fullText() ?? ""
 
             DispatchQueue.main.async {
@@ -248,7 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     let record = TranscriptionRecord(
                         text: fullText,
                         duration: duration,
-                        model: "Azure Realtime (\(language))"
+                        model: label
                     )
                     TranscriptionHistoryManager.shared.addRecord(record)
                 }

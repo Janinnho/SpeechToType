@@ -476,6 +476,12 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(azureRealtimeLanguage, forKey: "azureRealtimeLanguage") }
     }
 
+    /// Enable real-time/live transcription with Apple Speech (on-device). Only relevant
+    /// when the speech provider is Apple Speech.
+    @Published var appleRealtimeEnabled: Bool {
+        didSet { defaults.set(appleRealtimeEnabled, forKey: "appleRealtimeEnabled") }
+    }
+
     /// Common locales offered in the real-time language picker
     static let azureRealtimeLocales: [(code: String, name: String)] = [
         ("de-DE", "Deutsch (de-DE)"),
@@ -687,6 +693,7 @@ final class AppSettings: ObservableObject {
         self.azureBiasingWeight = defaults.object(forKey: "azureBiasingWeight") as? Double ?? 5.0
         self.azureRealtimeEnabled = defaults.object(forKey: "azureRealtimeEnabled") as? Bool ?? false
         self.azureRealtimeLanguage = defaults.string(forKey: "azureRealtimeLanguage") ?? "de-DE"
+        self.appleRealtimeEnabled = defaults.object(forKey: "appleRealtimeEnabled") as? Bool ?? false
 
         // Dictionary settings
         if let dictData = defaults.data(forKey: "dictionaryWords"),

@@ -3925,6 +3925,23 @@
           }
         }
       }
+    },
+    "appleRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst (komplett on-device, ohne Internet). Beim Loslassen der Taste wird der gesamte Text eingefügt. Hinweis: Apples On-Device-Erkennung kann sehr lange Aufnahmen zeitlich begrenzen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak (fully on-device, no internet). The complete text is inserted when you release the key. Note: Apple's on-device recognition may time-limit very long recordings."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

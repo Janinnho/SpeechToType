@@ -136,6 +136,12 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
 
+                    Toggle("azureRealtimeEnabled", isOn: $settings.appleRealtimeEnabled)
+
+                    Text("appleRealtimeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
                 case .gemini:
                     VStack(alignment: .leading, spacing: 8) {
                         Text("geminiApiKey")

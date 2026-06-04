@@ -32,7 +32,7 @@ enum RealtimeError: Error, LocalizedError {
     }
 }
 
-final class AzureRealtimeService {
+final class AzureRealtimeService: RealtimeTranscriber {
     static let shared = AzureRealtimeService()
     private init() {}
 

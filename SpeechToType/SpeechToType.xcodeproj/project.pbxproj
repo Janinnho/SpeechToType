@@ -55,15 +55,11 @@
 		};
 		977709A32F1D2449002C6491 /* SpeechToTypeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = SpeechToTypeTests;
 			sourceTree = "<group>";
 		};
 		977709AD2F1D2449002C6491 /* SpeechToTypeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = SpeechToTypeUITests;
 			sourceTree = "<group>";
 		};
