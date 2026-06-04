@@ -25,7 +25,7 @@ enum RealtimeError: Error, LocalizedError {
         case .sdkUnavailable:
             return String(localized: "azureRealtimeSDKUnavailable")
         case .notConfigured:
-            return String(localized: "azureEndpointInvalid")
+            return String(localized: "azureRealtimeNotConfigured")
         case .startFailed(let message):
             return "API-Fehler: \(message)"
         }
@@ -50,9 +50,8 @@ final class AzureRealtimeService: RealtimeTranscriber {
     private var phraseListGrammar: SPXPhraseListGrammar?
     #endif
 
-    /// Starts continuous recognition. Callbacks may be invoked on background threads.
-    /// The `offset` is the audio start offset (ticks) of the segment, used to bucket
-    /// interim/final results into utterances and drop stale events.
+    /// Starts continuous recognition. `onPartial` receives the growing interim hypothesis,
+    /// `onFinal` each finalized segment. Callbacks may be invoked on background threads.
     func start(
         onPartial: @escaping (String) -> Void,
         onFinal: @escaping (String) -> Void,

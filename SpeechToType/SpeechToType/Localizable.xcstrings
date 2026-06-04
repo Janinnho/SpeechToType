@@ -3942,6 +3942,23 @@
           }
         }
       }
+    },
+    "azureRealtimeNotConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure-Echtzeit ist nicht konfiguriert: Endpunkt und/oder API-Schlüssel fehlen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure real-time is not configured: endpoint and/or API key is missing."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

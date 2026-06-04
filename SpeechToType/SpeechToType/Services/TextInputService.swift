@@ -97,31 +97,37 @@ class TextInputService {
         }
     }
 
+    /// Serial queue for direct (clipboard-free) typing so the main thread is never blocked
+    /// by long transcriptions and keystroke order stays deterministic.
+    private let typingQueue = DispatchQueue(label: "com.speechtotype.typing")
+
     /// Types text directly via synthesized keyboard events, without using the clipboard.
-    /// Sent in small chunks so long text is delivered reliably.
+    /// Runs off the main thread and sends small chunks so long text is delivered reliably.
     private func typeText(_ text: String) {
         guard !text.isEmpty else { return }
-        let source = CGEventSource(stateID: .hidSystemState)
         let units = Array(text.utf16)
         let chunkSize = 20
 
-        var index = 0
-        while index < units.count {
-            let end = min(index + chunkSize, units.count)
-            var chunk = Array(units[index..<end])
+        typingQueue.async {
+            let source = CGEventSource(stateID: .hidSystemState)
+            var index = 0
+            while index < units.count {
+                let end = min(index + chunkSize, units.count)
+                var chunk = Array(units[index..<end])
 
-            if let down = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: true),
-               let up = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: false) {
-                chunk.withUnsafeBufferPointer { buffer in
-                    if let base = buffer.baseAddress {
-                        down.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
-                        up.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
+                if let down = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: true),
+                   let up = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: false) {
+                    chunk.withUnsafeBufferPointer { buffer in
+                        if let base = buffer.baseAddress {
+                            down.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
+                            up.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: base)
+                        }
                     }
+                    down.post(tap: .cghidEventTap)
+                    up.post(tap: .cghidEventTap)
                 }
-                down.post(tap: .cghidEventTap)
-                up.post(tap: .cghidEventTap)
+                index = end
             }
-            index = end
         }
     }
 

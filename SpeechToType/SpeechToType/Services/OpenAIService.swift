@@ -268,7 +268,7 @@ class OpenAIService {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let base = trimmedEndpoint.hasSuffix("/") ? String(trimmedEndpoint.dropLast()) : trimmedEndpoint
         let apiVersion = settings.azureFoundryApiVersion.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !base.isEmpty,
+        guard !base.isEmpty, !apiVersion.isEmpty,
               let url = URL(string: "\(base)/speechtotext/transcriptions:transcribe?api-version=\(apiVersion)") else {
             throw OpenAIError.apiError(String(localized: "azureEndpointInvalid"))
         }
