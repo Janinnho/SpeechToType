@@ -8,682 +8,81 @@
 import SwiftUI
 import Carbon.HIToolbox
 import Sparkle
-import FoundationModels
+
+/// The categories shown in the Settings window sidebar.
+enum SettingsCategory: String, CaseIterable, Identifiable {
+    case speech
+    case text
+    case shortcuts
+    case general
+    case about
+
+    var id: String { rawValue }
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .speech:    return "settingsTabSpeech"
+        case .text:      return "settingsTabText"
+        case .shortcuts: return "settingsTabShortcuts"
+        case .general:   return "settingsTabGeneral"
+        case .about:     return "settingsTabAbout"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .speech:    return "waveform"
+        case .text:      return "text.bubble"
+        case .shortcuts: return "keyboard"
+        case .general:   return "gearshape"
+        case .about:     return "info.circle"
+        }
+    }
+}
 
 struct SettingsView: View {
-    @ObservedObject var settings = AppSettings.shared
-    @State private var showingAPIKey = false
-    @State private var showingTextProcessingAPIKey = false
-    @State private var showingAnthropicAPIKey = false
-    @State private var showingGeminiAPIKey = false
-    @State private var showingAzureAPIKey = false
-    @State private var ollamaModels: [String] = []
-    @State private var isLoadingOllamaModels = false
-    @State private var ollamaModelError: String?
-    @State private var accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
-    @State private var isRecordingDirectDictationShortcut = false
-    @State private var isRecordingContinuousShortcut = false
-    @State private var isRecordingRewriteShortcut = false
-
     private let updater: SPUUpdater?
-    @State private var automaticallyChecksForUpdates: Bool
-    @State private var automaticallyDownloadsUpdates: Bool
+    @State private var selection: SettingsCategory = .speech
 
     init(updater: SPUUpdater? = nil) {
         self.updater = updater
-        self._automaticallyChecksForUpdates = State(initialValue: updater?.automaticallyChecksForUpdates ?? true)
-        self._automaticallyDownloadsUpdates = State(initialValue: updater?.automaticallyDownloadsUpdates ?? false)
     }
 
     var body: some View {
-        Form {
-            // Speech Model Configuration
-            Section {
-                Picker("speechModelProviderPicker", selection: $settings.speechModelProvider) {
-                    ForEach(SpeechModelProvider.allCases, id: \.self) { provider in
-                        Text(provider.displayName).tag(provider)
-                    }
-                }
-
-                switch settings.speechModelProvider {
-                case .openAI:
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("openApiKey")
-                            .font(.headline)
-
-                        HStack {
-                            if showingAPIKey {
-                                TextField("sk-...", text: $settings.apiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            } else {
-                                SecureField("sk-...", text: $settings.apiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-
-                            Button(action: { showingAPIKey.toggle() }) {
-                                Image(systemName: showingAPIKey ? "eye.slash" : "eye")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-
-                        Text("openApiKeyDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Picker("transcriptionModel", selection: $settings.selectedModel) {
-                        ForEach(TranscriptionModel.allCases, id: \.self) { model in
-                            Text(model.displayName).tag(model)
-                        }
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("modelInfo")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        Text("modelInfoMini")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("modelInfoStandard")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("modelInfoDiarize")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                case .local:
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("whisperServerURL")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        TextField("http://yourserver/v1/audio/transcriptions", text: $settings.whisperServerURL)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("whisperServerModel")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        TextField("whisper-1", text: $settings.whisperServerModel)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("whisperServerBearerToken")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        SecureField("whisperServerBearerTokenPlaceholder", text: $settings.whisperServerBearerToken)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    Text("whisperServerDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    Toggle("dictionaryApplyLocalWhisper", isOn: $settings.applyDictionaryToLocalWhisper)
-
-                    Toggle("dictionarySimpleModeLocalWhisper", isOn: $settings.dictionarySimpleModeLocalWhisper)
-                        .disabled(!settings.applyDictionaryToLocalWhisper)
-                    Text("dictionarySimpleModeDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    CustomHeadersEditor(headers: $settings.whisperServerCustomHeaders)
-
-                case .appleSpeech:
-                    Text("appleSpeechDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    Toggle("azureRealtimeEnabled", isOn: $settings.appleRealtimeEnabled)
-
-                    Text("appleRealtimeDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                case .gemini:
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("geminiApiKey")
-                            .font(.headline)
-
-                        HStack {
-                            if showingGeminiAPIKey {
-                                TextField("AIza...", text: $settings.geminiApiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            } else {
-                                SecureField("AIza...", text: $settings.geminiApiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-
-                            Button(action: { showingGeminiAPIKey.toggle() }) {
-                                Image(systemName: showingGeminiAPIKey ? "eye.slash" : "eye")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-
-                        Text("geminiApiKeyDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Picker("geminiModel", selection: $settings.selectedGeminiSpeechModel) {
-                        ForEach(GeminiModel.allCases, id: \.self) { model in
-                            Text(model.displayName).tag(model)
-                        }
-                    }
-
-                case .azureFoundry:
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("azureEndpoint")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        TextField("https://<resource>.cognitiveservices.azure.com/", text: $settings.azureFoundryEndpoint)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("azureApiKey")
-                            .font(.headline)
-
-                        HStack {
-                            if showingAzureAPIKey {
-                                TextField("azureApiKeyPlaceholder", text: $settings.azureFoundryApiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            } else {
-                                SecureField("azureApiKeyPlaceholder", text: $settings.azureFoundryApiKey)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-
-                            Button(action: { showingAzureAPIKey.toggle() }) {
-                                Image(systemName: showingAzureAPIKey ? "eye.slash" : "eye")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-
-                        Text("azureApiKeyDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("azureModel")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        TextField("mai-transcribe-1.5", text: $settings.azureFoundryModel)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("azureApiVersion")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        TextField("2025-10-15", text: $settings.azureFoundryApiVersion)
-                            .textFieldStyle(.roundedBorder)
-                    }
-
-                    Text("azureDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    Toggle("dictionaryApplyAzure", isOn: $settings.applyDictionaryToAzure)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text("azureBiasingWeight")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Text(String(format: "%.1f", settings.azureBiasingWeight))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Slider(value: $settings.azureBiasingWeight, in: 1.0...20.0, step: 0.5)
-                        Text("azureBiasingWeightDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .disabled(!settings.applyDictionaryToAzure)
-
-                    Divider()
-
-                    Toggle("azureRealtimeEnabled", isOn: $settings.azureRealtimeEnabled)
-
-                    Picker("azureRealtimeLanguage", selection: $settings.azureRealtimeLanguage) {
-                        ForEach(AppSettings.azureRealtimeLocales, id: \.code) { locale in
-                            Text(locale.name).tag(locale.code)
-                        }
-                    }
-                    .disabled(!settings.azureRealtimeEnabled)
-
-                    Text("azureRealtimeDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } header: {
-                Text("speechModelConfigSection")
+        // A custom two-column layout instead of NavigationSplitView: SettingsView is also
+        // embedded inside ContentView's NavigationSplitView detail pane, and nesting two
+        // split views makes the inner sidebar render behind the app's navigation.
+        HStack(spacing: 0) {
+            List(SettingsCategory.allCases, selection: $selection) { category in
+                Label(category.title, systemImage: category.icon)
+                    .tag(category)
             }
+            .listStyle(.sidebar)
+            .frame(width: 200)
 
-            // Text Rewriting Section
-            Section {
-                Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
+            Divider()
 
-                if settings.textRewriteEnabled {
-                    Toggle("dictionaryApplyRewrite", isOn: $settings.applyDictionaryToRewrite)
-
-                    Picker("textProcessingProviderPicker", selection: $settings.textProcessingProvider) {
-                        ForEach(TextProcessingProvider.allCases, id: \.self) { provider in
-                            Text(provider.displayName).tag(provider)
-                        }
-                    }
-
-                    switch settings.textProcessingProvider {
-                    case .openAI:
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("textProcessingOpenAIApiKey")
-                                .font(.headline)
-
-                            HStack {
-                                if showingTextProcessingAPIKey {
-                                    TextField("sk-...", text: $settings.textProcessingOpenAIApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                } else {
-                                    SecureField("sk-...", text: $settings.textProcessingOpenAIApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                }
-
-                                Button(action: { showingTextProcessingAPIKey.toggle() }) {
-                                    Image(systemName: showingTextProcessingAPIKey ? "eye.slash" : "eye")
-                                }
-                                .buttonStyle(.borderless)
-                            }
-
-                            Text("textProcessingOpenAIApiKeyDescription")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Picker("gptModel", selection: $settings.selectedGPTModel) {
-                            ForEach(GPTModel.allCases, id: \.self) { model in
-                                Text(model.displayName).tag(model)
-                            }
-                        }
-
-                        Text("gptModelDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                    case .anthropic:
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("anthropicApiKey")
-                                .font(.headline)
-
-                            HStack {
-                                if showingAnthropicAPIKey {
-                                    TextField("sk-ant-...", text: $settings.anthropicApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                } else {
-                                    SecureField("sk-ant-...", text: $settings.anthropicApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                }
-
-                                Button(action: { showingAnthropicAPIKey.toggle() }) {
-                                    Image(systemName: showingAnthropicAPIKey ? "eye.slash" : "eye")
-                                }
-                                .buttonStyle(.borderless)
-                            }
-
-                            Text("anthropicApiKeyDescription")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Picker("anthropicModel", selection: $settings.selectedAnthropicModel) {
-                            ForEach(AnthropicModel.allCases, id: \.self) { model in
-                                Text(model.displayName).tag(model)
-                            }
-                        }
-
-                    case .ollama:
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("ollamaServerURL")
-                                .font(.headline)
-
-                            TextField("http://localhost:11434", text: $settings.ollamaServerURL)
-                                .textFieldStyle(.roundedBorder)
-                                .onChange(of: settings.ollamaServerURL) { _, _ in
-                                    loadOllamaModels()
-                                }
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("ollamaModel")
-                                    .font(.headline)
-                                Spacer()
-                                if isLoadingOllamaModels {
-                                    ProgressView()
-                                        .scaleEffect(0.7)
-                                }
-                                Button {
-                                    loadOllamaModels()
-                                } label: {
-                                    Image(systemName: "arrow.clockwise")
-                                }
-                                .buttonStyle(.borderless)
-                            }
-
-                            if ollamaModels.isEmpty && !isLoadingOllamaModels {
-                                if let error = ollamaModelError {
-                                    Text(error)
-                                        .font(.caption)
-                                        .foregroundColor(.red)
-                                } else {
-                                    Text("ollamaNoModels")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            } else {
-                                Picker("", selection: $settings.selectedOllamaModel) {
-                                    if settings.selectedOllamaModel.isEmpty {
-                                        Text("ollamaSelectModel").tag("")
-                                    }
-                                    ForEach(ollamaModels, id: \.self) { model in
-                                        Text(model).tag(model)
-                                    }
-                                }
-                                .labelsHidden()
-                            }
-                        }
-
-                        Text("ollamaDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                        CustomHeadersEditor(headers: $settings.ollamaCustomHeaders)
-
-                    case .appleIntelligence:
-                        let model = SystemLanguageModel.default
-                        switch model.availability {
-                        case .available:
-                            HStack {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
-                                Text("appleIntelligenceAvailable")
-                                    .foregroundColor(.green)
-                            }
-                        case .unavailable(.deviceNotEligible):
-                            HStack {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.red)
-                                Text("appleIntelligenceNotEligible")
-                                    .foregroundColor(.red)
-                            }
-                        case .unavailable(.appleIntelligenceNotEnabled):
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.orange)
-                                Text("appleIntelligenceNotEnabled")
-                                    .foregroundColor(.orange)
-                            }
-                        case .unavailable(.modelNotReady):
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.7)
-                                Text("appleIntelligenceNotReady")
-                                    .foregroundColor(.secondary)
-                            }
-                        default:
-                            HStack {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .foregroundColor(.secondary)
-                                Text("appleIntelligenceUnavailable")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-
-                        Text("appleIntelligenceDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                    case .gemini:
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("geminiApiKey")
-                                .font(.headline)
-
-                            HStack {
-                                if showingGeminiAPIKey {
-                                    TextField("AIza...", text: $settings.geminiApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                } else {
-                                    SecureField("AIza...", text: $settings.geminiApiKey)
-                                        .textFieldStyle(.roundedBorder)
-                                }
-
-                                Button(action: { showingGeminiAPIKey.toggle() }) {
-                                    Image(systemName: showingGeminiAPIKey ? "eye.slash" : "eye")
-                                }
-                                .buttonStyle(.borderless)
-                            }
-
-                            Text("geminiApiKeyDescription")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            Text("geminiSharedKeyHint")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Picker("geminiModel", selection: $settings.selectedGeminiTextModel) {
-                            ForEach(GeminiModel.allCases, id: \.self) { model in
-                                Text(model.displayName).tag(model)
-                            }
-                        }
-                    }
-
-                    Picker("defaultTranslationLanguage", selection: $settings.defaultTranslationLanguage) {
-                        ForEach(AppSettings.translationLanguages, id: \.self) { language in
-                            Text(language).tag(language)
-                        }
-                    }
-
-                    Text("defaultTranslationLanguageDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } header: {
-                Text("textRewriteSection")
-            }
-
-            // Shortcuts Section
-            Section {
-                // Direct Dictation shortcut (hold to record)
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("directDictationShortcut")
-                        Spacer()
-                        ShortcutRecorderButton(
-                            shortcut: $settings.directDictationShortcut,
-                            isRecording: $isRecordingDirectDictationShortcut,
-                            otherRecording: .constant(isRecordingContinuousShortcut || isRecordingRewriteShortcut),
-                            triggerMode: .holdKey
-                        )
-                    }
-                    Text("directDictationDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                // Continuous Recording shortcut (double-tap)
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("continuousRecordingShortcut")
-                        Spacer()
-                        ShortcutRecorderButton(
-                            shortcut: $settings.continuousRecordingShortcut,
-                            isRecording: $isRecordingContinuousShortcut,
-                            otherRecording: .constant(isRecordingDirectDictationShortcut || isRecordingRewriteShortcut),
-                            triggerMode: .doubleTap
-                        )
-                    }
-                    Text("continuousRecordingDescription")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                // Rewrite shortcut (only if enabled)
-                if settings.textRewriteEnabled {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text("rewriteShortcut")
-                            Spacer()
-                            ShortcutRecorderButton(
-                                shortcut: $settings.rewriteShortcut,
-                                isRecording: $isRecordingRewriteShortcut,
-                                otherRecording: .constant(isRecordingDirectDictationShortcut || isRecordingContinuousShortcut),
-                                triggerMode: .keyCombo
-                            )
-                        }
-                        Text("rewriteShortcutDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-
-                Text("shortcutsDescription")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.top, 4)
-
-                Button("resetShortcuts") {
-                    settings.resetShortcutsToDefaults()
-                }
-                .font(.caption)
-
-                HStack {
-                    Text("accessibilityAccess")
-                    Spacer()
-                    if accessibilityEnabled {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Text("granted")
-                            .foregroundColor(.green)
-                    } else {
-                        Button("activate") {
-                            HotkeyManager.requestAccessibilityPermission()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-
-                Text("accessibilityDescription")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } header: {
-                Text("shortcutsSection")
-            }
-
-            Section {
-                Picker("autoDelete", selection: $settings.autoDeleteOption) {
-                    ForEach(AutoDeleteOption.allCases, id: \.self) { option in
-                        Text(option.displayName).tag(option)
-                    }
-                }
-
-                Text("autoDeleteDescription")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
-                Toggle("saveRewritesToHistory", isOn: $settings.saveRewritesToHistory)
-
-                Text("saveRewritesToHistoryDescription")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } header: {
-                Text("historySection")
-            }
-
-            Section {
-                Toggle("copyToClipboardOnInsert", isOn: $settings.copyToClipboardOnInsert)
-
-                Text("copyToClipboardOnInsertDescription")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } header: {
-                Text("insertionSection")
-            }
-
-            Section {
-                HStack {
-                    Text("version")
-                    Spacer()
-                    Text(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")
-                        .foregroundColor(.secondary)
-                }
-
-                if let updater = updater {
-                    Toggle("autoCheckUpdates", isOn: $automaticallyChecksForUpdates)
-                        .onChange(of: automaticallyChecksForUpdates) { _, newValue in
-                            updater.automaticallyChecksForUpdates = newValue
-                        }
-
-                    Toggle("autoDownloadUpdates", isOn: $automaticallyDownloadsUpdates)
-                        .disabled(!automaticallyChecksForUpdates)
-                        .onChange(of: automaticallyDownloadsUpdates) { _, newValue in
-                            updater.automaticallyDownloadsUpdates = newValue
-                        }
-
-                    Button("checkForUpdates") {
-                        updater.checkForUpdates()
-                    }
-                }
-
-                Link("OpenAI API Documentation", destination: URL(string: "https://platform.openai.com/docs/api-reference/audio")!)
-            } header: {
-                Text("about")
-            }
+            // Hide each pane's own grouped-form background and paint a single uniform
+            // backdrop across the whole detail area, with the form content left-aligned
+            // at a comfortable reading width. This avoids the big centred gap and any
+            // seam between the form and the surrounding whitespace.
+            detail
+                .scrollContentBackground(.hidden)
+                .frame(maxWidth: 700, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .background(Color(nsColor: .windowBackgroundColor))
         }
-        .formStyle(.grouped)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            accessibilityEnabled = HotkeyManager.checkAccessibilityPermission()
-            if settings.textProcessingProvider == .ollama {
-                loadOllamaModels()
-            }
-        }
-        .onChange(of: settings.textProcessingProvider) { _, newValue in
-            if newValue == .ollama {
-                loadOllamaModels()
-            }
-        }
+        .frame(minWidth: 760, minHeight: 520)
     }
 
-    private func loadOllamaModels() {
-        isLoadingOllamaModels = true
-        ollamaModelError = nil
-
-        Task {
-            do {
-                let models = try await TextRewriteService.fetchOllamaModels(serverURL: settings.ollamaServerURL)
-                await MainActor.run {
-                    ollamaModels = models
-                    isLoadingOllamaModels = false
-                    // Auto-select first model if none selected
-                    if settings.selectedOllamaModel.isEmpty, let first = models.first {
-                        settings.selectedOllamaModel = first
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    ollamaModels = []
-                    ollamaModelError = String(localized: "ollamaConnectionError")
-                    isLoadingOllamaModels = false
-                }
-            }
+    @ViewBuilder
+    private var detail: some View {
+        switch selection {
+        case .speech:    SpeechSettingsView()
+        case .text:      TextRewriteSettingsView()
+        case .shortcuts: ShortcutsSettingsView()
+        case .general:   GeneralSettingsView()
+        case .about:     AboutSettingsView(updater: updater)
         }
     }
 }

@@ -431,7 +431,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeechToType/SpeechToType.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9WQ4DZ2W9G;
 				ENABLE_APP_SANDBOX = NO;
@@ -449,7 +449,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = jaba.SpeechToType;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -470,7 +470,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeechToType/SpeechToType.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 9WQ4DZ2W9G;
 				ENABLE_APP_SANDBOX = NO;
@@ -488,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.3;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = jaba.SpeechToType;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

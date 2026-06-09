@@ -12,6 +12,33 @@
         -->
 
         <item>
+            <title>Version 2.4</title>
+            <pubDate>Tue, 09 Jun 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>14</sparkle:version>
+            <sparkle:shortVersionString>2.4</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.4</h2>
+                <p>Rebuilt Apple Speech live transcription and a cleaner settings layout.</p>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Apple Speech real-time</strong>: Rebuilt on Apple's modern on-device SpeechAnalyzer/SpeechTranscriber. Pauses no longer wipe what you already dictated, and long dictations are inserted reliably. Real-time is now enabled by default for Apple Speech.</li>
+                    <li><strong>Reorganized settings</strong>: Settings are split into a sidebar with separate areas for Speech model, Text model, Shortcuts, General, and About. Settings now open in their own window via a gear button in the bottom-left of the sidebar (and via the menu bar as before).</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release (nach `sign_update SpeechToType.dmg`):
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.4/SpeechToType.dmg"
+                sparkle:edSignature="2Ltg7lDhjC+Way+3/N/vRvD+RLg6mvt4+9DupeKT9LAGD7gxW7fAytrXBQ45MRjfYxV/QzHbDOkQOHsKIH3DAg=="
+                length="8794549"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.3</title>
             <pubDate>Wed, 03 Jun 2026 12:00:00 +0200</pubDate>
             <sparkle:version>13</sparkle:version>

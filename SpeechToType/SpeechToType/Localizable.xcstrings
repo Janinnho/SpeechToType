@@ -3072,6 +3072,91 @@
         }
       }
     },
+    "settingsTabSpeech": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprachmodell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech model"
+          }
+        }
+      }
+    },
+    "settingsTabText": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textmodell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text model"
+          }
+        }
+      }
+    },
+    "settingsTabShortcuts": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurzbefehle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcuts"
+          }
+        }
+      }
+    },
+    "settingsTabGeneral": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allgemein"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        }
+      }
+    },
+    "settingsTabAbout": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        }
+      }
+    },
     "saveRewritesToHistoryDescription": {
       "extractionState": "manual",
       "localizations": {
@@ -3939,6 +4024,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Shows the text live in the overlay preview while you speak (fully on-device, no internet). The complete text is inserted when you release the key. Note: Apple's on-device recognition may time-limit very long recordings."
+          }
+        }
+      }
+    },
+    "appleRealtimeEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Echtzeit-Transkription (live)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real-time transcription (live)"
           }
         }
       }
