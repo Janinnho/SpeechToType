@@ -12,7 +12,6 @@ enum ContentTab: String, CaseIterable {
     case rewrite = "rewrite"
     case dictionary = "dictionary"
     case history = "history"
-    case settings = "settings"
 
     var icon: String {
         switch self {
@@ -24,8 +23,6 @@ enum ContentTab: String, CaseIterable {
             return "character.book.closed"
         case .history:
             return "clock"
-        case .settings:
-            return "gear"
         }
     }
     
@@ -56,6 +53,17 @@ struct ContentView: View {
             }
             .listStyle(.sidebar)
             .navigationSplitViewColumnWidth(min: 150, ideal: 180, max: 220)
+            .safeAreaInset(edge: .bottom) {
+                // Small settings affordance pinned to the bottom-left of the sidebar.
+                // Opens the standard Settings window (same one as the menu bar item).
+                SettingsLink {
+                    Label("settings", systemImage: "gearshape")
+                }
+                .buttonStyle(.borderless)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+            }
         } detail: {
             ScrollView {
                 switch selectedTab {
@@ -67,8 +75,6 @@ struct ContentView: View {
                     DictionaryView()
                 case .history:
                     HistoryView()
-                case .settings:
-                    SettingsView()
                 }
             }
         }

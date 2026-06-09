@@ -693,7 +693,7 @@ final class AppSettings: ObservableObject {
         self.azureBiasingWeight = defaults.object(forKey: "azureBiasingWeight") as? Double ?? 5.0
         self.azureRealtimeEnabled = defaults.object(forKey: "azureRealtimeEnabled") as? Bool ?? false
         self.azureRealtimeLanguage = defaults.string(forKey: "azureRealtimeLanguage") ?? "de-DE"
-        self.appleRealtimeEnabled = defaults.object(forKey: "appleRealtimeEnabled") as? Bool ?? false
+        self.appleRealtimeEnabled = defaults.object(forKey: "appleRealtimeEnabled") as? Bool ?? true
 
         // Dictionary settings
         if let dictData = defaults.data(forKey: "dictionaryWords"),
