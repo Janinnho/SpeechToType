@@ -4061,6 +4061,261 @@
           }
         }
       }
+    },
+    "speechLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        }
+      }
+    },
+    "speechLanguageAutomatic": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic"
+          }
+        }
+      }
+    },
+    "speechLanguageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache für gpt-transcribe und gpt-live-transcribe. „Automatisch“ lässt das Modell die Sprache selbst erkennen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language for gpt-transcribe and gpt-live-transcribe. “Automatic” lets the model detect the language itself."
+          }
+        }
+      }
+    },
+    "openAILegacyLanguageNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die GPT-4o-Modelle transkribieren immer auf Deutsch."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The GPT-4o models always transcribe in German."
+          }
+        }
+      }
+    },
+    "openAIDictionaryKeywordsNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch-Wörter werden als Keywords (wörtliches Spezialvokabular) übergeben, die Anweisungen als Prompt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary words are passed as keywords (literal custom vocabulary), the instructions as a prompt."
+          }
+        }
+      }
+    },
+    "openAIRealtimeDelay": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latenz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency"
+          }
+        }
+      }
+    },
+    "openAIRealtimeDelayDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geringere Latenz reagiert schneller, höhere Latenz gibt dem Modell mehr Kontext und meist bessere Genauigkeit."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lower latency responds faster; higher latency gives the model more context and usually better accuracy."
+          }
+        }
+      }
+    },
+    "openAILiveDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst beim Loslassen der Taste wird der komplette, korrekt formatierte Text auf einmal eingefügt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. The complete, correctly formatted text is inserted at once when you release the key."
+          }
+        }
+      }
+    },
+    "realtimeDelayMinimal": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal"
+          }
+        }
+      }
+    },
+    "realtimeDelayLow": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niedrig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low"
+          }
+        }
+      }
+    },
+    "realtimeDelayMedium": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mittel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        }
+      }
+    },
+    "realtimeDelayHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High"
+          }
+        }
+      }
+    },
+    "realtimeDelayXHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sehr hoch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very high"
+          }
+        }
+      }
+    },
+    "modelInfoGptTranscribe": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT Transcribe: Neuestes Modell, Keywords + mehrsprachig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT Transcribe: newest model, keywords + multilingual"
+          }
+        }
+      }
+    },
+    "modelInfoGptLiveTranscribe": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT Live Transcribe: Live-Vorschau beim Sprechen (Streaming)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• GPT Live Transcribe: live preview while speaking (streaming)"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

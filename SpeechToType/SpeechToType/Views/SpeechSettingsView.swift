@@ -58,6 +58,12 @@ struct SpeechSettingsView: View {
                         Text("modelInfo")
                             .font(.caption)
                             .fontWeight(.semibold)
+                        Text("modelInfoGptTranscribe")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("modelInfoGptLiveTranscribe")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         Text("modelInfoMini")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -65,6 +71,44 @@ struct SpeechSettingsView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Text("modelInfoDiarize")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    if settings.selectedModel.usesLanguagesAndKeywords {
+                        Picker("speechLanguage", selection: $settings.openAISpeechLanguage) {
+                            ForEach(SpeechLanguageOption.allCases, id: \.self) { option in
+                                Text(option.displayName).tag(option)
+                            }
+                        }
+
+                        Text("speechLanguageDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                        Text("openAIDictionaryKeywordsNote")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("openAILegacyLanguageNote")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    if settings.selectedModel == .gptLiveTranscribe {
+                        Divider()
+
+                        Picker("openAIRealtimeDelay", selection: $settings.openAIRealtimeDelay) {
+                            ForEach(OpenAIRealtimeDelay.allCases, id: \.self) { delay in
+                                Text(delay.displayName).tag(delay)
+                            }
+                        }
+
+                        Text("openAIRealtimeDelayDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                        Text("openAILiveDescription")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

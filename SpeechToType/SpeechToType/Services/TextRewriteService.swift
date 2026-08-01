@@ -57,46 +57,28 @@ enum RewriteMode: String, CaseIterable, Codable {
 }
 
 enum GPTModel: String, CaseIterable, Codable {
-    case gpt4o = "gpt-4o"
-    case gpt54 = "gpt-5.4"
-    case gpt54mini = "gpt-5.4-mini"
-    case gpt54nano = "gpt-5.4-nano"
-    case gpt55 = "gpt-5.5"
+    case gpt56Sol = "gpt-5.6-sol"
+    case gpt56Terra = "gpt-5.6-terra"
+    case gpt56Luna = "gpt-5.6-luna"
 
     var displayName: String {
         switch self {
-        case .gpt4o:
-            return "GPT-4o"
-        case .gpt54:
-            return "GPT-5.4"
-        case .gpt54mini:
-            return "GPT-5.4 Mini"
-        case .gpt54nano:
-            return "GPT-5.4 Nano"
-        case .gpt55:
-            return "GPT-5.5"
+        case .gpt56Sol:
+            return "GPT-5.6 Sol"
+        case .gpt56Terra:
+            return "GPT-5.6 Terra"
+        case .gpt56Luna:
+            return "GPT-5.6 Luna"
         }
     }
 
-    /// Whether this model uses max_completion_tokens instead of max_tokens
-    var usesMaxCompletionTokens: Bool {
-        switch self {
-        case .gpt4o:
-            return false
-        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
-            return true
-        }
-    }
+    /// Whether this model uses max_completion_tokens instead of max_tokens.
+    /// The whole GPT-5.x family does.
+    var usesMaxCompletionTokens: Bool { true }
 
-    /// Whether this model supports custom temperature values
-    var supportsCustomTemperature: Bool {
-        switch self {
-        case .gpt4o:
-            return true
-        case .gpt54, .gpt54mini, .gpt54nano, .gpt55:
-            return false
-        }
-    }
+    /// Whether this model supports custom temperature values.
+    /// The GPT-5.x family does not.
+    var supportsCustomTemperature: Bool { false }
 }
 
 enum TextRewriteError: Error, LocalizedError {

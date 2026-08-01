@@ -59,6 +59,11 @@ Status, RecordingOverlayWindow, TextRewritePopupWindow.
 
 - Speech (`SpeechModelProvider`): `openai`, `local`, `appleSpeech`, `gemini`, `azureFoundry`.
 - Text (`TextProcessingProvider`): `openai`, `anthropic`, `ollama`, `appleIntelligence`, `gemini`.
+- **OpenAI models** (`TranscriptionModel`): `gpt-transcribe` (batch, default for new installs),
+  `gpt-live-transcribe` (**realtime only**, no `/v1/audio/transcriptions`), plus the legacy
+  `gpt-4o-*-transcribe`. The two new ones send `languages[]` (from `openAISpeechLanguage`,
+  "auto" ⇒ field omitted) + `keywords[]`; the legacy ones keep `language=de` + the combined
+  dictionary prompt. Branch on `usesLanguagesAndKeywords` / `isRealtimeOnly` / `batchFallback`.
 - **Azure Foundry MAI**: fast-transcription REST `…/speechtotext/transcriptions:transcribe`
   with `enhancedMode` (model `mai-transcribe-1.5`, lowercase!). Dictionary → `phraseList`.
   m4a is converted to WAV before upload (`convertToWav`) because MAI-Transcribe only
@@ -69,25 +74,41 @@ Status, RecordingOverlayWindow, TextRewritePopupWindow.
 Optional per provider; enabled in Settings. Behavior: **while speaking** the running text
 is shown only in the floating overlay; **on key release** the complete, formatted text is
 inserted once (no backspaces → never overwrites existing text). History label
-"Azure Realtime (…)" / "Apple Speech (Realtime)".
+"GPT Live Transcribe (…)" / "Azure Realtime (…)" / "Apple Speech (Realtime)".
 
-- Both engines implement protocol `RealtimeTranscriber` (`start(onPartial:onFinal:onError:)`,
+- All engines implement protocol `RealtimeTranscriber` (`start(onPartial:onFinal:onError:)`,
   `stop()`); the live path in `AppDelegate` is provider-agnostic (`realtimeTranscriber(for:)`).
+- `OpenAIRealtimeService` — Realtime API over `URLSessionWebSocketTask`, `session.update` with
+  `session.type = "transcription"`, mic audio as PCM16 mono 24 kHz base64 in
+  `input_audio_buffer.append`. `turn_detection` **must** be `null` — the model rejects any turn
+  detection config — so the model streams deltas on its own and the single turn is closed by
+  `stop()`, which sends `input_audio_buffer.commit` and then **blocks** (bounded, 2.5 s) until
+  `completed` lands, because `stopRealtime` reads `fullText()` right after. Incoming `…transcription.delta`
+  events are incremental → accumulated per `item_id` before hitting `onPartial`. Switched on by
+  selecting the `gpt-live-transcribe` model (no separate toggle). Settings:
+  `openAISpeechLanguage` + `openAIRealtimeDelay`. One instance per dictation, not a singleton.
 - `AzureRealtimeService` — Microsoft Speech SDK (`SPXSpeechRecognizer`, continuous
   recognition, `PhraseListGrammar`). Uses Azure standard streaming models (NOT MAI-Transcribe).
   Setting: `azureRealtimeEnabled` + `azureRealtimeLanguage`.
-- `AppleRealtimeService` — on-device `SFSpeechRecognizer` + `AVAudioEngine`, cumulative
-  partials, no network, no extra framework. Setting: `appleRealtimeEnabled`.
+- `AppleRealtimeService` — on-device `SpeechAnalyzer` + `SpeechTranscriber` (macOS 26) driven by
+  `AVAudioEngine`; `SFSpeechRecognizer` is only used for the authorization prompt. Phrase-by-phrase
+  volatile + finalized results, no network, no extra framework. Setting: `appleRealtimeEnabled`.
 - `LiveTypingSession` accumulates finals + last partial → `fullText()` for insertion; it is
-  thread-safe (events arrive on background threads).
-- Both live engines use the system default microphone (the app's mic selector does not apply).
+  thread-safe (events arrive on background threads). Contract: `onPartial` **replaces** the
+  interim, `onFinal` **appends** — so engines with delta-style output must accumulate first.
+- `AppDelegate`'s `onError` closure calls `stop()` **synchronously on the callback thread**, so a
+  blocking `stop()` must pre-arm its drain on the error path (see `OpenAIRealtimeService.emitError`).
+- All live engines use the system default microphone (the app's mic selector does not apply).
 
 ## Dictionary (custom vocabulary)
 
 `AppSettings.dictionaryWords` + `dictionaryInstructions`. Helpers: `dictionaryPromptText`,
-`dictionaryWordsText`, `dictionaryPhrases`. Passed as: prompt (OpenAI/Gemini/Whisper),
-`phraseList` (Azure), `PhraseListGrammar` (Azure realtime). Toggles: local Whisper, Azure,
-rewrite injection.
+`dictionaryWordsText`, `dictionaryPhrases`, `openAIKeywords`, `dictionaryInstructionsText`.
+Passed as: `keywords` + `prompt` (gpt-transcribe / gpt-live-transcribe — words and
+instructions travel separately; `openAIKeywords` strips `<`, `>` and newlines as the API
+requires), combined prompt (legacy gpt-4o-*, Gemini, Whisper), `phraseList` (Azure),
+`PhraseListGrammar` (Azure realtime). Toggles: local Whisper, Azure, rewrite injection —
+OpenAI has none, the dictionary is always applied.
 
 ## Microsoft Speech SDK dependency
 

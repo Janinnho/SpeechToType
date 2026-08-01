@@ -192,6 +192,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Returns the live transcriber to use for the current provider, or nil for the
     /// normal record→REST path. Also sets the history label for the active engine.
     private func realtimeTranscriber(for settings: AppSettings) -> RealtimeTranscriber? {
+        // gpt-live-transcribe is realtime-only, so selecting it is the live switch.
+        // Deliberately not gated on a non-empty API key: this way a missing key surfaces a
+        // visible error instead of silently falling back to a pointless recording.
+        if settings.speechModelProvider == .openAI, settings.selectedModel == .gptLiveTranscribe {
+            realtimeModelLabel = "GPT Live Transcribe (\(settings.openAISpeechLanguage.displayName))"
+            return OpenAIRealtimeService()
+        }
         if settings.speechModelProvider == .azureFoundry,
            settings.azureRealtimeEnabled,
            AzureRealtimeService.isAvailable {

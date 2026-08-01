@@ -53,48 +53,112 @@ enum TextProcessingProvider: String, CaseIterable, Codable {
 }
 
 enum GeminiModel: String, CaseIterable, Codable {
-    case gemini35Flash = "gemini-3.5-flash"
+    case gemini36Flash = "gemini-3.6-flash"
     case gemini31Pro = "gemini-3.1-pro"
 
     var displayName: String {
         switch self {
-        case .gemini35Flash: return "Gemini 3.5 Flash"
+        case .gemini36Flash: return "Gemini 3.6 Flash"
         case .gemini31Pro: return "Gemini 3.1 Pro"
         }
     }
 }
 
 enum AnthropicModel: String, CaseIterable, Codable {
-    case claude4Sonnet = "claude-sonnet-4-6"
-    case claude4Opus = "claude-opus-4-6"
-    case claude4Opus47 = "claude-opus-4-7"
-    case claude4Opus48 = "claude-opus-4-8"
-    case claudeHaiku = "claude-haiku-4-5-20251001"
+    case claudeOpus5 = "claude-opus-5"
+    case claudeSonnet5 = "claude-sonnet-5"
+    case claudeHaiku45 = "claude-haiku-4-5"
 
     var displayName: String {
         switch self {
-        case .claude4Sonnet: return "Claude Sonnet 4.6"
-        case .claude4Opus: return "Claude Opus 4.6"
-        case .claude4Opus47: return "Claude Opus 4.7"
-        case .claude4Opus48: return "Claude Opus 4.8"
-        case .claudeHaiku: return "Claude Haiku 4.5"
+        case .claudeOpus5: return "Claude Opus 5"
+        case .claudeSonnet5: return "Claude Sonnet 5"
+        case .claudeHaiku45: return "Claude Haiku 4.5"
         }
     }
 }
 
 enum TranscriptionModel: String, CaseIterable, Codable {
+    case gptTranscribe = "gpt-transcribe"
+    case gptLiveTranscribe = "gpt-live-transcribe"
     case gpt4oMiniTranscribe = "gpt-4o-mini-transcribe"
     case gpt4oTranscribe = "gpt-4o-transcribe"
     case gpt4oTranscribeDiarize = "gpt-4o-transcribe-diarize"
 
     var displayName: String {
         switch self {
+        case .gptTranscribe:
+            return "GPT Transcribe"
+        case .gptLiveTranscribe:
+            return "GPT Live Transcribe"
         case .gpt4oMiniTranscribe:
             return "GPT-4o Mini Transcribe"
         case .gpt4oTranscribe:
             return "GPT-4o Transcribe"
         case .gpt4oTranscribeDiarize:
             return "GPT-4o Transcribe (Diarize)"
+        }
+    }
+
+    /// New model generation: uses `languages[]` + `keywords[]` instead of the singular
+    /// `language` plus a combined dictionary prompt.
+    var usesLanguagesAndKeywords: Bool {
+        self == .gptTranscribe || self == .gptLiveTranscribe
+    }
+
+    /// Realtime-only — there is no `/v1/audio/transcriptions` endpoint for this model.
+    var isRealtimeOnly: Bool { self == .gptLiveTranscribe }
+
+    /// The model that can actually be used on the batch endpoint.
+    var batchFallback: TranscriptionModel { isRealtimeOnly ? .gptTranscribe : self }
+}
+
+/// Recognition language for the new OpenAI speech models. `automatic` omits the field
+/// entirely so the model detects the language itself.
+enum SpeechLanguageOption: String, CaseIterable, Codable {
+    case automatic = "auto"
+    case german = "de"
+    case english = "en"
+    case french = "fr"
+    case spanish = "es"
+    case italian = "it"
+    case dutch = "nl"
+    case portuguese = "pt"
+    case polish = "pl"
+
+    /// ISO-639-1 code for the API, or nil when the field must be omitted.
+    var apiCode: String? { self == .automatic ? nil : rawValue }
+
+    var displayName: String {
+        switch self {
+        case .automatic: return String(localized: "speechLanguageAutomatic")
+        case .german: return "Deutsch (de)"
+        case .english: return "English (en)"
+        case .french: return "Français (fr)"
+        case .spanish: return "Español (es)"
+        case .italian: return "Italiano (it)"
+        case .dutch: return "Nederlands (nl)"
+        case .portuguese: return "Português (pt)"
+        case .polish: return "Polski (pl)"
+        }
+    }
+}
+
+/// `delay` for gpt-live-transcribe: latency vs. accuracy trade-off.
+enum OpenAIRealtimeDelay: String, CaseIterable, Codable {
+    case minimal
+    case low
+    case medium
+    case high
+    case xhigh
+
+    var displayName: String {
+        switch self {
+        case .minimal: return String(localized: "realtimeDelayMinimal")
+        case .low: return String(localized: "realtimeDelayLow")
+        case .medium: return String(localized: "realtimeDelayMedium")
+        case .high: return String(localized: "realtimeDelayHigh")
+        case .xhigh: return String(localized: "realtimeDelayXHigh")
         }
     }
 }
@@ -482,6 +546,17 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(appleRealtimeEnabled, forKey: "appleRealtimeEnabled") }
     }
 
+    /// Recognition language for gpt-transcribe / gpt-live-transcribe. The legacy gpt-4o-*
+    /// models keep their hardcoded `language=de`.
+    @Published var openAISpeechLanguage: SpeechLanguageOption {
+        didSet { defaults.set(openAISpeechLanguage.rawValue, forKey: "openAISpeechLanguage") }
+    }
+
+    /// `delay` for gpt-live-transcribe (realtime latency profile)
+    @Published var openAIRealtimeDelay: OpenAIRealtimeDelay {
+        didSet { defaults.set(openAIRealtimeDelay.rawValue, forKey: "openAIRealtimeDelay") }
+    }
+
     /// Common locales offered in the real-time language picker
     static let azureRealtimeLocales: [(code: String, name: String)] = [
         ("de-DE", "Deutsch (de-DE)"),
@@ -545,6 +620,28 @@ final class AppSettings: ObservableObject {
         min(max(azureBiasingWeight, 1.0), 20.0)
     }
 
+    /// The dictionary words as OpenAI `keywords`. Per the API docs each keyword must be a
+    /// single line without `<`, `>`, CR or LF.
+    var openAIKeywords: [String] {
+        var seen = Set<String>()
+        return dictionaryWords.compactMap { raw -> String? in
+            let cleaned = raw
+                .components(separatedBy: .newlines)
+                .joined(separator: " ")
+                .replacingOccurrences(of: "<", with: "")
+                .replacingOccurrences(of: ">", with: "")
+                .trimmingCharacters(in: .whitespaces)
+            guard !cleaned.isEmpty, seen.insert(cleaned).inserted else { return nil }
+            return cleaned
+        }
+    }
+
+    /// Only the free-text instructions — for the new OpenAI models the words travel
+    /// separately as `keywords`.
+    var dictionaryInstructionsText: String {
+        dictionaryInstructions.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     /// Combined dictionary prompt text (words + instructions); empty if nothing is set
     var dictionaryPromptText: String {
         var parts: [String] = []
@@ -606,21 +703,23 @@ final class AppSettings: ObservableObject {
         // v1.6 migration: one-time upgrade of default models
         let hasApplied16Migration = defaults.bool(forKey: "hasApplied16Migration")
 
-        // Transcription model: new default is gpt4oTranscribe
+        // Transcription model: new default is gptTranscribe. An already stored choice is
+        // never overwritten — only fresh installs get the new default.
         if !hasApplied16Migration {
             // First install or upgrade: set to new default
-            self.selectedModel = .gpt4oTranscribe
-            defaults.set(TranscriptionModel.gpt4oTranscribe.rawValue, forKey: "selectedModel")
+            self.selectedModel = .gptTranscribe
+            defaults.set(TranscriptionModel.gptTranscribe.rawValue, forKey: "selectedModel")
         } else {
-            self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gpt4oTranscribe
+            self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gptTranscribe
         }
 
-        // GPT model: new default is gpt54
+        // GPT model: new default is gpt56Terra (balanced tier). A stored value from a
+        // model that is no longer offered no longer parses and falls back to the default.
         if !hasApplied16Migration {
-            self.selectedGPTModel = .gpt54
-            defaults.set(GPTModel.gpt54.rawValue, forKey: "selectedGPTModel")
+            self.selectedGPTModel = .gpt56Terra
+            defaults.set(GPTModel.gpt56Terra.rawValue, forKey: "selectedGPTModel")
         } else {
-            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt54
+            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt56Terra
         }
 
         // Mark v1.6 migration as applied
@@ -659,7 +758,7 @@ final class AppSettings: ObservableObject {
         // Text processing & Anthropic settings
         self.textProcessingOpenAIApiKey = defaults.string(forKey: "textProcessingOpenAIApiKey") ?? ""
         self.anthropicApiKey = defaults.string(forKey: "anthropicApiKey") ?? ""
-        self.selectedAnthropicModel = AnthropicModel(rawValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claude4Sonnet
+        self.selectedAnthropicModel = AnthropicModel(rawValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claudeSonnet5
 
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
@@ -673,8 +772,8 @@ final class AppSettings: ObservableObject {
 
         // Gemini settings
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
-        self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini35Flash
-        self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini35Flash
+        self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini36Flash
+        self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini36Flash
 
         // Azure Foundry MAI settings
         self.azureFoundryEndpoint = defaults.string(forKey: "azureFoundryEndpoint") ?? ""
@@ -694,6 +793,10 @@ final class AppSettings: ObservableObject {
         self.azureRealtimeEnabled = defaults.object(forKey: "azureRealtimeEnabled") as? Bool ?? false
         self.azureRealtimeLanguage = defaults.string(forKey: "azureRealtimeLanguage") ?? "de-DE"
         self.appleRealtimeEnabled = defaults.object(forKey: "appleRealtimeEnabled") as? Bool ?? true
+
+        // OpenAI (gpt-transcribe / gpt-live-transcribe) settings
+        self.openAISpeechLanguage = SpeechLanguageOption(rawValue: defaults.string(forKey: "openAISpeechLanguage") ?? "") ?? .german
+        self.openAIRealtimeDelay = OpenAIRealtimeDelay(rawValue: defaults.string(forKey: "openAIRealtimeDelay") ?? "") ?? .low
 
         // Dictionary settings
         if let dictData = defaults.data(forKey: "dictionaryWords"),
