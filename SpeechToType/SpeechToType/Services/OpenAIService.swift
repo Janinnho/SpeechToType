@@ -60,6 +60,13 @@ class OpenAIService {
         }
     }
 
+    /// Appends a simple multipart/form-data text field.
+    private func appendFormField(_ name: String, _ value: String, to body: inout Data, boundary: String) {
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(value)\r\n".data(using: .utf8)!)
+    }
+
     // MARK: - OpenAI API Transcription
 
     private func transcribeWithOpenAI(audioURL: URL, model: TranscriptionModel, settings: AppSettings) async throws -> String {
@@ -78,22 +85,39 @@ class OpenAIService {
         let audioData = try Data(contentsOf: audioURL)
         var body = Data()
 
+        // gpt-live-transcribe is realtime-only and has no /v1/audio/transcriptions endpoint.
+        // Should it ever reach this path, transcribe with its batch sibling instead of
+        // failing the request.
+        let effectiveModel = model.batchFallback
+
         // Add model field
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"model\"\r\n\r\n".data(using: .utf8)!)
-        body.append("\(model.rawValue)\r\n".data(using: .utf8)!)
+        appendFormField("model", effectiveModel.rawValue, to: &body, boundary: boundary)
 
-        // Add language field (German)
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"language\"\r\n\r\n".data(using: .utf8)!)
-        body.append("de\r\n".data(using: .utf8)!)
+        if effectiveModel.usesLanguagesAndKeywords {
+            // New model generation: `languages` (plural) replaces the singular `language`
+            // and is omitted entirely for automatic detection.
+            if let language = settings.openAISpeechLanguage.apiCode {
+                appendFormField("languages[]", language, to: &body, boundary: boundary)
+            }
 
-        // Add dictionary prompt (custom vocabulary / instructions)
-        let dictionaryPrompt = settings.dictionaryPromptText
-        if !dictionaryPrompt.isEmpty {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"prompt\"\r\n\r\n".data(using: .utf8)!)
-            body.append("\(dictionaryPrompt)\r\n".data(using: .utf8)!)
+            // Dictionary words become literal custom vocabulary…
+            for keyword in settings.openAIKeywords {
+                appendFormField("keywords[]", keyword, to: &body, boundary: boundary)
+            }
+
+            // …and the free-text instructions stay in the prompt.
+            let instructions = settings.dictionaryInstructionsText
+            if !instructions.isEmpty {
+                appendFormField("prompt", instructions, to: &body, boundary: boundary)
+            }
+        } else {
+            // Legacy gpt-4o-* models: language field (German) and the combined dictionary prompt
+            appendFormField("language", "de", to: &body, boundary: boundary)
+
+            let dictionaryPrompt = settings.dictionaryPromptText
+            if !dictionaryPrompt.isEmpty {
+                appendFormField("prompt", dictionaryPrompt, to: &body, boundary: boundary)
+            }
         }
 
         // Add audio file

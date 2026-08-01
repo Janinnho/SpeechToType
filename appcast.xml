@@ -12,6 +12,40 @@
         -->
 
         <item>
+            <title>Version 2.5</title>
+            <pubDate>Sat, 01 Aug 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>15</sparkle:version>
+            <sparkle:shortVersionString>2.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.5</h2>
+                <p>OpenAI's new speech models — including live transcription — plus a refreshed text model lineup.</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>GPT Transcribe</strong>: OpenAI's newest speech-to-text model, now the default for new installs. More accurate on short phrases, numbers, specialized terminology, and noisy audio.</li>
+                    <li><strong>GPT Live Transcribe</strong>: Real-time transcription over OpenAI's Realtime API — your words appear live in the overlay while you speak, and the complete, formatted text is inserted once you release the key. Just pick the model; no extra switch.</li>
+                    <li><strong>Recognition language</strong>: Choose the language for the new OpenAI models, or let them detect it automatically.</li>
+                    <li><strong>Latency setting</strong>: Tune live transcription between faster responses and higher accuracy.</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Better custom vocabulary</strong>: With the new OpenAI models, dictionary words are passed as dedicated keywords instead of a plain prompt, so names and domain terms are spelled correctly more often. Works in live mode too.</li>
+                    <li><strong>Updated text models</strong>: The rewrite model lists now offer only the current generation — GPT-5.6 Sol, Terra, and Luna; Claude Opus 5, Sonnet 5, and Haiku 4.5; Gemini 3.6 Flash and 3.1 Pro.</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release (nach `sign_update SpeechToType.dmg`):
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.5/SpeechToType.dmg"
+                sparkle:edSignature="kcJRbZwKIreqgOdHq8hzoQmHlQarzCNjFpHG+uWQTZgFDyjzhgai5OQ2JZfmjSNKNpURt1cHCqIKKJyP0b6ZAA=="
+                length="8832944"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.4</title>
             <pubDate>Tue, 09 Jun 2026 12:00:00 +0200</pubDate>
             <sparkle:version>14</sparkle:version>
