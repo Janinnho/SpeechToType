@@ -188,11 +188,59 @@ struct SpeechSettingsView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    Picker("geminiModel", selection: $settings.selectedGeminiSpeechModel) {
-                        ForEach(GeminiModel.allCases, id: \.self) { model in
+                    Picker("transcriptionModel", selection: $settings.selectedGeminiSpeechModel) {
+                        ForEach(GeminiSpeechModel.allCases, id: \.self) { model in
                             Text(model.displayName).tag(model)
                         }
                     }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("modelInfo")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        Text("modelInfoGeminiTranscribe")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("modelInfoGeminiTranscribeLive")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Picker("speechLanguage", selection: $settings.geminiSpeechLanguage) {
+                        ForEach(GeminiSpeechLanguage.allCases, id: \.self) { option in
+                            Text(option.displayName).tag(option)
+                        }
+                    }
+
+                    Text("geminiSpeechLanguageDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Picker("geminiTranscriptionMode", selection: $settings.geminiTranscriptionMode) {
+                        ForEach(GeminiTranscriptionMode.allCases, id: \.self) { mode in
+                            Text(mode.displayName).tag(mode)
+                        }
+                    }
+
+                    Text("geminiTranscriptionModeDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text("geminiDictionaryVocabularyNote")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if settings.selectedGeminiSpeechModel.isRealtimeOnly {
+                        Divider()
+
+                        Text("geminiLiveDescription")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Text("geminiTextModelHint")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
 
                 case .azureFoundry:
                     VStack(alignment: .leading, spacing: 4) {
