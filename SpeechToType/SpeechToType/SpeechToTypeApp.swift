@@ -161,7 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         let record = TranscriptionRecord(
                             text: text,
                             duration: duration,
-                            model: settings.selectedModel.displayName
+                            model: settings.speechModelDisplayName
                         )
                         historyManager.addRecord(record)
 
@@ -198,6 +198,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if settings.speechModelProvider == .openAI, settings.selectedModel == .gptLiveTranscribe {
             realtimeModelLabel = "GPT Live Transcribe (\(settings.openAISpeechLanguage.displayName))"
             return OpenAIRealtimeService()
+        }
+        // Same for gemini-3.5-transcribe-live: Live API only, so picking it is the switch.
+        if settings.speechModelProvider == .gemini, settings.selectedGeminiSpeechModel.isRealtimeOnly {
+            realtimeModelLabel = "Gemini 3.5 Transcribe Live (\(settings.geminiSpeechLanguage.displayName))"
+            return GeminiRealtimeService()
         }
         if settings.speechModelProvider == .azureFoundry,
            settings.azureRealtimeEnabled,

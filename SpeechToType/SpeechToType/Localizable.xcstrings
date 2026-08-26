@@ -1502,6 +1502,159 @@
         }
       }
     },
+    "geminiAudioTooLong": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Aufnahme ist zu lang für Gemini 3.5 Transcribe. Bitte kürzer diktieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The recording is too long for Gemini 3.5 Transcribe. Please dictate a shorter passage."
+          }
+        }
+      }
+    },
+    "geminiDictionaryVocabularyNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch-Wörter werden als Custom Vocabulary übergeben (max. 1.000). Die Freitext-Anweisungen nutzt Gemini 3.5 Transcribe nicht – das Modell nimmt keinen Prompt entgegen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary words are passed as custom vocabulary (max. 1,000). Gemini 3.5 Transcribe ignores the free-text instructions – the model takes no prompt."
+          }
+        }
+      }
+    },
+    "geminiLiveDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst beim Loslassen der Taste wird der komplette, korrekt formatierte Text auf einmal eingefügt. Eine Live-Sitzung ist auf 10 Minuten begrenzt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. The complete, correctly formatted text is inserted at once when you release the key. A live session is limited to 10 minutes."
+          }
+        }
+      }
+    },
+    "geminiModeSmart": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (aufgeräumt)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (cleaned up)"
+          }
+        }
+      }
+    },
+    "geminiModeVerbatim": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wortwörtlich"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbatim"
+          }
+        }
+      }
+    },
+    "geminiSpeechLanguageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache (BCP-47) für Gemini 3.5 Transcribe. „Automatisch“ lässt das Modell die Sprache selbst erkennen – auch mitten im Satz."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language (BCP-47) for Gemini 3.5 Transcribe. “Automatic” lets the model detect the language itself – even mid-sentence."
+          }
+        }
+      }
+    },
+    "geminiTextModelHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für die Textverarbeitung (Umschreiben) werden weiterhin die normalen Gemini-Modelle genutzt – einstellbar im Tab „Textverarbeitung“."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text processing (rewriting) keeps using the regular Gemini models – configurable in the “Text processing” tab."
+          }
+        }
+      }
+    },
+    "geminiTranscriptionMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkriptions-Modus"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription mode"
+          }
+        }
+      }
+    },
+    "geminiTranscriptionModeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Smart“ entfernt Füllwörter, löst gesprochene Selbstkorrekturen auf und formatiert Listen, Zahlen und Daten. „Wortwörtlich“ gibt exakt das Gesprochene zurück."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Smart” removes filler words, resolves spoken self-corrections and formats lists, numbers and dates. “Verbatim” returns exactly what was said."
+          }
+        }
+      }
+    },
     "geminiModel": {
       "extractionState": "manual",
       "localizations": {
@@ -1893,6 +2046,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "• GPT-4o Diarize: With speaker recognition"
+          }
+        }
+      }
+    },
+    "modelInfoGeminiTranscribe": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Gemini 3.5 Transcribe: präzises Speech-to-Text, 85+ Sprachen, Aufnahme wird nach dem Sprechen transkribiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Gemini 3.5 Transcribe: precise speech-to-text, 85+ languages, the recording is transcribed after you speak"
+          }
+        }
+      }
+    },
+    "modelInfoGeminiTranscribeLive": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Gemini 3.5 Transcribe Live: Live-Vorschau beim Sprechen (Streaming über die Live API)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Gemini 3.5 Transcribe Live: live preview while speaking (streaming via the Live API)"
           }
         }
       }

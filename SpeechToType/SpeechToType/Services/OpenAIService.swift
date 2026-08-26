@@ -39,7 +39,12 @@ class OpenAIService {
     static let shared = OpenAIService()
 
     private let openAIBaseURL = "https://api.openai.com/v1/audio/transcriptions"
-    private let geminiBaseURL = "https://generativelanguage.googleapis.com/v1beta/models"
+    /// Gemini 3.5 Transcribe runs on the Interactions API, not on `models/…:generateContent`.
+    private let geminiInteractionsURL = "https://generativelanguage.googleapis.com/v1beta/interactions"
+
+    /// Inline audio travels base64-encoded and the whole request must stay below the
+    /// Interactions API's 20 MB cap.
+    private static let geminiInlineAudioLimit = 18 * 1024 * 1024
 
     private init() {}
 
@@ -196,46 +201,64 @@ class OpenAIService {
         return try await executeTranscriptionRequest(request)
     }
 
-    // MARK: - Google Gemini Transcription
+    // MARK: - Google Gemini Transcription (Gemini 3.5 Transcribe)
 
+    /// Unary transcription with `gemini-3.5-transcribe` over the Interactions API. Unlike the
+    /// previous `generateContent` prompt hack this is a real ASR endpoint: language hints,
+    /// custom vocabulary and the transcription mode are first-class config, so no instruction
+    /// text is sent at all.
     private func transcribeWithGemini(audioURL: URL, settings: AppSettings) async throws -> String {
         let apiKey = settings.geminiApiKey
         guard !apiKey.isEmpty else {
             throw OpenAIError.invalidAPIKey
         }
 
-        let model = settings.selectedGeminiSpeechModel
-        guard let url = URL(string: "\(geminiBaseURL)/\(model.rawValue):generateContent") else {
+        guard let url = URL(string: geminiInteractionsURL) else {
             throw OpenAIError.invalidResponse
         }
 
-        let audioData = try Data(contentsOf: audioURL)
-        let base64Audio = audioData.base64EncodedString()
+        // gemini-3.5-transcribe-live exists only on the Live API. Should it reach this path,
+        // transcribe with its unary sibling instead of failing the request.
+        let model = settings.selectedGeminiSpeechModel.batchFallback
+
+        // The Interactions API accepts WAV/MP3/AIFF/AAC/OGG/FLAC — not the m4a container the
+        // recorder writes — so the recording is converted first.
+        let wavURL = try convertToWav(audioURL)
+        defer { try? FileManager.default.removeItem(at: wavURL) }
+        let base64Audio = try Data(contentsOf: wavURL).base64EncodedString()
+        guard base64Audio.count <= Self.geminiInlineAudioLimit else {
+            throw OpenAIError.apiError(String(localized: "geminiAudioTooLong"))
+        }
+
+        // An empty `language_codes` list is the documented way to ask for automatic
+        // detection (including mid-sentence language switches).
+        var transcriptionConfig: [String: Any] = [
+            "language_codes": settings.geminiSpeechLanguage.apiCode.map { [$0] } ?? [],
+            "mode": ["type": settings.geminiTranscriptionMode.unaryValue]
+        ]
+        // Dictionary words bias recognition. The free-text instructions have no channel here
+        // — the transcribe model takes no prompt.
+        let vocabulary = settings.geminiCustomVocabulary
+        if !vocabulary.isEmpty {
+            transcriptionConfig["custom_vocabulary"] = vocabulary
+        }
+
+        let requestBody: [String: Any] = [
+            "model": model.rawValue,
+            "input": [[
+                "type": "audio",
+                "data": base64Audio,
+                "mime_type": "audio/wav"
+            ]],
+            "generation_config": [
+                "transcription_config": transcriptionConfig
+            ]
+        ]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let baseInstruction = "Transcribe this audio verbatim in German. Return only the transcription without any commentary, formatting, or quotation marks."
-        let dictionaryPrompt = settings.dictionaryPromptText
-        let instruction = dictionaryPrompt.isEmpty
-            ? baseInstruction
-            : "Use the following custom vocabulary and spellings where applicable: \(dictionaryPrompt)\n\n\(baseInstruction)"
-
-        let requestBody: [String: Any] = [
-            "contents": [[
-                "role": "user",
-                "parts": [
-                    ["inlineData": ["mimeType": "audio/mp4", "data": base64Audio]],
-                    ["text": instruction]
-                ]
-            ]],
-            "generationConfig": [
-                "temperature": 0.0
-            ]
-        ]
-
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
 
         do {
@@ -258,25 +281,40 @@ class OpenAIService {
                 throw OpenAIError.apiError("HTTP \(httpResponse.statusCode)")
             }
 
-            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let candidates = json["candidates"] as? [[String: Any]],
-                  let firstCandidate = candidates.first,
-                  let content = firstCandidate["content"] as? [String: Any],
-                  let parts = content["parts"] as? [[String: Any]],
-                  let text = parts.first?["text"] as? String else {
-                throw OpenAIError.noTranscription
+            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                throw OpenAIError.invalidResponse
             }
 
-            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.isEmpty {
+            let text = Self.geminiTranscript(from: json)
+            if text.isEmpty {
                 throw OpenAIError.noTranscription
             }
-            return trimmed
+            return text
         } catch let error as OpenAIError {
             throw error
         } catch {
             throw OpenAIError.networkError(error)
         }
+    }
+
+    /// Reads the transcript out of an Interactions response. `output_text` is the documented
+    /// convenience field; the per-step text content is the fallback for responses that carry
+    /// the transcript only in `steps[].content[]` (e.g. alongside word annotations).
+    private static func geminiTranscript(from json: [String: Any]) -> String {
+        if let outputText = json["output_text"] as? String {
+            let trimmed = outputText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty { return trimmed }
+        }
+
+        let steps = json["steps"] as? [[String: Any]] ?? []
+        let texts = steps.flatMap { step -> [String] in
+            let contents = step["content"] as? [[String: Any]] ?? []
+            return contents.compactMap { content in
+                guard content["type"] as? String == "text" else { return nil }
+                return content["text"] as? String
+            }
+        }
+        return texts.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // MARK: - Azure Foundry MAI (LLM Speech) Transcription

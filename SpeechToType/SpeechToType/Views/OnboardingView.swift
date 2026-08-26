@@ -126,9 +126,14 @@ struct OnboardingView: View {
                                 showing: $showingGeminiAPIKey,
                                 description: "geminiApiKeyDescription"
                             )
-                            Picker("geminiModel", selection: $settings.selectedGeminiSpeechModel) {
-                                ForEach(GeminiModel.allCases, id: \.self) { model in
+                            Picker("transcriptionModel", selection: $settings.selectedGeminiSpeechModel) {
+                                ForEach(GeminiSpeechModel.allCases, id: \.self) { model in
                                     Text(model.displayName).tag(model)
+                                }
+                            }
+                            Picker("speechLanguage", selection: $settings.geminiSpeechLanguage) {
+                                ForEach(GeminiSpeechLanguage.allCases, id: \.self) { option in
+                                    Text(option.displayName).tag(option)
                                 }
                             }
 

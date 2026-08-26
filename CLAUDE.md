@@ -42,13 +42,15 @@ open ~/Library/Developer/Xcode/DerivedData/SpeechToType-*/Build/Products/Debug/S
   continuous (double-tap toggle), rewrite (key combo). Calls `onRecordingStarted/Stopped`.
 - `OpenAIService.transcribe(audioURL:model:)` — **batch** transcription router by
   `settings.speechModelProvider`: `.openAI`, `.local` (self-hosted Whisper), `.appleSpeech`,
-  `.gemini`, `.azureFoundry` (Azure MAI-Transcribe via REST).
+  `.gemini` (Gemini 3.5 Transcribe via the Interactions API), `.azureFoundry` (Azure
+  MAI-Transcribe via REST).
 - `TextRewriteService` — text rewriting router: OpenAI, Anthropic, Ollama, Apple
   Intelligence, Gemini.
 - `TextInputService` — inserts text into focused app. `insertText` uses clipboard+Cmd-V,
   or types directly (no clipboard) when `copyToClipboardOnInsert == false`. Also hosts
   `LiveTypingSession` (live-mode accumulator/preview).
-- `AzureRealtimeService` / `AppleRealtimeService` — live streaming (see below).
+- `AzureRealtimeService` / `AppleRealtimeService` / `GeminiRealtimeService` — live
+  streaming (see below).
 - `TranscriptionHistoryManager` — persisted history records.
 
 **Models:** `AppSettings` (singleton, all settings via UserDefaults `didSet`),
@@ -64,6 +66,14 @@ Status, RecordingOverlayWindow, TextRewritePopupWindow.
   `gpt-4o-*-transcribe`. The two new ones send `languages[]` (from `openAISpeechLanguage`,
   "auto" ⇒ field omitted) + `keywords[]`; the legacy ones keep `language=de` + the combined
   dictionary prompt. Branch on `usesLanguagesAndKeywords` / `isRealtimeOnly` / `batchFallback`.
+- **Gemini speech models** (`GeminiSpeechModel`): `gemini-3.5-transcribe` (unary, default)
+  and `gemini-3.5-transcribe-live` (**Live API only**). Both are separate from `GeminiModel`,
+  which stays reserved for text rewriting. The unary model runs on
+  `POST /v1beta/interactions` (**not** `models/…:generateContent`) with
+  `generation_config.transcription_config`: `language_codes` (BCP-47, `[]` ⇒ auto),
+  `custom_vocabulary` (≤1000), `mode` (`{"type": "smart"|"verbatim"}`). Transcript comes back
+  in `output_text`. The recorded m4a is converted to WAV first (`convertToWav`) because the
+  API takes WAV/MP3/AIFF/AAC/OGG/FLAC only, and it travels inline base64 (20 MB request cap).
 - **Azure Foundry MAI**: fast-transcription REST `…/speechtotext/transcriptions:transcribe`
   with `enhancedMode` (model `mai-transcribe-1.5`, lowercase!). Dictionary → `phraseList`.
   m4a is converted to WAV before upload (`convertToWav`) because MAI-Transcribe only
@@ -74,7 +84,9 @@ Status, RecordingOverlayWindow, TextRewritePopupWindow.
 Optional per provider; enabled in Settings. Behavior: **while speaking** the running text
 is shown only in the floating overlay; **on key release** the complete, formatted text is
 inserted once (no backspaces → never overwrites existing text). History label
-"GPT Live Transcribe (…)" / "Azure Realtime (…)" / "Apple Speech (Realtime)".
+"GPT Live Transcribe (…)" / "Gemini 3.5 Transcribe Live (…)" / "Azure Realtime (…)" /
+"Apple Speech (Realtime)". Batch runs are labelled by `AppSettings.speechModelDisplayName`
+(provider-aware).
 
 - All engines implement protocol `RealtimeTranscriber` (`start(onPartial:onFinal:onError:)`,
   `stop()`); the live path in `AppDelegate` is provider-agnostic (`realtimeTranscriber(for:)`).
@@ -90,6 +102,16 @@ inserted once (no backspaces → never overwrites existing text). History label
 - `AzureRealtimeService` — Microsoft Speech SDK (`SPXSpeechRecognizer`, continuous
   recognition, `PhraseListGrammar`). Uses Azure standard streaming models (NOT MAI-Transcribe).
   Setting: `azureRealtimeEnabled` + `azureRealtimeLanguage`.
+- `GeminiRealtimeService` — Gemini Live API over `URLSessionWebSocketTask`
+  (`…GenerativeService.BidiGenerateContent?key=…`), mic audio as PCM16 mono **16 kHz** base64 in
+  `realtimeInput.audio` (`mimeType: audio/pcm;rate=16000`). `setup.inputAudioTranscription`
+  carries `languageCodes` / `customVocabulary` / `mode` (`SMART`/`VERBATIM`); audio is queued
+  until `setupComplete`. Hybrid VAD: server VAD stays on (keeps the first word), `stop()` sends
+  `realtimeInput.audioStreamEnd` and **blocks** (bounded, 2.5 s) for the trailing final.
+  `serverContent.interimInputTranscription` ⇒ `onPartial` (replaces),
+  `serverContent.inputTranscription` ⇒ `onFinal` (appends). Switched on by selecting the
+  `gemini-3.5-transcribe-live` model. Sessions are capped at 10 minutes by the API.
+  Settings: `geminiSpeechLanguage` + `geminiTranscriptionMode`. One instance per dictation.
 - `AppleRealtimeService` — on-device `SpeechAnalyzer` + `SpeechTranscriber` (macOS 26) driven by
   `AVAudioEngine`; `SFSpeechRecognizer` is only used for the authorization prompt. Phrase-by-phrase
   volatile + finalized results, no network, no extra framework. Setting: `appleRealtimeEnabled`.
@@ -107,8 +129,10 @@ inserted once (no backspaces → never overwrites existing text). History label
 Passed as: `keywords` + `prompt` (gpt-transcribe / gpt-live-transcribe — words and
 instructions travel separately; `openAIKeywords` strips `<`, `>` and newlines as the API
 requires), combined prompt (legacy gpt-4o-*, Gemini, Whisper), `phraseList` (Azure),
-`PhraseListGrammar` (Azure realtime). Toggles: local Whisper, Azure, rewrite injection —
-OpenAI has none, the dictionary is always applied.
+`PhraseListGrammar` (Azure realtime), `custom_vocabulary` / `customVocabulary` (Gemini 3.5
+Transcribe — words only; the model takes no prompt, so the instructions are not sent).
+Toggles: local Whisper, Azure, rewrite injection — OpenAI and Gemini have none, the
+dictionary is always applied.
 
 ## Microsoft Speech SDK dependency
 

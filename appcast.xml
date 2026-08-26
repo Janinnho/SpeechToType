@@ -12,6 +12,41 @@
         -->
 
         <item>
+            <title>Version 2.6</title>
+            <pubDate>Wed, 26 Aug 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>16</sparkle:version>
+            <sparkle:shortVersionString>2.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 2.6</h2>
+                <p>Google's brand-new Gemini 3.5 Transcribe models — for recorded and live dictation — plus Gemini 3.7 Flash for rewriting.</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>Gemini 3.5 Transcribe</strong>: Google's dedicated speech-to-text model replaces the old prompt-based Gemini transcription. It runs on a real speech API instead of a general-purpose chat call, detects 85+ languages automatically, and handles switching language mid-sentence.</li>
+                    <li><strong>Gemini 3.5 Transcribe Live</strong>: Real-time transcription over Gemini's Live API — your words appear live in the overlay while you speak, and the complete, formatted text is inserted once you release the key. Just pick the model; no extra switch.</li>
+                    <li><strong>Smart transcription mode</strong>: New setting that removes filler words, resolves spoken self-corrections ("Tuesday, actually no, Wednesday"), and formats lists, numbers and dates automatically. Switch to verbatim if you want the raw transcript instead.</li>
+                    <li><strong>Recognition language for Gemini</strong>: Pick the language for the Gemini speech models, or let them detect it automatically.</li>
+                    <li><strong>Gemini 3.7 Flash</strong>: Google's newest Flash model is now available for text rewriting.</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Better custom vocabulary with Gemini</strong>: Dictionary words are passed as dedicated custom vocabulary (up to 1,000 terms) instead of being stuffed into a prompt, so names and domain terms are spelled correctly more often. Works in live mode too.</li>
+                    <li><strong>Correct model names in the history</strong>: Entries now show the speech model that actually produced them. Previously every transcription was labelled with the OpenAI model, even when Gemini, Azure, a self-hosted server, or Apple Speech did the work.</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release (nach `sign_update SpeechToType.dmg`):
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/2.6/SpeechToType.dmg"
+                sparkle:edSignature="lDp0wuyr9/OvUNmJ+w3II04se8Amx4N4s5L67iWRXnB0V00r0lSuaioeSRLSUBVfXTVCLi9W8pqtmiQMLWaKDw=="
+                length="8919454"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.5</title>
             <pubDate>Sat, 01 Aug 2026 12:00:00 +0200</pubDate>
             <sparkle:version>15</sparkle:version>

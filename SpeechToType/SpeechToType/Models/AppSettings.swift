@@ -53,13 +53,91 @@ enum TextProcessingProvider: String, CaseIterable, Codable {
 }
 
 enum GeminiModel: String, CaseIterable, Codable {
+    case gemini37Flash = "gemini-3.7-flash"
     case gemini36Flash = "gemini-3.6-flash"
     case gemini31Pro = "gemini-3.1-pro"
 
     var displayName: String {
         switch self {
+        case .gemini37Flash: return "Gemini 3.7 Flash"
         case .gemini36Flash: return "Gemini 3.6 Flash"
         case .gemini31Pro: return "Gemini 3.1 Pro"
+        }
+    }
+}
+
+/// Speech-to-text models of the Gemini 3.5 Transcribe family. Mirrors the OpenAI split:
+/// `gemini-3.5-transcribe` runs on the unary Interactions API, `gemini-3.5-transcribe-live`
+/// exists only on the Live API (WebSocket) — picking it is what switches the app to the
+/// live path. The general-purpose `GeminiModel` cases stay reserved for text rewriting.
+enum GeminiSpeechModel: String, CaseIterable, Codable {
+    case transcribe = "gemini-3.5-transcribe"
+    case transcribeLive = "gemini-3.5-transcribe-live"
+
+    var displayName: String {
+        switch self {
+        case .transcribe: return "Gemini 3.5 Transcribe"
+        case .transcribeLive: return "Gemini 3.5 Transcribe Live"
+        }
+    }
+
+    /// Live-API only — there is no unary `interactions` endpoint for this model.
+    var isRealtimeOnly: Bool { self == .transcribeLive }
+
+    /// The model that can actually be used on the unary endpoint.
+    var batchFallback: GeminiSpeechModel { isRealtimeOnly ? .transcribe : self }
+}
+
+/// Recognition language for Gemini 3.5 Transcribe. Google expects BCP-47 codes (`de-DE`),
+/// not the ISO-639-1 codes the OpenAI models take. `automatic` sends an empty list, which
+/// is how the API is asked to detect the language itself (incl. mid-sentence switches).
+enum GeminiSpeechLanguage: String, CaseIterable, Codable {
+    case automatic = "auto"
+    case german = "de-DE"
+    case englishUS = "en-US"
+    case englishGB = "en-GB"
+    case french = "fr-FR"
+    case spanish = "es-ES"
+    case italian = "it-IT"
+    case dutch = "nl-NL"
+    case portuguese = "pt-PT"
+    case portugueseBrazil = "pt-BR"
+    case polish = "pl-PL"
+
+    /// BCP-47 code for the API, or nil when the language list must stay empty.
+    var apiCode: String? { self == .automatic ? nil : rawValue }
+
+    var displayName: String {
+        switch self {
+        case .automatic: return String(localized: "speechLanguageAutomatic")
+        case .german: return "Deutsch (de-DE)"
+        case .englishUS: return "English US (en-US)"
+        case .englishGB: return "English UK (en-GB)"
+        case .french: return "Français (fr-FR)"
+        case .spanish: return "Español (es-ES)"
+        case .italian: return "Italiano (it-IT)"
+        case .dutch: return "Nederlands (nl-NL)"
+        case .portuguese: return "Português (pt-PT)"
+        case .portugueseBrazil: return "Português BR (pt-BR)"
+        case .polish: return "Polski (pl-PL)"
+        }
+    }
+}
+
+/// `mode` for Gemini 3.5 Transcribe: the raw transcript, or the model's smart clean-up
+/// (filler-word removal, resolved self-corrections, formatting).
+enum GeminiTranscriptionMode: String, CaseIterable, Codable {
+    case smart
+    case verbatim
+
+    /// The unary API takes a lowercase mode object, the Live API an uppercase string.
+    var unaryValue: String { rawValue }
+    var liveValue: String { rawValue.uppercased() }
+
+    var displayName: String {
+        switch self {
+        case .smart: return String(localized: "geminiModeSmart")
+        case .verbatim: return String(localized: "geminiModeVerbatim")
         }
     }
 }
@@ -487,9 +565,20 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(geminiApiKey, forKey: "geminiApiKey") }
     }
 
-    /// Selected Gemini model for speech transcription
-    @Published var selectedGeminiSpeechModel: GeminiModel {
-        didSet { defaults.set(selectedGeminiSpeechModel.rawValue, forKey: "selectedGeminiSpeechModel") }
+    /// Selected Gemini 3.5 Transcribe model for speech transcription. Stored under a new
+    /// key because the previous value was a general-purpose `GeminiModel`.
+    @Published var selectedGeminiSpeechModel: GeminiSpeechModel {
+        didSet { defaults.set(selectedGeminiSpeechModel.rawValue, forKey: "geminiSpeechModel") }
+    }
+
+    /// Recognition language hint for Gemini 3.5 Transcribe (BCP-47)
+    @Published var geminiSpeechLanguage: GeminiSpeechLanguage {
+        didSet { defaults.set(geminiSpeechLanguage.rawValue, forKey: "geminiSpeechLanguage") }
+    }
+
+    /// Transcription mode (smart clean-up vs. verbatim) for Gemini 3.5 Transcribe
+    @Published var geminiTranscriptionMode: GeminiTranscriptionMode {
+        didSet { defaults.set(geminiTranscriptionMode.rawValue, forKey: "geminiTranscriptionMode") }
     }
 
     /// Selected Gemini model for text rewriting
@@ -636,6 +725,21 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// The dictionary words as Gemini `custom_vocabulary`. The API accepts up to 1,000
+    /// phrases (Google recommends staying near 100 for best results).
+    var geminiCustomVocabulary: [String] {
+        var seen = Set<String>()
+        let cleaned = dictionaryWords.compactMap { raw -> String? in
+            let phrase = raw
+                .components(separatedBy: .newlines)
+                .joined(separator: " ")
+                .trimmingCharacters(in: .whitespaces)
+            guard !phrase.isEmpty, seen.insert(phrase).inserted else { return nil }
+            return phrase
+        }
+        return Array(cleaned.prefix(1000))
+    }
+
     /// Only the free-text instructions — for the new OpenAI models the words travel
     /// separately as `keywords`.
     var dictionaryInstructionsText: String {
@@ -650,6 +754,25 @@ final class AppSettings: ObservableObject {
         let instr = dictionaryInstructions.trimmingCharacters(in: .whitespacesAndNewlines)
         if !instr.isEmpty { parts.append(instr) }
         return parts.joined(separator: "\n")
+    }
+
+    /// Display name of the speech engine actually used for a batch transcription. The model
+    /// picker is per provider, so `selectedModel` alone only describes the OpenAI path.
+    var speechModelDisplayName: String {
+        switch speechModelProvider {
+        case .openAI:
+            return selectedModel.batchFallback.displayName
+        case .local:
+            let model = whisperServerModel.trimmingCharacters(in: .whitespaces)
+            return model.isEmpty ? SpeechModelProvider.local.displayName : model
+        case .appleSpeech:
+            return SpeechModelProvider.appleSpeech.displayName
+        case .gemini:
+            return selectedGeminiSpeechModel.batchFallback.displayName
+        case .azureFoundry:
+            let model = azureFoundryModel.trimmingCharacters(in: .whitespaces)
+            return model.isEmpty ? SpeechModelProvider.azureFoundry.displayName : model
+        }
     }
 
     var isConfigured: Bool {
@@ -772,7 +895,9 @@ final class AppSettings: ObservableObject {
 
         // Gemini settings
         self.geminiApiKey = defaults.string(forKey: "geminiApiKey") ?? ""
-        self.selectedGeminiSpeechModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiSpeechModel") ?? "") ?? .gemini36Flash
+        self.selectedGeminiSpeechModel = GeminiSpeechModel(rawValue: defaults.string(forKey: "geminiSpeechModel") ?? "") ?? .transcribe
+        self.geminiSpeechLanguage = GeminiSpeechLanguage(rawValue: defaults.string(forKey: "geminiSpeechLanguage") ?? "") ?? .german
+        self.geminiTranscriptionMode = GeminiTranscriptionMode(rawValue: defaults.string(forKey: "geminiTranscriptionMode") ?? "") ?? .smart
         self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini36Flash
 
         // Azure Foundry MAI settings
