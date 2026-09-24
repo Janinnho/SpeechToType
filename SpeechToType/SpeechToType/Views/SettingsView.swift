@@ -13,6 +13,7 @@ import Sparkle
 enum SettingsCategory: String, CaseIterable, Identifiable {
     case speech
     case text
+    case chat
     case shortcuts
     case general
     case about
@@ -23,6 +24,7 @@ enum SettingsCategory: String, CaseIterable, Identifiable {
         switch self {
         case .speech:    return "settingsTabSpeech"
         case .text:      return "settingsTabText"
+        case .chat:      return "settingsTabChat"
         case .shortcuts: return "settingsTabShortcuts"
         case .general:   return "settingsTabGeneral"
         case .about:     return "settingsTabAbout"
@@ -33,6 +35,7 @@ enum SettingsCategory: String, CaseIterable, Identifiable {
         switch self {
         case .speech:    return "waveform"
         case .text:      return "text.bubble"
+        case .chat:      return "bubble.left.and.bubble.right"
         case .shortcuts: return "keyboard"
         case .general:   return "gearshape"
         case .about:     return "info.circle"
@@ -80,6 +83,7 @@ struct SettingsView: View {
         switch selection {
         case .speech:    SpeechSettingsView()
         case .text:      TextRewriteSettingsView()
+        case .chat:      ChatSettingsView()
         case .shortcuts: ShortcutsSettingsView()
         case .general:   GeneralSettingsView()
         case .about:     AboutSettingsView(updater: updater)

@@ -154,7 +154,7 @@ struct OnboardingView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("azureModel")
                                     .font(.caption).fontWeight(.semibold)
-                                TextField("mai-transcribe-1.5", text: $settings.azureFoundryModel)
+                                TextField("mai-transcribe-2", text: $settings.azureFoundryModel)
                                     .textFieldStyle(.roundedBorder)
                             }
                         }

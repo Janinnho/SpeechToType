@@ -9,23 +9,29 @@ import SwiftUI
 
 enum ContentTab: String, CaseIterable {
     case status = "status"
+    case chat = "chat"
     case rewrite = "rewrite"
     case dictionary = "dictionary"
     case history = "history"
+    case templates = "templates"
 
     var icon: String {
         switch self {
         case .status:
             return "waveform"
+        case .chat:
+            return "bubble.left.and.bubble.right"
         case .rewrite:
             return "wand.and.stars"
         case .dictionary:
             return "character.book.closed"
         case .history:
             return "clock"
+        case .templates:
+            return "note.text"
         }
     }
-    
+
     var localizedName: LocalizedStringKey {
         return LocalizedStringKey(self.rawValue)
     }
@@ -34,7 +40,7 @@ enum ContentTab: String, CaseIterable {
 struct ContentView: View {
     @State private var selectedTab: ContentTab = .status
     @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
-    
+
     var body: some View {
         Group {
             if showOnboarding {
@@ -44,7 +50,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private var mainContent: some View {
         NavigationSplitView {
             List(ContentTab.allCases, id: \.self, selection: $selectedTab) { tab in
@@ -65,20 +71,66 @@ struct ContentView: View {
                 .padding(.vertical, 10)
             }
         } detail: {
-            ScrollView {
-                switch selectedTab {
-                case .status:
-                    StatusView()
-                case .rewrite:
+            switch selectedTab {
+            case .status:
+                StartPageView {
+                    selectedTab = .chat
+                }
+            case .chat:
+                ChatView()
+            case .templates:
+                TemplatesView()
+            case .rewrite:
+                ScrollView {
                     RewriteView()
-                case .dictionary:
+                }
+            case .dictionary:
+                ScrollView {
                     DictionaryView()
-                case .history:
+                }
+            case .history:
+                ScrollView {
                     HistoryView()
                 }
             }
         }
-        .frame(minWidth: 650, minHeight: 450)
+        .frame(minWidth: 820, minHeight: 520)
+    }
+}
+
+/// The status page plus a message field: sending starts a new chat and opens it.
+struct StartPageView: View {
+    /// Called once a chat was started, to switch to the chat tab
+    let onChatStarted: () -> Void
+
+    @ObservedObject private var settings = AppSettings.shared
+    @State private var draft = ChatDraft()
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                StatusView()
+            }
+
+            ChatComposerView(
+                draft: $draft,
+                model: settings.chatModel,
+                placeholder: "startChatPlaceholder",
+                onSelectModel: { ChatManager.shared.setModel($0, for: nil) },
+                onSend: send
+            )
+            .frame(maxWidth: 680)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+        }
+    }
+
+    private func send() {
+        let text = draft.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty || !draft.attachments.isEmpty else { return }
+        ChatManager.shared.startConversation(text: text, attachments: draft.attachments)
+        draft = ChatDraft()
+        onChatStarted()
     }
 }
 

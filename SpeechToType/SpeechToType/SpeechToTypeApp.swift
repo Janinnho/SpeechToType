@@ -56,7 +56,7 @@ struct SpeechToTypeApp: App {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 700, height: 500)
+        .defaultSize(width: 1040, height: 700)
         
         MenuBarExtra("SpeechToType", systemImage: "waveform") {
             MenuBarView()
@@ -85,6 +85,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize TextInputService early to track app switching
         _ = TextInputService.shared
+
+        // Load chats now: its startup cleanup of unreferenced attachment files must run
+        // before any composer can hold a draft attachment
+        _ = ChatManager.shared
 
         // Request necessary permissions on launch
         Task {

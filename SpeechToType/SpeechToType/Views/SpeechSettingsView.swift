@@ -64,36 +64,21 @@ struct SpeechSettingsView: View {
                         Text("modelInfoGptLiveTranscribe")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text("modelInfoMini")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("modelInfoStandard")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("modelInfoDiarize")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
                     }
 
-                    if settings.selectedModel.usesLanguagesAndKeywords {
-                        Picker("speechLanguage", selection: $settings.openAISpeechLanguage) {
-                            ForEach(SpeechLanguageOption.allCases, id: \.self) { option in
-                                Text(option.displayName).tag(option)
-                            }
+                    Picker("speechLanguage", selection: $settings.openAISpeechLanguage) {
+                        ForEach(SpeechLanguageOption.allCases, id: \.self) { option in
+                            Text(option.displayName).tag(option)
                         }
-
-                        Text("speechLanguageDescription")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                        Text("openAIDictionaryKeywordsNote")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("openAILegacyLanguageNote")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
                     }
+
+                    Text("speechLanguageDescription")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text("openAIDictionaryKeywordsNote")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
 
                     if settings.selectedModel == .gptLiveTranscribe {
                         Divider()
@@ -279,7 +264,7 @@ struct SpeechSettingsView: View {
                         Text("azureModel")
                             .font(.caption)
                             .fontWeight(.semibold)
-                        TextField("mai-transcribe-1.5", text: $settings.azureFoundryModel)
+                        TextField("mai-transcribe-2", text: $settings.azureFoundryModel)
                             .textFieldStyle(.roundedBorder)
                     }
 

@@ -37,17 +37,23 @@ SpeechToType lives in your menu bar and lets you dictate text into any applicati
 - **Transcription History**: Browse, search, and reuse past transcriptions with optional auto-delete
 
 ### Multiple Speech Providers
-- **OpenAI Whisper** — High-accuracy cloud transcription with multiple model options
+- **OpenAI** — GPT Transcribe, or GPT Live Transcribe with a live preview while you speak
+- **Google Gemini** — Gemini 3.5 Transcribe and Gemini 3.5 Transcribe Live
+- **Azure Foundry MAI** — MAI-Transcribe-2, plus an optional real-time mode
 - **Apple Speech** — Fully on-device transcription using macOS built-in speech recognition, no API key needed
 - **Local Whisper Server** — Connect to your own self-hosted Whisper instance for full privacy
 
 ### AI Text Rewriting
 Select any text and rewrite it with AI — fix grammar, elaborate, or apply custom prompts.
 
-- **OpenAI** (GPT-5.4, GPT-5.4-mini, GPT-5.4-nano, GPT-4o, GPT-4o-mini)
-- **Anthropic** (Claude Sonnet 4, Claude Opus 4, Claude Haiku)
+- **OpenAI** (GPT-6 Astra, GPT-6 Sol, GPT-6 Luna)
+- **Anthropic** (Claude Fable 5.1, Claude Opus 5.5, Claude Sonnet 5, Claude Haiku 4.5)
+- **Google Gemini** (Gemini 3.8 Flash, Gemini 3.1 Pro Preview, Gemini 3.5 Flash-Lite)
 - **Apple Intelligence** — On-device text processing via the FoundationModels framework, no API key required
 - **Ollama** — Use any local model running on your machine
+
+### Chat
+Chat with any of these text models, like in ChatGPT: start right from the home screen, pick the model per conversation, attach images, PDFs and text files, and dictate your messages. Past chats stay in the Chat tab; **Templates** keep text snippets ready to copy.
 
 ### Customizable
 - **Custom Keyboard Shortcuts** for recording and text rewriting

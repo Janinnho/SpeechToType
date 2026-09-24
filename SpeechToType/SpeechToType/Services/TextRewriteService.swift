@@ -56,28 +56,40 @@ enum RewriteMode: String, CaseIterable, Codable {
     }
 }
 
-enum GPTModel: String, CaseIterable, Codable {
-    case gpt56Sol = "gpt-5.6-sol"
-    case gpt56Terra = "gpt-5.6-terra"
-    case gpt56Luna = "gpt-5.6-luna"
+nonisolated enum GPTModel: String, CaseIterable, Codable {
+    case gpt6Astra = "gpt-6-astra"
+    case gpt6Sol = "gpt-6-sol"
+    case gpt6Luna = "gpt-6-luna"
 
     var displayName: String {
         switch self {
-        case .gpt56Sol:
-            return "GPT-5.6 Sol"
-        case .gpt56Terra:
-            return "GPT-5.6 Terra"
-        case .gpt56Luna:
-            return "GPT-5.6 Luna"
+        case .gpt6Astra:
+            return "GPT-6 Astra"
+        case .gpt6Sol:
+            return "GPT-6 Sol"
+        case .gpt6Luna:
+            return "GPT-6 Luna"
         }
     }
 
+    /// Parses a stored model id. Ids of the previous generation map to the successor of
+    /// the same tier (5.6 Sol → Astra, Terra → Sol, Luna → Luna).
+    init?(storedValue: String) {
+        let successors: [String: GPTModel] = [
+            "gpt-5.6-sol": .gpt6Astra,
+            "gpt-5.6-terra": .gpt6Sol,
+            "gpt-5.6-luna": .gpt6Luna
+        ]
+        guard let model = GPTModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        self = model
+    }
+
     /// Whether this model uses max_completion_tokens instead of max_tokens.
-    /// The whole GPT-5.x family does.
+    /// The whole GPT-6 family does.
     var usesMaxCompletionTokens: Bool { true }
 
     /// Whether this model supports custom temperature values.
-    /// The GPT-5.x family does not.
+    /// The GPT-6 family does not.
     var supportsCustomTemperature: Bool { false }
 }
 
@@ -180,17 +192,20 @@ class TextRewriteService {
             "messages": [
                 ["role": "system", "content": systemPrompt],
                 ["role": "user", "content": text]
-            ]
+            ],
+            // Rewriting is a short, simple task: light reasoning keeps the reply fast
+            "reasoning_effort": "low"
         ]
 
         if model.supportsCustomTemperature {
             requestBody["temperature"] = 0.7
         }
 
+        // Reasoning tokens count toward the limit, so leave room beyond the rewritten text
         if model.usesMaxCompletionTokens {
-            requestBody["max_completion_tokens"] = 2048
+            requestBody["max_completion_tokens"] = 8192
         } else {
-            requestBody["max_tokens"] = 2048
+            requestBody["max_tokens"] = 8192
         }
 
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
@@ -224,23 +239,30 @@ class TextRewriteService {
         request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let requestBody: [String: Any] = [
+        var requestBody: [String: Any] = [
             "model": model.rawValue,
-            "max_tokens": 2048,
+            // Hard limit for thinking + text — the current models think before answering
+            "max_tokens": 8192,
             "system": systemPrompt,
             "messages": [
                 ["role": "user", "content": text]
             ]
         ]
 
+        // Rewriting is a short, simple task: low effort keeps the thinking (and the wait) short
+        if model.supportsEffort {
+            requestBody["output_config"] = ["effort": "low"]
+        }
+
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
 
         let (data, _) = try await executeRequest(request, data: nil)
 
+        // The reply can start with a thinking block, so look for the text block
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let content = json["content"] as? [[String: Any]],
-              let firstBlock = content.first,
-              let responseText = firstBlock["text"] as? String else {
+              let textBlock = content.first(where: { $0["type"] as? String == "text" }),
+              let responseText = textBlock["text"] as? String else {
             throw TextRewriteError.noResponse
         }
 
@@ -273,9 +295,10 @@ class TextRewriteService {
                 "role": "user",
                 "parts": [["text": text]]
             ]],
+            // No temperature: the current Gemini models deprecate the sampling parameters.
+            // The limit leaves room for the model's thinking on top of the rewritten text.
             "generationConfig": [
-                "temperature": 0.7,
-                "maxOutputTokens": 2048
+                "maxOutputTokens": 8192
             ]
         ]
 
@@ -287,8 +310,16 @@ class TextRewriteService {
               let candidates = json["candidates"] as? [[String: Any]],
               let firstCandidate = candidates.first,
               let content = firstCandidate["content"] as? [String: Any],
-              let parts = content["parts"] as? [[String: Any]],
-              let responseText = parts.first?["text"] as? String else {
+              let parts = content["parts"] as? [[String: Any]] else {
+            throw TextRewriteError.noResponse
+        }
+
+        // The answer can come in several parts; thought summaries are not part of it
+        let responseText = parts
+            .filter { ($0["thought"] as? Bool) != true }
+            .compactMap { $0["text"] as? String }
+            .joined()
+        guard !responseText.isEmpty else {
             throw TextRewriteError.noResponse
         }
 
