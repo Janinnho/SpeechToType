@@ -98,31 +98,20 @@ class OpenAIService {
         // Add model field
         appendFormField("model", effectiveModel.rawValue, to: &body, boundary: boundary)
 
-        if effectiveModel.usesLanguagesAndKeywords {
-            // New model generation: `languages` (plural) replaces the singular `language`
-            // and is omitted entirely for automatic detection.
-            if let language = settings.openAISpeechLanguage.apiCode {
-                appendFormField("languages[]", language, to: &body, boundary: boundary)
-            }
+        // `languages` (plural) is omitted entirely for automatic detection.
+        if let language = settings.openAISpeechLanguage.apiCode {
+            appendFormField("languages[]", language, to: &body, boundary: boundary)
+        }
 
-            // Dictionary words become literal custom vocabulary…
-            for keyword in settings.openAIKeywords {
-                appendFormField("keywords[]", keyword, to: &body, boundary: boundary)
-            }
+        // Dictionary words become literal custom vocabulary…
+        for keyword in settings.openAIKeywords {
+            appendFormField("keywords[]", keyword, to: &body, boundary: boundary)
+        }
 
-            // …and the free-text instructions stay in the prompt.
-            let instructions = settings.dictionaryInstructionsText
-            if !instructions.isEmpty {
-                appendFormField("prompt", instructions, to: &body, boundary: boundary)
-            }
-        } else {
-            // Legacy gpt-4o-* models: language field (German) and the combined dictionary prompt
-            appendFormField("language", "de", to: &body, boundary: boundary)
-
-            let dictionaryPrompt = settings.dictionaryPromptText
-            if !dictionaryPrompt.isEmpty {
-                appendFormField("prompt", dictionaryPrompt, to: &body, boundary: boundary)
-            }
+        // …and the free-text instructions stay in the prompt.
+        let instructions = settings.dictionaryInstructionsText
+        if !instructions.isEmpty {
+            appendFormField("prompt", instructions, to: &body, boundary: boundary)
         }
 
         // Add audio file
@@ -342,8 +331,8 @@ class OpenAIService {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
         // Build the definition JSON.
-        // - With an explicit model (e.g. mai-transcribe-1.5): MAI-Transcribe style,
-        //   only `enabled` + `model` (no `task`; prompt-tuning is unsupported).
+        // - With an explicit model (e.g. mai-transcribe-2): MAI-Transcribe style,
+        //   `enabled` + `model` (no `task`; prompt-tuning is unsupported).
         // - With an empty model field: fall back to the default LLM Speech request
         //   (`enabled` + `task`), which is the request shape that worked before.
         var enhancedMode: [String: Any] = ["enabled": true]
@@ -352,11 +341,16 @@ class OpenAIService {
             enhancedMode["task"] = "transcribe"
         } else {
             enhancedMode["model"] = modelName
+            // MAI-Transcribe-2 transcribes verbatim by default (keeps "äh", false starts);
+            // dictation wants the clean style that 1.5 always produced.
+            if modelName.lowercased().hasPrefix("mai-transcribe-2") {
+                enhancedMode["modelOptions"] = ["transcribeStyle": "clean"]
+            }
         }
         var definition: [String: Any] = [:]
 
         // Dictionary (custom vocabulary) — only when enabled and there are words.
-        // MAI-Transcribe-1.5 supports `phraseList` (entity biasing); this is the
+        // MAI-Transcribe supports `phraseList` (keyword biasing); this is the
         // correct channel for custom vocabulary. The free-text instructions are not
         // sent because prompt-tuning is unsupported by MAI-Transcribe.
         if settings.applyDictionaryToAzure {

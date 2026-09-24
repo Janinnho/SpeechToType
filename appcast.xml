@@ -12,6 +12,44 @@
         -->
 
         <item>
+            <title>Version 3.0</title>
+            <pubDate>Thu, 24 Sep 2026 12:00:00 +0200</pubDate>
+            <sparkle:version>18</sparkle:version>
+            <sparkle:shortVersionString>3.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <h2>SpeechToType 3.0</h2>
+                <p>A completely redesigned app in the new Liquid Glass look — plus a built-in chat with your AI models, text templates and the newest models from every provider.</p>
+                <h3>New Features</h3>
+                <ul>
+                    <li><strong>New Liquid Glass design</strong>: The whole app was redesigned for macOS 26 — an animated gradient background, glass cards and a new dashboard home screen with your status, statistics and recent activity. The recording overlay, menu bar, settings, rewrite window and onboarding got the new look too.</li>
+                    <li><strong>Chat</strong>: Chat with your text models like in ChatGPT. Start right from the home screen, pick the model per conversation (OpenAI, Anthropic, Gemini, Ollama or Apple Intelligence), attach images, PDFs and text files, dictate your messages and add your own custom instructions. Replies stream in live, and conversations get AI-generated titles.</li>
+                    <li><strong>Templates</strong>: Save reusable text snippets with an optional title and copy them with one click.</li>
+                    <li><strong>Record button on the home screen</strong>: Click it to start and stop a recording, or hold it while you speak. In Settings → General you choose where the text goes: the home screen's message field, the last active app, or the clipboard.</li>
+                    <li><strong>New app icon</strong>: A new, simpler icon in the Liquid Glass style.</li>
+                </ul>
+                <h3>Improvements</h3>
+                <ul>
+                    <li><strong>Newest AI models</strong>: GPT-6 Astra, Sol and Luna; Claude Fable 5.1, Opus 5.5, Sonnet 5 and Haiku 4.5; Gemini 3.8 Flash, 3.1 Pro Preview and 3.5 Flash-Lite. Previously selected models move to their successor automatically.</li>
+                    <li><strong>MAI-Transcribe-2</strong>: Azure Foundry now uses MAI-Transcribe-2 by default, with clean output without filler words.</li>
+                    <li><strong>Redesigned history</strong>: A list with search and filters next to a detail view, where you can copy an entry or insert it straight into the app you used last.</li>
+                    <li><strong>Recording timer in live mode</strong>: The recording time now also runs while you use a live transcription model.</li>
+                    <li><strong>Removed deprecated models</strong>: OpenAI's GPT-4o transcription models and Whisper-1 are being shut down and were removed — if you used one, the app switches to GPT Transcribe automatically.</li>
+                </ul>
+            ]]></description>
+            <!--
+            WICHTIG: Ersetze diese Werte vor dem Release (nach `sign_update SpeechToType.dmg`):
+            - sparkle:edSignature: Die EdDSA-Signatur der Datei
+            - length: Dateigröße in Bytes
+            -->
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/3.0/SpeechToType.dmg"
+                sparkle:edSignature="CwjUYz6sv6lNUlVctrL/3XxV3kIY1yywKUvh1pU1NLKZNJjED+mp/GZf66Pfo2TCEBWRRwnF9t0LZasmNLUCAQ=="
+                length="8153002"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 2.6</title>
             <pubDate>Wed, 26 Aug 2026 12:00:00 +0200</pubDate>
             <sparkle:version>16</sparkle:version>

@@ -13,6 +13,7 @@ import Sparkle
 enum SettingsCategory: String, CaseIterable, Identifiable {
     case speech
     case text
+    case chat
     case shortcuts
     case general
     case about
@@ -23,6 +24,7 @@ enum SettingsCategory: String, CaseIterable, Identifiable {
         switch self {
         case .speech:    return "settingsTabSpeech"
         case .text:      return "settingsTabText"
+        case .chat:      return "settingsTabChat"
         case .shortcuts: return "settingsTabShortcuts"
         case .general:   return "settingsTabGeneral"
         case .about:     return "settingsTabAbout"
@@ -33,9 +35,22 @@ enum SettingsCategory: String, CaseIterable, Identifiable {
         switch self {
         case .speech:    return "waveform"
         case .text:      return "text.bubble"
+        case .chat:      return "bubble.left.and.bubble.right"
         case .shortcuts: return "keyboard"
         case .general:   return "gearshape"
         case .about:     return "info.circle"
+        }
+    }
+
+    /// Tile color of the icon, as in System Settings
+    var color: Color {
+        switch self {
+        case .speech:    return .blue
+        case .text:      return .purple
+        case .chat:      return .green
+        case .shortcuts: return .orange
+        case .general:   return .gray
+        case .about:     return .indigo
         }
     }
 }
@@ -54,8 +69,13 @@ struct SettingsView: View {
         // split views makes the inner sidebar render behind the app's navigation.
         HStack(spacing: 0) {
             List(SettingsCategory.allCases, selection: $selection) { category in
-                Label(category.title, systemImage: category.icon)
-                    .tag(category)
+                Label {
+                    Text(category.title)
+                } icon: {
+                    IconBadge(systemName: category.icon, color: category.color, size: 22)
+                }
+                .padding(.vertical, 2)
+                .tag(category)
             }
             .listStyle(.sidebar)
             .frame(width: 200)
@@ -80,6 +100,7 @@ struct SettingsView: View {
         switch selection {
         case .speech:    SpeechSettingsView()
         case .text:      TextRewriteSettingsView()
+        case .chat:      ChatSettingsView()
         case .shortcuts: ShortcutsSettingsView()
         case .general:   GeneralSettingsView()
         case .about:     AboutSettingsView(updater: updater)

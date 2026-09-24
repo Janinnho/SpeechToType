@@ -27,7 +27,7 @@ class RecordingOverlayWindowController: NSObject, ObservableObject {
     @Published var liveText: String = ""
 
     /// Distance from the bottom edge of the screen.
-    private let bottomMargin: CGFloat = 28
+    private let bottomMargin: CGFloat = 20
 
     private override init() {
         super.init()
@@ -119,29 +119,37 @@ struct RecordingOverlayView: View {
     @ObservedObject var audioRecorder = AudioRecorder.shared
     let width: CGFloat
 
+    /// Recent input levels, newest last, for the waveform
+    @State private var levels: [Float] = Array(repeating: 0, count: 26)
+
     var body: some View {
         Group {
             switch controller.mode {
             case .recording:
                 compact {
                     PulsingDot()
+                    WaveformBars(levels: levels)
+                        .frame(height: 24)
                     Text(formatDuration(audioRecorder.recordingDuration))
-                        .font(.system(.body, design: .monospaced))
-                        .foregroundStyle(.white)
-                        .frame(minWidth: 50, alignment: .leading)
+                        .font(.system(.body, design: .monospaced).weight(.medium))
+                        .frame(minWidth: 44, alignment: .leading)
                 }
             case .processing:
                 compact {
                     ProgressView()
-                        .progressViewStyle(.circular)
                         .controlSize(.small)
-                        .tint(.white)
                     Text("processing")
-                        .foregroundStyle(.white)
+                        .font(.body.weight(.medium))
                 }
             case .live:
                 liveContent
             }
+        }
+        // Room for the glass edge and shadow inside the borderless window
+        .padding(8)
+        .onReceive(audioRecorder.$audioLevel) { level in
+            levels.append(level)
+            levels.removeFirst(levels.count - 26)
         }
     }
 
@@ -151,9 +159,9 @@ struct RecordingOverlayView: View {
         HStack(spacing: 12) {
             content()
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 18)
         .padding(.vertical, 12)
-        .background(background)
+        .glassEffect(.regular, in: .capsule)
         .fixedSize()
     }
 
@@ -163,7 +171,7 @@ struct RecordingOverlayView: View {
                 PulsingDot()
                 Text("liveTranscription")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(.secondary)
                     .textCase(.uppercase)
             }
 
@@ -171,7 +179,7 @@ struct RecordingOverlayView: View {
                  ? String(localized: "overlayListening")
                  : controller.liveText)
                 .font(.system(size: 15))
-                .foregroundStyle(controller.liveText.isEmpty ? .white.opacity(0.5) : .white)
+                .foregroundStyle(controller.liveText.isEmpty ? .secondary : .primary)
                 .lineSpacing(3)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -179,22 +187,29 @@ struct RecordingOverlayView: View {
         }
         .padding(18)
         .frame(width: width, alignment: .leading)
-        .background(background)
-    }
-
-    private var background: some View {
-        RoundedRectangle(cornerRadius: 16, style: .continuous)
-            .fill(Color.black.opacity(0.82))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(Color.white.opacity(0.10), lineWidth: 1)
-            )
+        .glassEffect(.regular, in: .rect(cornerRadius: 24))
     }
 
     private func formatDuration(_ duration: TimeInterval) -> String {
         let minutes = Int(duration) / 60
         let seconds = Int(duration) % 60
         return String(format: "%d:%02d", minutes, seconds)
+    }
+}
+
+/// Bars that follow the microphone level, oldest on the left
+struct WaveformBars: View {
+    let levels: [Float]
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 3) {
+            ForEach(levels.indices, id: \.self) { index in
+                Capsule()
+                    .fill(Color.red.gradient)
+                    .frame(width: 3, height: max(3, CGFloat(min(levels[index] * 1.4, 1)) * 24))
+            }
+        }
+        .animation(.easeOut(duration: 0.08), value: levels)
     }
 }
 
@@ -205,7 +220,8 @@ struct PulsingDot: View {
         Circle()
             .fill(Color.red)
             .frame(width: 10, height: 10)
-            .opacity(isPulsing ? 0.4 : 1.0)
+            .shadow(color: .red.opacity(0.6), radius: isPulsing ? 5 : 1)
+            .opacity(isPulsing ? 0.5 : 1.0)
             .onAppear {
                 withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                     isPulsing = true

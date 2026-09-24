@@ -2,7 +2,8 @@
 
 macOS menu-bar app for speech-to-text dictation with a global hotkey. Records audio (or
 streams live), transcribes via a chosen provider, and inserts the text into the focused
-app. Also offers AI text rewriting. SwiftUI + AppKit.
+app. Also offers AI text rewriting, a chat with the text models (ChatGPT-style) and
+text templates ("Vorlagen"). SwiftUI + AppKit.
 
 ## Repo layout (nested!)
 
@@ -34,7 +35,13 @@ open ~/Library/Developer/Xcode/DerivedData/SpeechToType-*/Build/Products/Debug/S
 ## Architecture
 
 **Orchestration:** `SpeechToTypeApp.swift` (`AppDelegate.setupRecordingHandlers`) wires
-`HotkeyManager` callbacks → recording/transcription → insertion → history.
+`HotkeyManager` callbacks → recording/transcription → insertion → history. Recordings started
+with the start page's record button (`HotkeyManager.recordingSource == .button`, captured at
+stop) skip the insertion into the focused app: `AppDelegate.deliver` routes their text by
+`AppSettings.buttonDictationTarget` — `.messageField` (default; via
+`AppNavigation.pendingComposerDictation` into the start page composer), `.previousApp`
+(re-activates `TextInputService.getPreviousApp()`, then inserts; falls back to the message
+field) or `.clipboard`. History is recorded either way.
 
 **Core services** (`SpeechToType/SpeechToType/Services/`):
 - `AudioRecorder` — AVAudioRecorder, m4a 16 kHz mono; mic device enumeration.
@@ -52,20 +59,37 @@ open ~/Library/Developer/Xcode/DerivedData/SpeechToType-*/Build/Products/Debug/S
 - `AzureRealtimeService` / `AppleRealtimeService` / `GeminiRealtimeService` — live
   streaming (see below).
 - `TranscriptionHistoryManager` — persisted history records.
+- `ChatManager` / `ChatService` / `ChatAttachmentStore` — chat (see below).
+- `TemplateStore` — "Vorlagen": plain text snippets with an optional title (`TextTemplate.title`;
+  lists fall back to the text's first line via `displayTitle`; `Templates/templates.json`,
+  debounced saves; files from before titles decode with an empty title).
 
 **Models:** `AppSettings` (singleton, all settings via UserDefaults `didSet`),
-`TranscriptionRecord`. **Views:** Settings, Onboarding, Dictionary, History, Rewrite,
-Status, RecordingOverlayWindow, TextRewritePopupWindow.
+`TranscriptionRecord`, `ChatModels` (conversation/message/attachment/`ChatModelSelection`).
+**Views:** Home (dashboard), History, Dictionary, Chat*, Rewrite, Templates, Settings (panes
+incl. Chat), Onboarding, Markdown, RecordingOverlayWindow, TextRewritePopupWindow, plus the shared
+`DesignSystem.swift` (see "Design").
 
 ## Providers
 
 - Speech (`SpeechModelProvider`): `openai`, `local`, `appleSpeech`, `gemini`, `azureFoundry`.
 - Text (`TextProcessingProvider`): `openai`, `anthropic`, `ollama`, `appleIntelligence`, `gemini`.
-- **OpenAI models** (`TranscriptionModel`): `gpt-transcribe` (batch, default for new installs),
-  `gpt-live-transcribe` (**realtime only**, no `/v1/audio/transcriptions`), plus the legacy
-  `gpt-4o-*-transcribe`. The two new ones send `languages[]` (from `openAISpeechLanguage`,
-  "auto" ⇒ field omitted) + `keywords[]`; the legacy ones keep `language=de` + the combined
-  dictionary prompt. Branch on `usesLanguagesAndKeywords` / `isRealtimeOnly` / `batchFallback`.
+- **OpenAI speech models** (`TranscriptionModel`): `gpt-transcribe` (batch, default) and
+  `gpt-live-transcribe` (**realtime only**, no `/v1/audio/transcriptions`). Both send
+  `languages[]` (from `openAISpeechLanguage`, "auto" ⇒ field omitted) + `keywords[]` + the
+  dictionary instructions as `prompt`. Branch on `isRealtimeOnly` / `batchFallback`. The
+  `gpt-4o-*-transcribe` models and `whisper-1` are deprecated (shutdown Feb 2027) and were
+  removed; a stored legacy value falls back to `gpt-transcribe`.
+- **Text models** (as of Sept 2026): `GPTModel` = `gpt-6-astra` / `gpt-6-sol` (default) /
+  `gpt-6-luna`; `AnthropicModel` = `claude-fable-5-1` / `claude-opus-5-5` / `claude-sonnet-5`
+  (default) / `claude-haiku-4-5`; `GeminiModel` = `gemini-3.8-flash` (default) /
+  `gemini-3.1-pro-preview` (Pro exists on the Gemini API only as preview) / `gemini-3.5-flash-lite`.
+  Stored ids of an earlier generation map to their successor via `init?(storedValue:)`
+  (settings) and `ChatModelSelection.upgraded` (chats) — extend these maps when bumping models.
+- The current text models reason before answering. Rewrites send `reasoning_effort: "low"`
+  (OpenAI) / `output_config.effort: "low"` (Claude except Haiku 4.5, see `supportsEffort`) with
+  an 8192-token limit, and take Claude's first `text` block (a thinking block can come first).
+  Gemini requests carry no `temperature` (deprecated for the current models).
 - **Gemini speech models** (`GeminiSpeechModel`): `gemini-3.5-transcribe` (unary, default)
   and `gemini-3.5-transcribe-live` (**Live API only**). Both are separate from `GeminiModel`,
   which stays reserved for text rewriting. The unary model runs on
@@ -75,7 +99,9 @@ Status, RecordingOverlayWindow, TextRewritePopupWindow.
   in `output_text`. The recorded m4a is converted to WAV first (`convertToWav`) because the
   API takes WAV/MP3/AIFF/AAC/OGG/FLAC only, and it travels inline base64 (20 MB request cap).
 - **Azure Foundry MAI**: fast-transcription REST `…/speechtotext/transcriptions:transcribe`
-  with `enhancedMode` (model `mai-transcribe-1.5`, lowercase!). Dictionary → `phraseList`.
+  with `enhancedMode` (default model `mai-transcribe-2`, public preview; the id is not
+  case-sensitive). MAI-Transcribe-2 is verbatim by default (keeps "äh"), so the app sends
+  `modelOptions.transcribeStyle: "clean"` for it. Dictionary → `phraseList`.
   m4a is converted to WAV before upload (`convertToWav`) because MAI-Transcribe only
   accepts WAV/MP3/FLAC. Endpoint/key/model are user-entered (never hardcoded).
 
@@ -122,13 +148,72 @@ inserted once (no backspaces → never overwrites existing text). History label
   blocking `stop()` must pre-arm its drain on the error path (see `OpenAIRealtimeService.emitError`).
 - All live engines use the system default microphone (the app's mic selector does not apply).
 
+## Design (Liquid Glass)
+
+- `DesignSystem.swift` holds the shared look: `AppBackground` (slowly drifting `MeshGradient`,
+  set as the window background via `.containerBackground(for: .window)` in `ContentView`; pauses
+  while the window is inactive and with Reduce Motion), `glassCard()`, `insetField()` (for fields
+  on glass — never glass on glass), `PageHeader`, `SectionTitle`, `EmptyStateView`, `IconBadge`,
+  `KeyCap`, `InfoChip`, `PanelSearchField`, `StatTile`, `DictationOrb` and `FlowLayout`.
+- Sidebar (`ContentView`) is one flat list of every `ContentTab` (no section headers).
+  `AppNavigation.shared` holds the selected tab and the history selection so the dashboard can
+  jump to a chat or history entry.
+- Page patterns: two-pane pages (History, Chat, Templates) = a fixed-width floating glass list
+  panel + content; single pages (Dictionary, Rewrite) = `ScrollView` with a max-width column of
+  glass cards; Home = dashboard (status card, stats, recent items, composer in a bottom inset).
+- The orb in Home's status card is a record button (`DictationRecordButton`): a click records
+  until the next click (`startButtonRecording()` + `continueButtonRecording()`), holding it
+  ≥ 0.35 s records until release — same live/batch path as the shortcut.
+- Buttons use `.glass` / `.glassProminent`. Keep panel content within the panel's width — the
+  detail column continues under the floating sidebar, so overflow slides under it. A segmented
+  `Picker` sizes every segment for its longest title and overflows narrow panels (hence
+  `HistoryFilterBar`).
+- The recording overlay, menu bar popover, rewrite popup and onboarding use the same components;
+  the settings forms stay native (`.formStyle(.grouped)`) with icon tiles in their sidebar.
+- App icon: `SpeechToType/SpeechToTypeIcon.icon` (Icon Composer, referenced by
+  `ASSETCATALOG_COMPILER_APPICON_NAME`) = violet→blue linear-gradient fill + one white glyph
+  layer `Assets/Glyph.svg` (three waveform bars flowing into a text cursor) with translucency
+  and a neutral shadow. Preview without Xcode: `xcrun actool … --app-icon SpeechToTypeIcon`, then
+  `iconutil -c iconset` on the resulting `.icns`.
+
+## Chat & Vorlagen
+
+- Tabs: **Chat** (`ChatView`: conversation list + `ChatConversationView`) and **Vorlagen**
+  (`TemplatesView`). The start page (`HomeView`) has a composer; sending there starts a
+  conversation and switches to the chat tab.
+- `ChatManager` (singleton) owns conversations, selection, per-conversation drafts and running
+  replies — replies keep streaming when the view is gone. Live text goes through the separate
+  `ChatStreamBuffer` (throttled to 20 Hz) so only `StreamingMessageView` re-renders per chunk.
+- `ChatService.streamReply` works for every `TextProcessingProvider`: OpenAI chat completions
+  (SSE), Anthropic Messages (SSE, `max_tokens` 16384, only `text_delta` is shown), Gemini
+  `:streamGenerateContent?alt=sse` (skips `thought` parts), Ollama `/api/chat` (NDJSON), Apple
+  Intelligence (`LanguageModelSession` rebuilt from a `Transcript`, history trimmed to ~9k chars,
+  text only). It runs in a detached task from a `ChatProviderConfig` snapshot and yields the
+  **accumulated** reply text, not deltas.
+- Each conversation stores its model (`ChatModelSelection` = provider + model id); the picker
+  lists every provider that is set up (`ChatModelCatalog.isConfigured`). `AppSettings.chatModel`
+  = model for new chats (the last one picked; until then it follows the rewrite model and is
+  not persisted). The Text-model settings pane shows all provider keys at once for this.
+- Settings: `chatCustomInstructions` (system prompt of every chat), `chatAutoGenerateTitles`
+  (the chat's own model writes a title after the first reply; fallback = first line).
+- Attachments (`ChatAttachmentStore`): images → JPEG ≤2048 px (alpha flattened onto white);
+  PDFs ≤10 MB (native for OpenAI/Anthropic/Gemini, extracted text for Ollama/Apple); text files
+  ≤2 MB, inlined as `<file name="…">`. Paste and file drops are handled in `ComposerTextView`.
+- Composer input is `ChatInputTextView` (NSTextView): Return sends, Shift/Option-Return = new
+  line; the mic button dictates via `OpenAIService.transcribe`.
+- Storage in `~/Library/Application Support/<bundle id>/`: `Chats/<uuid>.json` (one file per
+  conversation), `ChatAttachments/` (unreferenced files are deleted on launch),
+  `Templates/templates.json`.
+- The default actor isolation is MainActor: types used off the main actor (chat models,
+  `ChatService`, `ChatAttachmentStore`, the text provider/model enums) are `nonisolated`.
+
 ## Dictionary (custom vocabulary)
 
 `AppSettings.dictionaryWords` + `dictionaryInstructions`. Helpers: `dictionaryPromptText`,
 `dictionaryWordsText`, `dictionaryPhrases`, `openAIKeywords`, `dictionaryInstructionsText`.
 Passed as: `keywords` + `prompt` (gpt-transcribe / gpt-live-transcribe — words and
 instructions travel separately; `openAIKeywords` strips `<`, `>` and newlines as the API
-requires), combined prompt (legacy gpt-4o-*, Gemini, Whisper), `phraseList` (Azure),
+requires), combined prompt (local Whisper, rewrite injection), `phraseList` (Azure),
 `PhraseListGrammar` (Azure realtime), `custom_vocabulary` / `customVocabulary` (Gemini 3.5
 Transcribe — words only; the model takes no prompt, so the instructions are not sent).
 Toggles: local Whisper, Azure, rewrite injection — OpenAI and Gemini have none, the

@@ -56,7 +56,7 @@ struct SpeechToTypeApp: App {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 700, height: 500)
+        .defaultSize(width: 1040, height: 700)
         
         MenuBarExtra("SpeechToType", systemImage: "waveform") {
             MenuBarView()
@@ -85,6 +85,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize TextInputService early to track app switching
         _ = TextInputService.shared
+
+        // Load chats now: its startup cleanup of unreferenced attachment files must run
+        // before any composer can hold a draft attachment
+        _ = ChatManager.shared
 
         // Request necessary permissions on launch
         Task {
@@ -141,6 +145,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             hotkeyManager.statusMessage = "Transkribiere..."
+            let source = hotkeyManager.recordingSource
 
             // Show processing overlay
             Task { @MainActor in
@@ -156,7 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                     await MainActor.run {
                         RecordingOverlayWindowController.shared.hide()
-                        TextInputService.shared.insertText(text)
+                        self?.deliver(text, from: source)
 
                         let record = TranscriptionRecord(
                             text: text,
@@ -264,6 +269,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let hotkeyManager = HotkeyManager.shared
         let label = realtimeModelLabel
+        let source = hotkeyManager.recordingSource
 
         // Stop recognition, then insert the complete text once.
         // Done off the main thread to avoid blocking UI.
@@ -275,7 +281,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 RecordingOverlayWindowController.shared.hide()
 
                 if !fullText.isEmpty {
-                    TextInputService.shared.insertText(fullText)
+                    self.deliver(fullText, from: source)
 
                     let record = TranscriptionRecord(
                         text: fullText,
@@ -295,6 +301,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+
+    // MARK: - Delivery
+
+    /// Puts dictated text where it belongs: the shortcut inserts it into the focused app, the
+    /// start page's record button follows `AppSettings.buttonDictationTarget`.
+    private func deliver(_ text: String, from source: RecordingSource) {
+        guard source == .button else {
+            TextInputService.shared.insertText(text)
+            return
+        }
+
+        switch AppSettings.shared.buttonDictationTarget {
+        case .previousApp:
+            if let app = TextInputService.shared.getPreviousApp() {
+                app.activate()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    TextInputService.shared.insertText(text)
+                }
+                return
+            }
+            // No other app used yet: keep the text in the message field
+            fallthrough
+        case .messageField:
+            let pending = AppNavigation.shared.pendingComposerDictation ?? ""
+            AppNavigation.shared.pendingComposerDictation = pending.isEmpty ? text : pending + " " + text
+        case .clipboard:
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(text, forType: .string)
+        }
+    }
 }
 
 // MARK: - Menu Bar View
@@ -302,131 +338,148 @@ struct MenuBarView: View {
     @ObservedObject var hotkeyManager = HotkeyManager.shared
     @ObservedObject var audioRecorder = AudioRecorder.shared
     @ObservedObject var settings = AppSettings.shared
-    
+    @ObservedObject private var overlay = RecordingOverlayWindowController.shared
+
+    private var phase: DictationOrb.Phase {
+        if hotkeyManager.isRecording { return .recording }
+        if overlay.isVisible && overlay.mode == .processing { return .processing }
+        return hotkeyManager.isListening ? .idle : .inactive
+    }
+
     var body: some View {
-        VStack(spacing: 12) {
-            // Status indicator
-            HStack {
-                Circle()
-                    .fill(statusColor)
-                    .frame(width: 10, height: 10)
-                
-                Text(hotkeyManager.statusMessage)
-                    .font(.headline)
-                
-                Spacer()
+        VStack(alignment: .leading, spacing: 14) {
+            // Status
+            HStack(spacing: 12) {
+                DictationOrb(phase: phase, level: audioRecorder.audioLevel, size: 28)
+                    .frame(width: 44, height: 44)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("SpeechToType")
+                        .font(.headline)
+                    Text(hotkeyManager.compactStatusMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+                Spacer(minLength: 0)
+                if let start = hotkeyManager.recordingStartedAt {
+                    TimelineView(.periodic(from: start, by: 0.1)) { context in
+                        Text(formatDuration(context.date.timeIntervalSince(start)))
+                            .font(.system(.callout, design: .monospaced).weight(.semibold))
+                            .foregroundStyle(.red)
+                    }
+                }
             }
-            .padding(.horizontal)
-            
-            // Recording duration
-            if hotkeyManager.isRecording {
-                Text(formatDuration(audioRecorder.recordingDuration))
-                    .font(.system(.title3, design: .monospaced))
-                    .foregroundColor(.red)
-            }
-            
-            Divider()
-            
-            // Quick actions
+
+            // Actions
             VStack(spacing: 8) {
                 if hotkeyManager.isRecording {
-                    Button(action: {
+                    Button {
                         hotkeyManager.stopCurrentRecording()
-                    }) {
+                    } label: {
                         Label("stopRecording", systemImage: "stop.circle.fill")
+                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
                     .tint(.red)
+                    .controlSize(.large)
                 } else {
-                    Button(action: {
+                    Button {
                         hotkeyManager.startContinuousRecording()
-                    }) {
+                    } label: {
                         Label("startContinuousRecording", systemImage: "mic.circle.fill")
+                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
+                    .controlSize(.large)
                 }
 
                 if settings.textRewriteEnabled {
-                    Button(action: {
+                    Button {
                         triggerRewriteFromMenu()
-                    }) {
-                        Label("rewriteSelectedText", systemImage: "pencil.circle.fill")
+                    } label: {
+                        Label("rewriteSelectedText", systemImage: "wand.and.stars")
+                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.glass)
 
-                    Button(action: {
+                    Button {
                         rewriteFromClipboard()
-                    }) {
+                    } label: {
                         Label("rewriteClipboardText", systemImage: "doc.on.clipboard")
+                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.glass)
                 }
-
-                Text(String(format: String(localized: "holdShortcutToDictate %@"), settings.directDictationShortcut.displayString))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
-                Text(String(format: String(localized: "doubleTapShortcutForContinuous %@"), settings.continuousRecordingShortcut.displayString))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
             }
-            .padding(.horizontal)
+
+            // Shortcut hints
+            VStack(alignment: .leading, spacing: 6) {
+                shortcutHint(settings.directDictationShortcut.displayString, label: "homeHoldToDictate")
+                shortcutHint(settings.continuousRecordingShortcut.displayString + " ×2", label: "homeDoubleTapContinuous")
+            }
 
             Divider()
 
-            // Microphone selection
             MicrophoneSelectionView()
-                .padding(.horizontal)
 
-            Divider()
-
-            // API Status
-            HStack {
-                Image(systemName: settings.isConfigured ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                    .foregroundColor(settings.isConfigured ? .green : .yellow)
+            Label {
                 Text(settings.isConfigured ? "apiConfigured" : "apiKeyMissing")
-                    .font(.caption)
-                Spacer()
+            } icon: {
+                Image(systemName: settings.isConfigured ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                    .foregroundStyle(settings.isConfigured ? .green : .yellow)
             }
-            .padding(.horizontal)
+            .font(.caption)
 
             Divider()
 
-            // Menu items
-            Button("openMainWindow") {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-                if let window = NSApplication.shared.windows.first(where: { $0.canBecomeMain }) {
-                    window.makeKeyAndOrderFront(nil)
+            // Window, settings, quit
+            HStack(spacing: 8) {
+                Button {
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    if let window = NSApplication.shared.windows.first(where: { $0.canBecomeMain }) {
+                        window.makeKeyAndOrderFront(nil)
+                    }
+                } label: {
+                    Label("openMainWindow", systemImage: "macwindow")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.glass)
+
+                Button {
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .keyboardShortcut(",", modifiers: .command)
+                .help("settings")
+
+                Button {
+                    NSApplication.shared.terminate(nil)
+                } label: {
+                    Image(systemName: "power")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .keyboardShortcut("q", modifiers: .command)
+                .help("quit")
             }
-            
-            Button("settings") {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-            }
-            .keyboardShortcut(",", modifiers: .command)
-            
-            Divider()
-            
-            Button("quit") {
-                NSApplication.shared.terminate(nil)
-            }
-            .keyboardShortcut("q", modifiers: .command)
         }
-        .padding(.vertical, 8)
-        .frame(width: 250)
+        .padding(14)
+        .frame(width: 290)
     }
-    
-    private var statusColor: Color {
-        if hotkeyManager.isRecording {
-            return .red
-        } else if hotkeyManager.isListening {
-            return .green
-        } else {
-            return .gray
+
+    private func shortcutHint(_ keys: String, label: LocalizedStringKey) -> some View {
+        HStack(spacing: 8) {
+            KeyCap(text: keys)
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
-    
+
     private func formatDuration(_ duration: TimeInterval) -> String {
         let minutes = Int(duration) / 60
         let seconds = Int(duration) % 60
@@ -521,10 +574,9 @@ struct MicrophoneSelectionView: View {
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.caption2)
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(6)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .insetField(cornerRadius: 8)
             }
             .buttonStyle(.plain)
             .onAppear {

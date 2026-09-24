@@ -2,6 +2,7 @@
   "sourceLanguage": "en",
   "strings": {
     "": {},
+    "·": {},
     "(2x)": {},
     "(Standard)": {},
     "2025-10-15": {},
@@ -397,6 +398,40 @@
         }
       }
     },
+    "appleRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst (komplett on-device, ohne Internet). Beim Loslassen der Taste wird der gesamte Text eingefügt. Hinweis: Apples On-Device-Erkennung kann sehr lange Aufnahmen zeitlich begrenzen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak (fully on-device, no internet). The complete text is inserted when you release the key. Note: Apple's on-device recognition may time-limit very long recordings."
+          }
+        }
+      }
+    },
+    "appleRealtimeEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Echtzeit-Transkription (live)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real-time transcription (live)"
+          }
+        }
+      }
+    },
     "appleSpeechDescription": {
       "extractionState": "manual",
       "localizations": {
@@ -584,6 +619,23 @@
         }
       }
     },
+    "azureAudioConversionFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio konnte nicht ins WAV-Format konvertiert werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not convert audio to WAV format."
+          }
+        }
+      }
+    },
     "azureBiasingWeight": {
       "extractionState": "manual",
       "localizations": {
@@ -686,6 +738,176 @@
         }
       }
     },
+    "azureRealtimeDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst wenn du die Taste loslässt (bzw. die Aufnahme stoppst), wird der komplette, korrekt formatierte Text auf einmal eingefügt. Nutzt Azure-Standardmodelle – nicht MAI-Transcribe."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. Only when you release the key (or stop recording) is the complete, correctly formatted text inserted at once. Uses Azure standard models – not MAI-Transcribe."
+          }
+        }
+      }
+    },
+    "azureRealtimeEnabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Echtzeit-Transkription (live)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real-time transcription (live)"
+          }
+        }
+      }
+    },
+    "azureRealtimeLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language"
+          }
+        }
+      }
+    },
+    "azureRealtimeNotConfigured": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure-Echtzeit ist nicht konfiguriert: Endpunkt und/oder API-Schlüssel fehlen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Azure real-time is not configured: endpoint and/or API key is missing."
+          }
+        }
+      }
+    },
+    "azureRealtimeSDKUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Azure Speech SDK ist in diesem Build nicht eingebunden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Azure Speech SDK is not included in this build."
+          }
+        }
+      }
+    },
+    "buttonDictationTarget": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text vom Aufnahmebutton"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text from the record button"
+          }
+        }
+      }
+    },
+    "buttonDictationTargetClipboard": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlauf + Zwischenablage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History + clipboard"
+          }
+        }
+      }
+    },
+    "buttonDictationTargetDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wohin der Text geht, wenn du auf der Startseite mit dem Aufnahmebutton diktierst. Diktate per Tastenkürzel werden immer in die aktive App eingefügt, und jedes Diktat landet zusätzlich im Verlauf."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where the text goes when you dictate with the record button on the start page. Dictations via keyboard shortcut are always inserted into the active app, and every dictation is also saved to the history."
+          }
+        }
+      }
+    },
+    "buttonDictationTargetMessageField": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eingabefeld der Startseite"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start page message field"
+          }
+        }
+      }
+    },
+    "buttonDictationTargetPreviousApp": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt aktive App"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last active app"
+          }
+        }
+      }
+    },
     "cancel": {
       "extractionState": "manual",
       "localizations": {
@@ -699,6 +921,856 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancel"
+          }
+        }
+      }
+    },
+    "chat": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        }
+      }
+    },
+    "chatAttachFiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dateien anhängen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attach files"
+          }
+        }
+      }
+    },
+    "chatAttachmentLimit %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximal %lld Anhänge pro Nachricht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At most %lld attachments per message."
+          }
+        }
+      }
+    },
+    "chatAttachmentTooLarge %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ ist zu groß (max. 10 MB für PDFs, 2 MB für Textdateien)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” is too large (max. 10 MB for PDFs, 2 MB for text files)."
+          }
+        }
+      }
+    },
+    "chatAttachmentUnreadable %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ konnte nicht gelesen werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” could not be read."
+          }
+        }
+      }
+    },
+    "chatAttachmentUnsupported %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ kann nicht angehängt werden. Unterstützt werden Bilder, PDFs und Textdateien."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” can't be attached. Images, PDFs and text files are supported."
+          }
+        }
+      }
+    },
+    "chatAutoGenerateTitles": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel automatisch erzeugen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate titles automatically"
+          }
+        }
+      }
+    },
+    "chatAutoGenerateTitlesDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach der ersten Antwort schreibt das Modell einen kurzen Titel für den Chat (ein kleiner zusätzlicher Aufruf). Ohne diese Option wird die erste Zeile deiner Nachricht verwendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After the first reply, the model writes a short title for the chat (one small extra request). Without this option, the first line of your message is used."
+          }
+        }
+      }
+    },
+    "chatConversationCount %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherte Chats: %lld"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved chats: %lld"
+          }
+        }
+      }
+    },
+    "chatCustomInstructions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigene Anweisungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom instructions"
+          }
+        }
+      }
+    },
+    "chatCustomInstructionsDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird bei jedem Chat als System-Prompt mitgeschickt, bei allen Anbietern."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sent as the system prompt with every chat, for all providers."
+          }
+        }
+      }
+    },
+    "chatCustomInstructionsPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z. B. „Antworte kurz und präzise. Ich entwickle Apps für macOS.“"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "e.g. “Keep answers short and precise. I build macOS apps.”"
+          }
+        }
+      }
+    },
+    "chatDeleteAll": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Chats löschen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete All Chats…"
+          }
+        }
+      }
+    },
+    "chatDeleteAllConfirmation": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Chats löschen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all chats?"
+          }
+        }
+      }
+    },
+    "chatDeleteAllWarning": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Konversationen und ihre Anhänge werden unwiderruflich gelöscht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All conversations and their attachments will be deleted permanently."
+          }
+        }
+      }
+    },
+    "chatDeleteMessage %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ wird mit allen Nachrichten und Anhängen gelöscht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” will be deleted with all messages and attachments."
+          }
+        }
+      }
+    },
+    "chatDeleteTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat löschen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete chat?"
+          }
+        }
+      }
+    },
+    "chatDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachricht diktieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictate message"
+          }
+        }
+      }
+    },
+    "chatEmptySubtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schreib oder diktiere eine Nachricht. Dateien und Bilder kannst du anhängen, einfügen oder hineinziehen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type or dictate a message. Attach, paste or drop in files and images."
+          }
+        }
+      }
+    },
+    "chatEmptyTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie kann ich helfen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How can I help?"
+          }
+        }
+      }
+    },
+    "chatErrorContextTooLong": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Unterhaltung ist zu lang für Apple Intelligence. Starte einen neuen Chat oder wähle ein anderes Modell."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The conversation is too long for Apple Intelligence. Start a new chat or pick another model."
+          }
+        }
+      }
+    },
+    "chatErrorImagesNotSupported": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence kann keine Bilder verarbeiten. Wähle ein anderes Modell oder entferne das Bild."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligence can't process images. Pick another model or remove the image."
+          }
+        }
+      }
+    },
+    "chatErrorNotConfigured %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für %@ ist kein API-Key hinterlegt. Trage ihn in den Einstellungen unter „Textmodell“ ein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No API key set for %@. Add it in Settings under “Text model”."
+          }
+        }
+      }
+    },
+    "chatGenerateReply": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antwort erzeugen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate reply"
+          }
+        }
+      }
+    },
+    "chatInputPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachricht schreiben…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write a message…"
+          }
+        }
+      }
+    },
+    "chatManageProviders": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anbieter einrichten…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set Up Providers…"
+          }
+        }
+      }
+    },
+    "chatModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
+          }
+        }
+      }
+    },
+    "chatNew": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New chat"
+          }
+        }
+      }
+    },
+    "chatNoConversations": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Chats.\nStarte einen über das Eingabefeld."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No chats yet.\nStart one with the message field."
+          }
+        }
+      }
+    },
+    "chatOpenSettings": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
+          }
+        }
+      }
+    },
+    "chatPastedImageName": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eingefügtes Bild"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasted image"
+          }
+        }
+      }
+    },
+    "chatProviderNotConfigured %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für %@ ist noch kein Zugang eingerichtet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ isn't set up yet."
+          }
+        }
+      }
+    },
+    "chatRegenerate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neu generieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regenerate"
+          }
+        }
+      }
+    },
+    "chatRename": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umbenennen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        }
+      }
+    },
+    "chatRenamePlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Title"
+          }
+        }
+      }
+    },
+    "chatRenameTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat umbenennen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename chat"
+          }
+        }
+      }
+    },
+    "chatRetry": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        }
+      }
+    },
+    "chatScrollToBottom": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach unten scrollen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scroll to bottom"
+          }
+        }
+      }
+    },
+    "chatSectionLast7Days": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte 7 Tage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous 7 days"
+          }
+        }
+      }
+    },
+    "chatSectionLast30Days": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte 30 Tage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous 30 days"
+          }
+        }
+      }
+    },
+    "chatSectionOlder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Älter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Older"
+          }
+        }
+      }
+    },
+    "chatSectionToday": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        }
+      }
+    },
+    "chatSectionYesterday": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestern"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yesterday"
+          }
+        }
+      }
+    },
+    "chatSend": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Senden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send"
+          }
+        }
+      }
+    },
+    "chatSettingsSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        }
+      }
+    },
+    "chatStop": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antwort stoppen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop response"
+          }
+        }
+      }
+    },
+    "chatStopDictation": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktat beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop dictation"
+          }
+        }
+      }
+    },
+    "chatStorageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats und Anhänge liegen lokal auf diesem Mac unter ~/Library/Application Support."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chats and attachments are stored locally on this Mac in ~/Library/Application Support."
+          }
+        }
+      }
+    },
+    "chatStorageSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherte Chats"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved chats"
+          }
+        }
+      }
+    },
+    "chatThinking": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denkt nach…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thinking…"
           }
         }
       }
@@ -788,6 +1860,23 @@
         }
       }
     },
+    "copied": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
+          }
+        }
+      }
+    },
     "copy": {
       "extractionState": "manual",
       "localizations": {
@@ -801,6 +1890,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy"
+          }
+        }
+      }
+    },
+    "copyToClipboardOnInsert": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über Zwischenablage einfügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert via clipboard"
+          }
+        }
+      }
+    },
+    "copyToClipboardOnInsertDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An: Text wird per Zwischenablage (Cmd+V) eingefügt und die vorherige Zwischenablage danach wiederhergestellt. Aus: Text wird direkt getippt, ohne die Zwischenablage zu verändern."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On: text is inserted via the clipboard (Cmd+V) and your previous clipboard is restored afterwards. Off: text is typed directly without ever touching the clipboard."
           }
         }
       }
@@ -1230,6 +2353,23 @@
         }
       }
     },
+    "dictionarySubtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Begriffe und Anweisungen, die die Spracherkennung kennen soll."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms and instructions the speech recognition should know."
+          }
+        }
+      }
+    },
     "dictionaryWordPlaceholder": {
       "extractionState": "manual",
       "localizations": {
@@ -1332,23 +2472,6 @@
         }
       }
     },
-    "doubleTapShortcutForContinuous %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Doppelt %@ für Daueraufnahme"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Double-tap %@ for continuous"
-          }
-        }
-      }
-    },
     "enterApiKey": {
       "extractionState": "manual",
       "localizations": {
@@ -1434,6 +2557,23 @@
         }
       }
     },
+    "filterDictations": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktate"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictations"
+          }
+        }
+      }
+    },
     "filterRewrites": {
       "extractionState": "manual",
       "localizations": {
@@ -1447,23 +2587,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rewrites"
-          }
-        }
-      }
-    },
-    "filterTranscriptions": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transkriptionen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transcriptions"
           }
         }
       }
@@ -1553,6 +2676,23 @@
         }
       }
     },
+    "geminiModel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini-Modell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini Model"
+          }
+        }
+      }
+    },
     "geminiModeSmart": {
       "extractionState": "manual",
       "localizations": {
@@ -1583,6 +2723,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Verbatim"
+          }
+        }
+      }
+    },
+    "geminiSharedKeyHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieser Schlüssel wird mit der Sprachmodell-Konfiguration geteilt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This key is shared with the speech model configuration."
           }
         }
       }
@@ -1651,40 +2808,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "“Smart” removes filler words, resolves spoken self-corrections and formats lists, numbers and dates. “Verbatim” returns exactly what was said."
-          }
-        }
-      }
-    },
-    "geminiModel": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gemini-Modell"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gemini Model"
-          }
-        }
-      }
-    },
-    "geminiSharedKeyHint": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dieser Schlüssel wird mit der Sprachmodell-Konfiguration geteilt."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This key is shared with the speech model configuration."
           }
         }
       }
@@ -1774,6 +2897,57 @@
         }
       }
     },
+    "greetingDay": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guten Tag"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good afternoon"
+          }
+        }
+      }
+    },
+    "greetingEvening": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guten Abend"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good evening"
+          }
+        }
+      }
+    },
+    "greetingMorning": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guten Morgen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good morning"
+          }
+        }
+      }
+    },
     "history": {
       "extractionState": "manual",
       "localizations": {
@@ -1787,6 +2961,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "History"
+          }
+        }
+      }
+    },
+    "historyCharacterCount %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Zeichen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld characters"
+          }
+        }
+      }
+    },
+    "historyEmptyMessage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Diktate und Umschreibungen erscheinen hier."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your dictations and rewrites will appear here."
+          }
+        }
+      }
+    },
+    "historyInsertInto %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In %@ einfügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insert into %@"
+          }
+        }
+      }
+    },
+    "historyNoSelection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Eintrag ausgewählt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No entry selected"
+          }
+        }
+      }
+    },
+    "historyOriginal": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original"
+          }
+        }
+      }
+    },
+    "historyResult": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ergebnis"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Result"
           }
         }
       }
@@ -1808,6 +3084,23 @@
         }
       }
     },
+    "historyWordCount %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Wörter"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld words"
+          }
+        }
+      }
+    },
     "holdControlToDictate": {
       "extractionState": "manual",
       "localizations": {
@@ -1825,36 +3118,138 @@
         }
       }
     },
-    "holdShortcutToDictate %@": {
+    "home": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Halte %@ gedrückt zum Diktieren"
+            "value": "Start"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hold %@ to dictate"
+            "value": "Home"
           }
         }
       }
     },
-    "holdToDictate": {
+    "homeDoubleTapContinuous": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Halte die Control-Taste gedrückt, um zu diktieren."
+            "value": "Doppeltippen für Daueraufnahme"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hold the Control key to dictate."
+            "value": "Double-tap for continuous dictation"
+          }
+        }
+      }
+    },
+    "homeHoldToDictate": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halten zum Diktieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold to dictate"
+          }
+        }
+      }
+    },
+    "homeNoActivityMessage %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halte %@ gedrückt und sprich – deine Diktate und Chats erscheinen dann hier."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold %@ and speak — your dictations and chats will show up here."
+          }
+        }
+      }
+    },
+    "homeNoActivityTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch nichts los hier"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing here yet"
+          }
+        }
+      }
+    },
+    "homeRecent": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent"
+          }
+        }
+      }
+    },
+    "homeRewriteShortcut": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Markierten Text umschreiben"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewrite selected text"
+          }
+        }
+      }
+    },
+    "homeSubtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktiere, schreibe um oder chatte mit deinen KI-Modellen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictate, rewrite or chat with your AI models."
           }
         }
       }
@@ -1896,6 +3291,23 @@
         }
       }
     },
+    "insertionSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfügen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text insertion"
+          }
+        }
+      }
+    },
     "key": {
       "extractionState": "manual",
       "localizations": {
@@ -1909,6 +3321,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Key"
+          }
+        }
+      }
+    },
+    "liveTranscription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
           }
         }
       }
@@ -1930,7 +3359,7 @@
         }
       }
     },
-    "mai-transcribe-1.5": {},
+    "mai-transcribe-2": {},
     "microphone": {
       "extractionState": "manual",
       "localizations": {
@@ -2033,23 +3462,6 @@
         }
       }
     },
-    "modelInfoDiarize": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT-4o Diarize: Mit Sprechererkennung"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT-4o Diarize: With speaker recognition"
-          }
-        }
-      }
-    },
     "modelInfoGeminiTranscribe": {
       "extractionState": "manual",
       "localizations": {
@@ -2084,36 +3496,36 @@
         }
       }
     },
-    "modelInfoMini": {
+    "modelInfoGptLiveTranscribe": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "• GPT-4o Mini: Schnell und günstig"
+            "value": "• GPT Live Transcribe: Live-Vorschau beim Sprechen (Streaming)"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "• GPT-4o Mini: Fast and affordable"
+            "value": "• GPT Live Transcribe: live preview while speaking (streaming)"
           }
         }
       }
     },
-    "modelInfoStandard": {
+    "modelInfoGptTranscribe": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "• GPT-4o: Höhere Qualität"
+            "value": "• GPT Transcribe: Neuestes Modell, Keywords + mehrsprachig"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "• GPT-4o: Higher quality"
+            "value": "• GPT Transcribe: newest model, keywords + multilingual"
           }
         }
       }
@@ -2409,6 +3821,74 @@
       }
     },
     "OpenAI API Documentation": {},
+    "openAIDictionaryKeywordsNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wörterbuch-Wörter werden als Keywords (wörtliches Spezialvokabular) übergeben, die Anweisungen als Prompt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary words are passed as keywords (literal custom vocabulary), the instructions as a prompt."
+          }
+        }
+      }
+    },
+    "openAILiveDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst beim Loslassen der Taste wird der komplette, korrekt formatierte Text auf einmal eingefügt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows the text live in the overlay preview while you speak. The complete, correctly formatted text is inserted at once when you release the key."
+          }
+        }
+      }
+    },
+    "openAIRealtimeDelay": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latenz"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency"
+          }
+        }
+      }
+    },
+    "openAIRealtimeDelayDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geringere Latenz reagiert schneller, höhere Latenz gibt dem Modell mehr Kontext und meist bessere Genauigkeit."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lower latency responds faster; higher latency gives the model more context and usually better accuracy."
+          }
+        }
+      }
+    },
     "openApiKey": {
       "extractionState": "manual",
       "localizations": {
@@ -2494,19 +3974,121 @@
         }
       }
     },
-    "pressAndHold": {
+    "orbCaptionIdle": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Drücke und halte"
+            "value": "Klicken oder halten"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Press and hold"
+            "value": "Click or hold"
+          }
+        }
+      }
+    },
+    "orbCaptionRelease": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loslassen zum Beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release to stop"
+          }
+        }
+      }
+    },
+    "orbCaptionStop": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klicken zum Beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click to stop"
+          }
+        }
+      }
+    },
+    "orbHelp": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klicken startet eine Aufnahme, die bis zum nächsten Klick läuft. Gedrückt halten nimmt auf, bis du loslässt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click to start a recording that runs until the next click. Hold to record until you let go."
+          }
+        }
+      }
+    },
+    "orbStartRecording": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme starten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start recording"
+          }
+        }
+      }
+    },
+    "orbStopRecording": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop recording"
+          }
+        }
+      }
+    },
+    "overlayListening": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Höre zu …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listening …"
           }
         }
       }
@@ -2592,6 +4174,91 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ready - Hold the key to record"
+          }
+        }
+      }
+    },
+    "realtimeDelayHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High"
+          }
+        }
+      }
+    },
+    "realtimeDelayLow": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niedrig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low"
+          }
+        }
+      }
+    },
+    "realtimeDelayMedium": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mittel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        }
+      }
+    },
+    "realtimeDelayMinimal": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimal"
+          }
+        }
+      }
+    },
+    "realtimeDelayXHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sehr hoch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very high"
           }
         }
       }
@@ -3191,6 +4858,23 @@
         }
       }
     },
+    "rewriteSubtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korrigieren, verbessern, übersetzen oder eigene Anweisungen – mit deinem Textmodell."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correct, improve, translate or follow your own instructions — with your text model."
+          }
+        }
+      }
+    },
     "rewriteTitle": {
       "extractionState": "manual",
       "localizations": {
@@ -3259,91 +4943,6 @@
         }
       }
     },
-    "settingsTabSpeech": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprachmodell"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speech model"
-          }
-        }
-      }
-    },
-    "settingsTabText": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Textmodell"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Text model"
-          }
-        }
-      }
-    },
-    "settingsTabShortcuts": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kurzbefehle"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shortcuts"
-          }
-        }
-      }
-    },
-    "settingsTabGeneral": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allgemein"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "General"
-          }
-        }
-      }
-    },
-    "settingsTabAbout": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Über"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "About"
-          }
-        }
-      }
-    },
     "saveRewritesToHistoryDescription": {
       "extractionState": "manual",
       "localizations": {
@@ -3391,6 +4990,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "Settings"
+          }
+        }
+      }
+    },
+    "settingsTabAbout": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        }
+      }
+    },
+    "settingsTabChat": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chat"
+          }
+        }
+      }
+    },
+    "settingsTabGeneral": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allgemein"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        }
+      }
+    },
+    "settingsTabShortcuts": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurzbefehle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shortcuts"
+          }
+        }
+      }
+    },
+    "settingsTabSpeech": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprachmodell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speech model"
+          }
+        }
+      }
+    },
+    "settingsTabText": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textmodell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text model"
           }
         }
       }
@@ -3448,6 +5149,57 @@
         }
       }
     },
+    "speechLanguage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        }
+      }
+    },
+    "speechLanguageAutomatic": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic"
+          }
+        }
+      }
+    },
+    "speechLanguageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennungssprache für gpt-transcribe und gpt-live-transcribe. „Automatisch“ lässt das Modell die Sprache selbst erkennen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognition language for gpt-transcribe and gpt-live-transcribe. “Automatic” lets the model detect the language itself."
+          }
+        }
+      }
+    },
     "speechModelConfigSection": {
       "extractionState": "manual",
       "localizations": {
@@ -3483,6 +5235,23 @@
       }
     },
     "SpeechToType": {},
+    "startChatPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frag irgendwas – startet einen neuen Chat"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask anything — starts a new chat"
+          }
+        }
+      }
+    },
     "startContinuousRecording": {
       "extractionState": "manual",
       "localizations": {
@@ -3496,40 +5265,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Start continuous recording"
-          }
-        }
-      }
-    },
-    "statistics": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Statistiken"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Statistics"
-          }
-        }
-      }
-    },
-    "status": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Status"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Status"
           }
         }
       }
@@ -3602,6 +5337,125 @@
         }
       }
     },
+    "templates": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorlagen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Templates"
+          }
+        }
+      }
+    },
+    "templatesAdd": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neue Vorlage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New template"
+          }
+        }
+      }
+    },
+    "templatesEmpty": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Vorlagen.\nLeg mit + eine an."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No templates yet.\nCreate one with +."
+          }
+        }
+      }
+    },
+    "templatesEmptyMessage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichere Textbausteine und kopiere sie mit einem Klick."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save text snippets and copy them with one click."
+          }
+        }
+      }
+    },
+    "templatesNoSelection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Vorlage ausgewählt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No template selected"
+          }
+        }
+      }
+    },
+    "templatesPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text eingeben…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter text…"
+          }
+        }
+      }
+    },
+    "templatesUntitled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neue Vorlage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New template"
+          }
+        }
+      }
+    },
     "textProcessingOpenAIApiKey": {
       "extractionState": "manual",
       "localizations": {
@@ -3653,6 +5507,40 @@
         }
       }
     },
+    "textProvidersSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anbieter & Zugänge"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Providers & access"
+          }
+        }
+      }
+    },
+    "textProvidersSectionDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Zugänge nutzen das Text-Umschreiben und der Chat. Im Chat kannst du zwischen allen hier eingerichteten Anbietern wählen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used by text rewriting and the chat. In the chat you can pick any provider set up here."
+          }
+        }
+      }
+    },
     "textRewriteEnabled": {
       "extractionState": "manual",
       "localizations": {
@@ -3683,23 +5571,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Text Rewriting"
-          }
-        }
-      }
-    },
-    "toDictate": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "um zu diktieren"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "to dictate"
           }
         }
       }
@@ -3768,23 +5639,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Transcription"
-          }
-        }
-      }
-    },
-    "transcriptionHistory": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transkriptions-Verlauf"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Transcription History"
           }
         }
       }
@@ -4028,478 +5882,19 @@
         }
       }
     },
-    "azureAudioConversionFailed": {
+    "templatesTitlePlaceholder": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Audio konnte nicht ins WAV-Format konvertiert werden."
+            "value": "Titel"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Could not convert audio to WAV format."
-          }
-        }
-      }
-    },
-    "azureRealtimeEnabled": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Echtzeit-Transkription (live)"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Real-time transcription (live)"
-          }
-        }
-      }
-    },
-    "azureRealtimeLanguage": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erkennungssprache"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recognition language"
-          }
-        }
-      }
-    },
-    "azureRealtimeDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst wenn du die Taste loslässt (bzw. die Aufnahme stoppst), wird der komplette, korrekt formatierte Text auf einmal eingefügt. Nutzt Azure-Standardmodelle – nicht MAI-Transcribe."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shows the text live in the overlay preview while you speak. Only when you release the key (or stop recording) is the complete, correctly formatted text inserted at once. Uses Azure standard models – not MAI-Transcribe."
-          }
-        }
-      }
-    },
-    "azureRealtimeSDKUnavailable": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das Azure Speech SDK ist in diesem Build nicht eingebunden."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Azure Speech SDK is not included in this build."
-          }
-        }
-      }
-    },
-    "liveTranscription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Live"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Live"
-          }
-        }
-      }
-    },
-    "overlayListening": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Höre zu …"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Listening …"
-          }
-        }
-      }
-    },
-    "insertionSection": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Einfügen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Text insertion"
-          }
-        }
-      }
-    },
-    "copyToClipboardOnInsert": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Über Zwischenablage einfügen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insert via clipboard"
-          }
-        }
-      }
-    },
-    "copyToClipboardOnInsertDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "An: Text wird per Zwischenablage (Cmd+V) eingefügt und die vorherige Zwischenablage danach wiederhergestellt. Aus: Text wird direkt getippt, ohne die Zwischenablage zu verändern."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On: text is inserted via the clipboard (Cmd+V) and your previous clipboard is restored afterwards. Off: text is typed directly without ever touching the clipboard."
-          }
-        }
-      }
-    },
-    "appleRealtimeDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst (komplett on-device, ohne Internet). Beim Loslassen der Taste wird der gesamte Text eingefügt. Hinweis: Apples On-Device-Erkennung kann sehr lange Aufnahmen zeitlich begrenzen."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shows the text live in the overlay preview while you speak (fully on-device, no internet). The complete text is inserted when you release the key. Note: Apple's on-device recognition may time-limit very long recordings."
-          }
-        }
-      }
-    },
-    "appleRealtimeEnabled": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Echtzeit-Transkription (live)"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Real-time transcription (live)"
-          }
-        }
-      }
-    },
-    "azureRealtimeNotConfigured": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azure-Echtzeit ist nicht konfiguriert: Endpunkt und/oder API-Schlüssel fehlen."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azure real-time is not configured: endpoint and/or API key is missing."
-          }
-        }
-      }
-    },
-    "speechLanguage": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sprache"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Language"
-          }
-        }
-      }
-    },
-    "speechLanguageAutomatic": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatisch"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic"
-          }
-        }
-      }
-    },
-    "speechLanguageDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erkennungssprache für gpt-transcribe und gpt-live-transcribe. „Automatisch“ lässt das Modell die Sprache selbst erkennen."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recognition language for gpt-transcribe and gpt-live-transcribe. “Automatic” lets the model detect the language itself."
-          }
-        }
-      }
-    },
-    "openAILegacyLanguageNote": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Die GPT-4o-Modelle transkribieren immer auf Deutsch."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The GPT-4o models always transcribe in German."
-          }
-        }
-      }
-    },
-    "openAIDictionaryKeywordsNote": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wörterbuch-Wörter werden als Keywords (wörtliches Spezialvokabular) übergeben, die Anweisungen als Prompt."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dictionary words are passed as keywords (literal custom vocabulary), the instructions as a prompt."
-          }
-        }
-      }
-    },
-    "openAIRealtimeDelay": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Latenz"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Latency"
-          }
-        }
-      }
-    },
-    "openAIRealtimeDelayDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geringere Latenz reagiert schneller, höhere Latenz gibt dem Modell mehr Kontext und meist bessere Genauigkeit."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lower latency responds faster; higher latency gives the model more context and usually better accuracy."
-          }
-        }
-      }
-    },
-    "openAILiveDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zeigt den Text live in der Overlay-Vorschau, während du sprichst. Erst beim Loslassen der Taste wird der komplette, korrekt formatierte Text auf einmal eingefügt."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shows the text live in the overlay preview while you speak. The complete, correctly formatted text is inserted at once when you release the key."
-          }
-        }
-      }
-    },
-    "realtimeDelayMinimal": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minimal"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minimal"
-          }
-        }
-      }
-    },
-    "realtimeDelayLow": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Niedrig"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low"
-          }
-        }
-      }
-    },
-    "realtimeDelayMedium": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mittel"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medium"
-          }
-        }
-      }
-    },
-    "realtimeDelayHigh": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoch"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "High"
-          }
-        }
-      }
-    },
-    "realtimeDelayXHigh": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sehr hoch"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Very high"
-          }
-        }
-      }
-    },
-    "modelInfoGptTranscribe": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT Transcribe: Neuestes Modell, Keywords + mehrsprachig"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT Transcribe: newest model, keywords + multilingual"
-          }
-        }
-      }
-    },
-    "modelInfoGptLiveTranscribe": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT Live Transcribe: Live-Vorschau beim Sprechen (Streaming)"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "• GPT Live Transcribe: live preview while speaking (streaming)"
+            "value": "Title"
           }
         }
       }

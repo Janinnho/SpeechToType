@@ -1,20 +1,26 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+    "linear-gradient" : [
+      "display-p3:0.54000,0.36000,1.00000,1.00000",
+      "display-p3:0.16000,0.48000,1.00000,1.00000"
+    ],
+    "orientation" : {
+      "start" : {
+        "x" : 0.5,
+        "y" : 0
+      },
+      "stop" : {
+        "x" : 0.5,
+        "y" : 0.9
+      }
+    }
   },
   "groups" : [
     {
       "layers" : [
         {
-          "image-name" : "SpeechToTypeAppIconLegacy.png",
-          "name" : "SpeechToTypeAppIconLegacy",
-          "position" : {
-            "scale" : 1.45,
-            "translation-in-points" : [
-              -1.1368683772161603e-13,
-              22.887499617747835
-            ]
-          }
+          "image-name" : "Glyph.svg",
+          "name" : "Glyph"
         }
       ],
       "shadow" : {

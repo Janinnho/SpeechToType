@@ -34,7 +34,7 @@ enum SpeechModelProvider: String, CaseIterable, Codable {
     }
 }
 
-enum TextProcessingProvider: String, CaseIterable, Codable {
+nonisolated enum TextProcessingProvider: String, CaseIterable, Codable {
     case openAI = "openai"
     case anthropic = "anthropic"
     case ollama = "ollama"
@@ -52,17 +52,29 @@ enum TextProcessingProvider: String, CaseIterable, Codable {
     }
 }
 
-enum GeminiModel: String, CaseIterable, Codable {
-    case gemini37Flash = "gemini-3.7-flash"
-    case gemini36Flash = "gemini-3.6-flash"
-    case gemini31Pro = "gemini-3.1-pro"
+nonisolated enum GeminiModel: String, CaseIterable, Codable {
+    case gemini38Flash = "gemini-3.8-flash"
+    case gemini31ProPreview = "gemini-3.1-pro-preview"
+    case gemini35FlashLite = "gemini-3.5-flash-lite"
 
     var displayName: String {
         switch self {
-        case .gemini37Flash: return "Gemini 3.7 Flash"
-        case .gemini36Flash: return "Gemini 3.6 Flash"
-        case .gemini31Pro: return "Gemini 3.1 Pro"
+        case .gemini38Flash: return "Gemini 3.8 Flash"
+        case .gemini31ProPreview: return "Gemini 3.1 Pro (Preview)"
+        case .gemini35FlashLite: return "Gemini 3.5 Flash-Lite"
         }
+    }
+
+    /// Parses a stored model id, moving older Flash models to 3.8 Flash. Gemini 3.1 Pro
+    /// exists on the Gemini API only as a preview (`gemini-3.1-pro` was never valid there).
+    init?(storedValue: String) {
+        let successors: [String: GeminiModel] = [
+            "gemini-3.7-flash": .gemini38Flash,
+            "gemini-3.6-flash": .gemini38Flash,
+            "gemini-3.1-pro": .gemini31ProPreview
+        ]
+        guard let model = GeminiModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        self = model
     }
 }
 
@@ -142,26 +154,37 @@ enum GeminiTranscriptionMode: String, CaseIterable, Codable {
     }
 }
 
-enum AnthropicModel: String, CaseIterable, Codable {
-    case claudeOpus5 = "claude-opus-5"
+nonisolated enum AnthropicModel: String, CaseIterable, Codable {
+    case claudeFable51 = "claude-fable-5-1"
+    case claudeOpus55 = "claude-opus-5-5"
     case claudeSonnet5 = "claude-sonnet-5"
     case claudeHaiku45 = "claude-haiku-4-5"
 
     var displayName: String {
         switch self {
-        case .claudeOpus5: return "Claude Opus 5"
+        case .claudeFable51: return "Claude Fable 5.1"
+        case .claudeOpus55: return "Claude Opus 5.5"
         case .claudeSonnet5: return "Claude Sonnet 5"
         case .claudeHaiku45: return "Claude Haiku 4.5"
         }
     }
+
+    /// Whether the model takes `output_config.effort` (Haiku 4.5 does not)
+    var supportsEffort: Bool { self != .claudeHaiku45 }
+
+    /// Parses a stored model id, moving Claude Opus 5 to its successor Opus 5.5.
+    init?(storedValue: String) {
+        guard let model = AnthropicModel(rawValue: storedValue)
+                ?? (storedValue == "claude-opus-5" ? .claudeOpus55 : nil) else { return nil }
+        self = model
+    }
 }
 
+/// OpenAI speech-to-text models. The gpt-4o-*-transcribe models and whisper-1 are
+/// deprecated (shut down Feb 2027); a stored legacy value falls back to gpt-transcribe.
 enum TranscriptionModel: String, CaseIterable, Codable {
     case gptTranscribe = "gpt-transcribe"
     case gptLiveTranscribe = "gpt-live-transcribe"
-    case gpt4oMiniTranscribe = "gpt-4o-mini-transcribe"
-    case gpt4oTranscribe = "gpt-4o-transcribe"
-    case gpt4oTranscribeDiarize = "gpt-4o-transcribe-diarize"
 
     var displayName: String {
         switch self {
@@ -169,19 +192,7 @@ enum TranscriptionModel: String, CaseIterable, Codable {
             return "GPT Transcribe"
         case .gptLiveTranscribe:
             return "GPT Live Transcribe"
-        case .gpt4oMiniTranscribe:
-            return "GPT-4o Mini Transcribe"
-        case .gpt4oTranscribe:
-            return "GPT-4o Transcribe"
-        case .gpt4oTranscribeDiarize:
-            return "GPT-4o Transcribe (Diarize)"
         }
-    }
-
-    /// New model generation: uses `languages[]` + `keywords[]` instead of the singular
-    /// `language` plus a combined dictionary prompt.
-    var usesLanguagesAndKeywords: Bool {
-        self == .gptTranscribe || self == .gptLiveTranscribe
     }
 
     /// Realtime-only — there is no `/v1/audio/transcriptions` endpoint for this model.
@@ -279,6 +290,24 @@ enum AutoDeleteOption: String, CaseIterable, Codable {
     }
 }
 
+/// Where text dictated with the record button on the start page goes
+enum ButtonDictationTarget: String, CaseIterable, Codable {
+    case messageField = "messageField"
+    case previousApp = "previousApp"
+    case clipboard = "clipboard"
+
+    var displayName: LocalizedStringKey {
+        switch self {
+        case .messageField:
+            return "buttonDictationTargetMessageField"
+        case .previousApp:
+            return "buttonDictationTargetPreviousApp"
+        case .clipboard:
+            return "buttonDictationTargetClipboard"
+        }
+    }
+}
+
 /// Shortcut trigger mode
 enum ShortcutTriggerMode: String, Codable {
     case holdKey           // Hold single key to activate (for direct dictation)
@@ -359,7 +388,30 @@ struct ShortcutConfig: Codable, Equatable {
             kVK_Command: "⌘", kVK_RightCommand: "⌘ Right",
             kVK_Shift: "⇧"
         ]
-        return keyMap[keyCode] ?? "Key \(keyCode)"
+        return keyMap[keyCode] ?? Self.layoutCharacter(for: keyCode) ?? "Key \(keyCode)"
+    }
+
+    /// The character the key types on the current keyboard layout (e.g. "Ö" for key 41 on
+    /// a German layout), for keys the fixed map above doesn't name.
+    private static func layoutCharacter(for keyCode: Int) -> String? {
+        guard let source = TISCopyCurrentKeyboardLayoutInputSource()?.takeRetainedValue(),
+              let layoutPointer = TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) else { return nil }
+        let layoutData = Unmanaged<CFData>.fromOpaque(layoutPointer).takeUnretainedValue() as Data
+        var deadKeyState: UInt32 = 0
+        var length = 0
+        var characters = [UniChar](repeating: 0, count: 4)
+        let status = layoutData.withUnsafeBytes { buffer -> OSStatus in
+            guard let layout = buffer.baseAddress?.assumingMemoryBound(to: UCKeyboardLayout.self) else { return -1 }
+            return UCKeyTranslate(
+                layout, UInt16(keyCode), UInt16(kUCKeyActionDisplay), 0, UInt32(LMGetKbdType()),
+                OptionBits(kUCKeyTranslateNoDeadKeysBit), &deadKeyState, characters.count, &length, &characters
+            )
+        }
+        guard status == noErr, length > 0 else { return nil }
+        let character = String(utf16CodeUnits: characters, count: length)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .uppercased()
+        return character.isEmpty ? nil : character
     }
 }
 
@@ -450,6 +502,11 @@ final class AppSettings: ObservableObject {
     /// typed directly without ever touching the clipboard.
     @Published var copyToClipboardOnInsert: Bool {
         didSet { defaults.set(copyToClipboardOnInsert, forKey: "copyToClipboardOnInsert") }
+    }
+
+    /// Where text dictated with the start page's record button goes
+    @Published var buttonDictationTarget: ButtonDictationTarget {
+        didSet { defaults.set(buttonDictationTarget.rawValue, forKey: "buttonDictationTarget") }
     }
 
     /// Default language for translation
@@ -603,7 +660,7 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(azureFoundryApiVersion, forKey: "azureFoundryApiVersion") }
     }
 
-    /// Azure Foundry model name (free-text, e.g. MAI-Transcribe-1.5)
+    /// Azure Foundry model name (free-text, e.g. mai-transcribe-2)
     @Published var azureFoundryModel: String {
         didSet { defaults.set(azureFoundryModel, forKey: "azureFoundryModel") }
     }
@@ -635,8 +692,7 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(appleRealtimeEnabled, forKey: "appleRealtimeEnabled") }
     }
 
-    /// Recognition language for gpt-transcribe / gpt-live-transcribe. The legacy gpt-4o-*
-    /// models keep their hardcoded `language=de`.
+    /// Recognition language for gpt-transcribe / gpt-live-transcribe
     @Published var openAISpeechLanguage: SpeechLanguageOption {
         didSet { defaults.set(openAISpeechLanguage.rawValue, forKey: "openAISpeechLanguage") }
     }
@@ -688,6 +744,28 @@ final class AppSettings: ObservableObject {
     /// Whether to inject the dictionary into the text-rewrite system prompt (default off)
     @Published var applyDictionaryToRewrite: Bool {
         didSet { defaults.set(applyDictionaryToRewrite, forKey: "applyDictionaryToRewrite") }
+    }
+
+    // MARK: - Chat Settings
+
+    /// Model for new chats — the one picked last in any chat. Until something is
+    /// picked it follows the text-rewrite model (not persisted then).
+    @Published var chatModel: ChatModelSelection {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(chatModel) {
+                defaults.set(encoded, forKey: "chatModel")
+            }
+        }
+    }
+
+    /// Custom instructions, sent as the system prompt of every chat
+    @Published var chatCustomInstructions: String {
+        didSet { defaults.set(chatCustomInstructions, forKey: "chatCustomInstructions") }
+    }
+
+    /// Let the model write a short title after the first reply
+    @Published var chatAutoGenerateTitles: Bool {
+        didSet { defaults.set(chatAutoGenerateTitles, forKey: "chatAutoGenerateTitles") }
     }
 
     /// Only the words (comma-separated); empty if no words are set
@@ -775,6 +853,27 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// OpenAI key for text models: the dedicated text key, else the speech key
+    var textOpenAIApiKey: String {
+        textProcessingOpenAIApiKey.isEmpty ? apiKey : textProcessingOpenAIApiKey
+    }
+
+    /// The provider + model currently used for text rewriting
+    var rewriteModelSelection: ChatModelSelection {
+        switch textProcessingProvider {
+        case .openAI:
+            return ChatModelSelection(provider: .openAI, modelID: selectedGPTModel.rawValue)
+        case .anthropic:
+            return ChatModelSelection(provider: .anthropic, modelID: selectedAnthropicModel.rawValue)
+        case .ollama:
+            return ChatModelSelection(provider: .ollama, modelID: selectedOllamaModel)
+        case .appleIntelligence:
+            return ChatModelSelection(provider: .appleIntelligence, modelID: "")
+        case .gemini:
+            return ChatModelSelection(provider: .gemini, modelID: selectedGeminiTextModel.rawValue)
+        }
+    }
+
     var isConfigured: Bool {
         let speechConfigured: Bool
         switch speechModelProvider {
@@ -836,13 +935,13 @@ final class AppSettings: ObservableObject {
             self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gptTranscribe
         }
 
-        // GPT model: new default is gpt56Terra (balanced tier). A stored value from a
-        // model that is no longer offered no longer parses and falls back to the default.
+        // GPT model: default is gpt6Sol (balanced tier). GPT-5.6 choices move to the GPT-6
+        // model of the same tier; anything else no longer offered falls back to the default.
         if !hasApplied16Migration {
-            self.selectedGPTModel = .gpt56Terra
-            defaults.set(GPTModel.gpt56Terra.rawValue, forKey: "selectedGPTModel")
+            self.selectedGPTModel = .gpt6Sol
+            defaults.set(GPTModel.gpt6Sol.rawValue, forKey: "selectedGPTModel")
         } else {
-            self.selectedGPTModel = GPTModel(rawValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt56Terra
+            self.selectedGPTModel = GPTModel(storedValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt6Sol
         }
 
         // Mark v1.6 migration as applied
@@ -853,6 +952,7 @@ final class AppSettings: ObservableObject {
         self.textRewriteEnabled = defaults.object(forKey: "textRewriteEnabled") as? Bool ?? true
         self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
         self.copyToClipboardOnInsert = defaults.object(forKey: "copyToClipboardOnInsert") as? Bool ?? true
+        self.buttonDictationTarget = ButtonDictationTarget(rawValue: defaults.string(forKey: "buttonDictationTarget") ?? "") ?? .messageField
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
         // Whisper server settings
@@ -881,7 +981,7 @@ final class AppSettings: ObservableObject {
         // Text processing & Anthropic settings
         self.textProcessingOpenAIApiKey = defaults.string(forKey: "textProcessingOpenAIApiKey") ?? ""
         self.anthropicApiKey = defaults.string(forKey: "anthropicApiKey") ?? ""
-        self.selectedAnthropicModel = AnthropicModel(rawValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claudeSonnet5
+        self.selectedAnthropicModel = AnthropicModel(storedValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claudeSonnet5
 
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
@@ -898,18 +998,18 @@ final class AppSettings: ObservableObject {
         self.selectedGeminiSpeechModel = GeminiSpeechModel(rawValue: defaults.string(forKey: "geminiSpeechModel") ?? "") ?? .transcribe
         self.geminiSpeechLanguage = GeminiSpeechLanguage(rawValue: defaults.string(forKey: "geminiSpeechLanguage") ?? "") ?? .german
         self.geminiTranscriptionMode = GeminiTranscriptionMode(rawValue: defaults.string(forKey: "geminiTranscriptionMode") ?? "") ?? .smart
-        self.selectedGeminiTextModel = GeminiModel(rawValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini36Flash
+        self.selectedGeminiTextModel = GeminiModel(storedValue: defaults.string(forKey: "selectedGeminiTextModel") ?? "") ?? .gemini38Flash
 
         // Azure Foundry MAI settings
         self.azureFoundryEndpoint = defaults.string(forKey: "azureFoundryEndpoint") ?? ""
         self.azureFoundryApiKey = defaults.string(forKey: "azureFoundryApiKey") ?? ""
         self.azureFoundryApiVersion = defaults.string(forKey: "azureFoundryApiVersion") ?? "2025-10-15"
-        // Azure expects the lowercase model id (e.g. mai-transcribe-1.5). Migrate the
-        // previously shipped wrong-cased default if it was persisted.
+        // Default model: MAI-Transcribe-2. The previously shipped defaults (mai-transcribe-1.5,
+        // before that the wrong-cased MAI-Transcribe-1.5) move up; a model the user typed stays.
         let storedAzureModel = defaults.string(forKey: "azureFoundryModel")
-        if storedAzureModel == nil || storedAzureModel == "MAI-Transcribe-1.5" {
-            self.azureFoundryModel = "mai-transcribe-1.5"
-            defaults.set("mai-transcribe-1.5", forKey: "azureFoundryModel")
+        if storedAzureModel == nil || storedAzureModel == "mai-transcribe-1.5" || storedAzureModel == "MAI-Transcribe-1.5" {
+            self.azureFoundryModel = "mai-transcribe-2"
+            defaults.set("mai-transcribe-2", forKey: "azureFoundryModel")
         } else {
             self.azureFoundryModel = storedAzureModel!
         }
@@ -934,6 +1034,14 @@ final class AppSettings: ObservableObject {
         self.applyDictionaryToLocalWhisper = defaults.object(forKey: "applyDictionaryToLocalWhisper") as? Bool ?? false
         self.dictionarySimpleModeLocalWhisper = defaults.object(forKey: "dictionarySimpleModeLocalWhisper") as? Bool ?? false
         self.applyDictionaryToRewrite = defaults.object(forKey: "applyDictionaryToRewrite") as? Bool ?? false
+
+        // Chat settings. Without a stored chat model a placeholder is set here and replaced
+        // by the rewrite model at the end of init, once all properties are available.
+        let storedChatModel = defaults.data(forKey: "chatModel")
+            .flatMap { try? JSONDecoder().decode(ChatModelSelection.self, from: $0) }
+        self.chatModel = storedChatModel?.upgraded ?? ChatModelSelection(provider: .openAI, modelID: GPTModel.gpt6Sol.rawValue)
+        self.chatCustomInstructions = defaults.string(forKey: "chatCustomInstructions") ?? ""
+        self.chatAutoGenerateTitles = defaults.object(forKey: "chatAutoGenerateTitles") as? Bool ?? true
 
         // Check if this is an upgrade from a version before 1.5 (shortcut overhaul)
         let hasNewShortcutSettings = defaults.data(forKey: "directDictationShortcut") != nil
@@ -983,6 +1091,11 @@ final class AppSettings: ObservableObject {
             if let encoded = try? JSONEncoder().encode(ShortcutConfig.defaultRewrite) {
                 defaults.set(encoded, forKey: "rewriteShortcut")
             }
+        }
+
+        // Chats start with the rewrite model until a chat model has been picked
+        if storedChatModel == nil {
+            self.chatModel = rewriteModelSelection
         }
     }
 }
