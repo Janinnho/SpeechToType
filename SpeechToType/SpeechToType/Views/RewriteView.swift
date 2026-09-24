@@ -22,235 +22,236 @@ struct RewriteView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Mode selection
-            VStack(alignment: .leading, spacing: 8) {
-                Text("rewriteSelectMode")
-                    .font(.headline)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                PageHeader("rewrite", subtitle: "rewriteSubtitle")
 
-                Picker("", selection: $selectedMode) {
-                    ForEach(RewriteMode.allCases, id: \.self) { mode in
-                        Text(mode.displayName).tag(mode)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .onChange(of: selectedMode) { _, newMode in
-                    if newMode != .dictate {
-                        dictatedPrompt = ""
-                        dictationRecorder.cancelRecording()
-                    }
-                }
-            }
+                // Mode and its options
+                VStack(alignment: .leading, spacing: 14) {
+                    Label("rewriteSelectMode", systemImage: "slider.horizontal.3")
+                        .font(.headline)
 
-            // Dictation input (for dictate mode)
-            if selectedMode == .dictate {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteDictateInstructions")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    HStack {
-                        if dictationRecorder.isRecording {
-                            HStack(spacing: 8) {
-                                Circle()
-                                    .fill(Color.red)
-                                    .frame(width: 10, height: 10)
-
-                                Text(formatDuration(dictationRecorder.recordingDuration))
-                                    .font(.caption)
-                                    .monospacedDigit()
-
-                                GeometryReader { geometry in
-                                    Rectangle()
-                                        .fill(Color.red.opacity(0.3))
-                                        .frame(width: geometry.size.width * CGFloat(dictationRecorder.audioLevel))
-                                }
-                                .frame(height: 4)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(2)
-                            }
-                            .padding(8)
-                            .background(Color.red.opacity(0.1))
-                            .cornerRadius(8)
-
-                            Button(action: stopDictationRecording) {
-                                Image(systemName: "stop.fill")
-                                    .foregroundColor(.red)
-                            }
-                            .buttonStyle(.bordered)
-                        } else if isTranscribingDictation {
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                Text("transcribing")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(8)
-                        } else if !dictatedPrompt.isEmpty {
-                            Text(dictatedPrompt)
-                                .font(.body)
-                                .padding(8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(NSColor.textBackgroundColor))
-                                .cornerRadius(8)
-
-                            Button(action: { dictatedPrompt = "" }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
-                            }
-                            .buttonStyle(.borderless)
-
-                            Button(action: startDictationRecording) {
-                                Image(systemName: "mic.fill")
-                            }
-                            .buttonStyle(.bordered)
-                        } else {
-                            Button(action: startDictationRecording) {
-                                HStack {
-                                    Image(systemName: "mic.fill")
-                                    Text("rewriteStartDictation")
-                                }
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(.red)
+                    Picker("", selection: $selectedMode) {
+                        ForEach(RewriteMode.allCases, id: \.self) { mode in
+                            Text(mode.displayName).tag(mode)
                         }
                     }
-                }
-            }
-
-            // Translation language picker (for translate mode)
-            if selectedMode == .translate {
-                HStack {
-                    Text("rewriteTranslateTo")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    Picker("", selection: $selectedTranslationLanguage) {
-                        ForEach(AppSettings.translationLanguages, id: \.self) { language in
-                            Text(language).tag(language)
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .onChange(of: selectedMode) { _, newMode in
+                        if newMode != .dictate {
+                            dictatedPrompt = ""
+                            dictationRecorder.cancelRecording()
                         }
                     }
-                    .pickerStyle(.menu)
-                    .frame(maxWidth: 150)
+
+                    modeOptions
                 }
-            }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .glassCard(padding: 20, cornerRadius: 24)
 
-            // Custom prompt field (only shown when custom mode is selected)
-            if selectedMode == .custom {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteCustomPromptLabel")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    TextField(String(localized: "rewriteCustomPromptPlaceholder"), text: $customPrompt, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .lineLimit(3...5)
+                // Text to process
+                VStack(alignment: .leading, spacing: 10) {
+                    Label("rewriteInputLabel", systemImage: "text.alignleft")
+                        .font(.headline)
+                    editor(text: $inputText, placeholder: "rewriteInputPlaceholder")
                 }
-            }
-
-            // Editable input text
-            VStack(alignment: .leading, spacing: 4) {
-                Text("rewriteInputLabel")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                ZStack(alignment: .topLeading) {
-                    TextEditor(text: $inputText)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .padding(4)
-                        .frame(minHeight: 120)
-                        .background(Color(NSColor.textBackgroundColor))
-                        .cornerRadius(8)
-
-                    if inputText.isEmpty {
-                        Text("rewriteInputPlaceholder")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 12)
-                            .allowsHitTesting(false)
-                    }
-                }
-            }
-
-            // Editable result
-            if !resultText.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteResult")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    TextEditor(text: $resultText)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .padding(4)
-                        .frame(minHeight: 120)
-                        .background(Color.green.opacity(0.1))
-                        .cornerRadius(8)
-                }
-            }
-
-            // Error message
-            if let error = errorMessage {
-                Text(error)
-                    .font(.caption)
-                    .foregroundColor(.red)
-                    .padding(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(8)
-            }
-
-            // Action buttons
-            HStack {
-                Button("rewriteClear") {
-                    dictationRecorder.cancelRecording()
-                    inputText = ""
-                    resultText = ""
-                    customPrompt = ""
-                    dictatedPrompt = ""
-                    errorMessage = nil
-                }
-                .disabled(inputText.isEmpty && resultText.isEmpty)
-
-                Spacer()
+                .glassCard(padding: 20, cornerRadius: 24)
 
                 if !resultText.isEmpty {
-                    Button("rewriteCopy") {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(resultText, forType: .string)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Label("rewriteResult", systemImage: "sparkles")
+                            .font(.headline)
+                        editor(text: $resultText, placeholder: nil)
                     }
-                    .keyboardShortcut("c", modifiers: .command)
+                    .glassCard(padding: 20, cornerRadius: 24, tint: Color.green.opacity(0.12))
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
 
-                Button("rewriteProcess") {
-                    processText()
+                if let error = errorMessage {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .font(.callout)
+                        .foregroundStyle(.red)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.red.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(isProcessing || isTranscribingDictation || !canProcess)
-                .keyboardShortcut(.return)
+
+                actions
             }
+            .frame(maxWidth: 860, alignment: .leading)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 30)
+            .frame(maxWidth: .infinity)
+            .animation(.snappy, value: resultText.isEmpty)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay {
-            if isProcessing {
-                ZStack {
-                    Color.black.opacity(0.3)
-                    VStack {
-                        ProgressView()
-                            .scaleEffect(1.5)
-                        Text("rewriteProcessing")
-                            .foregroundColor(.white)
-                            .padding(.top, 8)
+    }
+
+    // MARK: - Sections
+
+    @ViewBuilder
+    private var modeOptions: some View {
+        switch selectedMode {
+        case .dictate:
+            VStack(alignment: .leading, spacing: 8) {
+                Text("rewriteDictateInstructions")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                dictationControl
+            }
+        case .translate:
+            HStack {
+                Text("rewriteTranslateTo")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                Picker("", selection: $selectedTranslationLanguage) {
+                    ForEach(AppSettings.translationLanguages, id: \.self) { language in
+                        Text(language).tag(language)
                     }
                 }
-                .cornerRadius(12)
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .fixedSize()
+            }
+        case .custom:
+            VStack(alignment: .leading, spacing: 8) {
+                Text("rewriteCustomPromptLabel")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                TextField(String(localized: "rewriteCustomPromptPlaceholder"), text: $customPrompt, axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .lineLimit(3...5)
+                    .padding(10)
+                    .insetField(cornerRadius: 12)
+            }
+        case .grammar, .elaborate:
+            EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var dictationControl: some View {
+        HStack(spacing: 10) {
+            if dictationRecorder.isRecording {
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 10, height: 10)
+                    Text(formatDuration(dictationRecorder.recordingDuration))
+                        .font(.callout.monospacedDigit())
+                    GeometryReader { geometry in
+                        Capsule()
+                            .fill(Color.red.opacity(0.5))
+                            .frame(width: geometry.size.width * CGFloat(dictationRecorder.audioLevel))
+                    }
+                    .frame(height: 5)
+                    .background(Color.primary.opacity(0.1), in: Capsule())
+                }
+                .padding(10)
+                .insetField(cornerRadius: 12)
+
+                Button(action: stopDictationRecording) {
+                    Label("chatStopDictation", systemImage: "stop.fill")
+                }
+                .buttonStyle(.glass)
+                .tint(.red)
+            } else if isTranscribingDictation {
+                ProgressView()
+                    .controlSize(.small)
+                Text("transcribing")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            } else if !dictatedPrompt.isEmpty {
+                Text(dictatedPrompt)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .insetField(cornerRadius: 12)
+
+                Button {
+                    dictatedPrompt = ""
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+
+                Button(action: startDictationRecording) {
+                    Image(systemName: "mic.fill")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+            } else {
+                Button(action: startDictationRecording) {
+                    Label("rewriteStartDictation", systemImage: "mic.fill")
+                }
+                .buttonStyle(.glassProminent)
+                .tint(.red)
             }
         }
     }
+
+    private func editor(text: Binding<String>, placeholder: LocalizedStringKey?) -> some View {
+        ZStack(alignment: .topLeading) {
+            TextEditor(text: text)
+                .font(.system(size: 14))
+                .scrollContentBackground(.hidden)
+                .frame(minHeight: 130)
+
+            if let placeholder, text.wrappedValue.isEmpty {
+                Text(placeholder)
+                    .font(.system(size: 14))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 5)
+                    .allowsHitTesting(false)
+            }
+        }
+        .padding(10)
+        .insetField(cornerRadius: 14)
+    }
+
+    private var actions: some View {
+        HStack(spacing: 10) {
+            Button {
+                dictationRecorder.cancelRecording()
+                inputText = ""
+                resultText = ""
+                customPrompt = ""
+                dictatedPrompt = ""
+                errorMessage = nil
+            } label: {
+                Label("rewriteClear", systemImage: "arrow.counterclockwise")
+            }
+            .buttonStyle(.glass)
+            .disabled(inputText.isEmpty && resultText.isEmpty)
+
+            Spacer()
+
+            if !resultText.isEmpty {
+                CopyButton(text: resultText, title: "rewriteCopy")
+                    .buttonStyle(.glass)
+            }
+
+            Button(action: processText) {
+                HStack(spacing: 6) {
+                    if isProcessing {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text("rewriteProcessing")
+                    } else {
+                        Image(systemName: "sparkles")
+                        Text("rewriteProcess")
+                    }
+                }
+                .padding(.horizontal, 4)
+            }
+            .buttonStyle(.glassProminent)
+            .controlSize(.large)
+            .disabled(isProcessing || isTranscribingDictation || !canProcess)
+            .keyboardShortcut(.return)
+        }
+    }
+
+    // MARK: - Logic
 
     private var canProcess: Bool {
         guard !inputText.isEmpty else { return false }
@@ -340,7 +341,7 @@ struct RewriteView: View {
                         let record = TranscriptionRecord(
                             text: result,
                             duration: 0,
-                            model: AppSettings.shared.selectedGPTModel.displayName,
+                            model: AppSettings.shared.rewriteModelSelection.displayName,
                             recordType: .rewrite,
                             originalText: textToProcess
                         )

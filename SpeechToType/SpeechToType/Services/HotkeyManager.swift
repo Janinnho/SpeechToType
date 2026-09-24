@@ -11,6 +11,14 @@ import Cocoa
 import Combine
 import SwiftUI
 
+/// What started a recording — decides where its text goes
+enum RecordingSource {
+    /// Keyboard shortcut or the menu bar
+    case shortcut
+    /// Record button on the start page (see `AppSettings.buttonDictationTarget`)
+    case button
+}
+
 class HotkeyManager: ObservableObject {
     static let shared = HotkeyManager()
 
@@ -34,6 +42,12 @@ class HotkeyManager: ObservableObject {
     // State tracking for modifier keys
     private var isRightOptionDown = false
     private var isRightControlDown = false
+
+    /// What started the current (or last) recording
+    private(set) var recordingSource: RecordingSource = .shortcut
+    /// Start of the current recording (nil while idle). Elapsed-time displays use this because
+    /// `AudioRecorder` does not run in live mode.
+    @Published private(set) var recordingStartedAt: Date?
 
     var onRecordingStarted: (() -> Void)?
     var onRecordingStopped: (() -> Void)?
@@ -367,8 +381,24 @@ class HotkeyManager: ObservableObject {
         stopRecording()
     }
 
-    private func startRecording() {
+    /// Record button on the start page: recording starts as soon as the button is pressed,
+    /// so holding it dictates like holding the shortcut
+    func startButtonRecording() {
         guard !isRecording else { return }
+        startRecording(source: .button)
+    }
+
+    /// A short click on the record button keeps the recording running until the next click
+    func continueButtonRecording() {
+        guard isRecording, recordingSource == .button else { return }
+        isContinuousMode = true
+        statusMessage = String(localized: "recordingContinuous")
+    }
+
+    private func startRecording(source: RecordingSource = .shortcut) {
+        guard !isRecording else { return }
+        recordingSource = source
+        recordingStartedAt = Date()
         isRecording = true
         statusMessage = isContinuousMode ? String(localized: "recordingContinuous") : String(localized: "recording")
 
@@ -384,6 +414,7 @@ class HotkeyManager: ObservableObject {
         guard isRecording else { return }
         isRecording = false
         isContinuousMode = false
+        recordingStartedAt = nil
         statusMessage = String(localized: "processing")
 
         // Hide overlay window - must be done on MainActor

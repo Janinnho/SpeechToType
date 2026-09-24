@@ -12,17 +12,18 @@ struct ChatView: View {
     @ObservedObject private var manager = ChatManager.shared
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 14) {
             ChatListView()
-                .frame(width: 240)
-
-            Divider()
+                .frame(width: 260)
+                .frame(maxHeight: .infinity)
+                .glassEffect(.regular, in: .rect(cornerRadius: 24))
 
             // A fresh view per conversation: scroll position and draft belong to it
             ChatConversationView(conversationID: manager.selectedConversationID)
                 .id(manager.selectedConversationID)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .padding(14)
     }
 }
 
@@ -88,37 +89,26 @@ struct ChatListView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("chat")
-                    .font(.headline)
+                    .font(.title2.weight(.bold))
                 Spacer()
                 Button {
                     manager.selectedConversationID = nil
                 } label: {
                     Image(systemName: "square.and.pencil")
+                        .font(.body.weight(.semibold))
+                        .frame(width: 22, height: 22)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
                 .help("chatNew")
             }
-            .padding(.horizontal, 14)
-            .frame(height: 44)
+            .padding(.horizontal, 18)
+            .padding(.top, 16)
+            .padding(.bottom, 10)
 
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.secondary)
-                TextField(String(localized: "search"), text: $searchText)
-                    .textFieldStyle(.plain)
-                if !searchText.isEmpty {
-                    Button(action: { searchText = "" }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
-                    }
-                    .buttonStyle(.borderless)
-                }
-            }
-            .padding(6)
-            .background(Color(NSColor.controlBackgroundColor))
-            .cornerRadius(8)
-            .padding(.horizontal, 10)
-            .padding(.bottom, 8)
+            PanelSearchField(text: $searchText)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
 
             if filteredConversations.isEmpty {
                 Text(searchText.isEmpty ? "chatNoConversations" : "noResults")
@@ -138,6 +128,7 @@ struct ChatListView: View {
                     }
                 }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
             }
         }
         .alert("chatRenameTitle", isPresented: Binding(
@@ -226,16 +217,18 @@ struct ChatConversationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(spacing: 10) {
                 Text(conversation?.title ?? String(localized: "chatNew"))
-                    .font(.headline)
+                    .font(.title2.weight(.bold))
                     .lineLimit(1)
                 Spacer()
+                if let conversation {
+                    InfoChip(icon: "cpu", text: conversation.model.displayName)
+                }
             }
             .padding(.horizontal, 20)
-            .frame(height: 44)
-
-            Divider()
+            .padding(.top, 14)
+            .padding(.bottom, 6)
 
             if let conversation, !conversation.messages.isEmpty {
                 messageList(conversation)
@@ -316,6 +309,7 @@ struct ChatConversationView: View {
             .frame(maxWidth: .infinity)
         }
         .defaultScrollAnchor(.bottom)
+        .scrollEdgeEffectStyle(.soft, for: .all)
         .scrollPosition($scrollPosition)
         .onScrollGeometryChange(for: ScrollMetrics.self) { geometry in
             ScrollMetrics(
@@ -340,11 +334,10 @@ struct ChatConversationView: View {
                 } label: {
                     Image(systemName: "arrow.down")
                         .font(.body.weight(.semibold))
-                        .padding(8)
-                        .background(.regularMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(Color(nsColor: .separatorColor)))
+                        .frame(width: 22, height: 22)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
                 .padding(.bottom, 10)
                 .help("chatScrollToBottom")
             }

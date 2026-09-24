@@ -29,31 +29,26 @@ struct OnboardingView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header
-            VStack(spacing: 8) {
-                Image(systemName: "waveform.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.blue)
+            VStack(spacing: 6) {
+                DictationOrb(phase: .idle, size: 48)
+                    .frame(width: 90, height: 90)
 
                 Text("onboardingTitle")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.system(size: 28, weight: .bold))
 
                 Text("onboardingSubtitle")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
-            .padding(.top, 16)
-            .padding(.bottom, 12)
-
-            Divider()
+            .padding(.top, 30)
+            .padding(.bottom, 10)
 
             // Scrollable content
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 14) {
                     // MARK: - Permissions
-                    Text("onboardingPermissions")
-                        .font(.headline)
-                        .padding(.top, 8)
+                    SectionTitle("onboardingPermissions")
+                        .padding(.top, 6)
 
                     PermissionRow(
                         icon: "mic.fill",
@@ -75,12 +70,9 @@ struct OnboardingView: View {
                         action: requestAccessibilityAccess
                     )
 
-                    Divider()
-                        .padding(.vertical, 4)
-
                     // MARK: - Speech Model Provider
-                    Text("speechModelConfigSection")
-                        .font(.headline)
+                    SectionTitle("speechModelConfigSection")
+                        .padding(.top, 6)
 
                     VStack(alignment: .leading, spacing: 12) {
                         Picker("speechModelProviderPicker", selection: $settings.speechModelProvider) {
@@ -159,16 +151,11 @@ struct OnboardingView: View {
                             }
                         }
                     }
-                    .padding()
-                    .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(10)
-
-                    Divider()
-                        .padding(.vertical, 4)
+                    .glassCard(padding: 16, cornerRadius: 20)
 
                     // MARK: - Text Processing Provider
-                    Text("textRewriteSection")
-                        .font(.headline)
+                    SectionTitle("textRewriteSection")
+                        .padding(.top, 6)
 
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle("textRewriteEnabled", isOn: $settings.textRewriteEnabled)
@@ -250,15 +237,12 @@ struct OnboardingView: View {
                             }
                         }
                     }
-                    .padding()
-                    .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(10)
+                    .glassCard(padding: 16, cornerRadius: 20)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 22)
                 .padding(.vertical, 8)
             }
-
-            Divider()
+            .scrollEdgeEffectStyle(.soft, for: .all)
 
             // Continue Button
             VStack(spacing: 8) {
@@ -272,16 +256,17 @@ struct OnboardingView: View {
                     Text("done")
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 4)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.glassProminent)
+                .controlSize(.extraLarge)
                 .disabled(!canProceed)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 12)
+            .padding(.horizontal, 22)
+            .padding(.top, 8)
+            .padding(.bottom, 20)
         }
-        .frame(width: 520, height: 680)
+        .frame(width: 560, height: 720)
         .onAppear {
             checkPermissions()
         }
@@ -364,10 +349,7 @@ struct PermissionRow: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(iconColor)
-                .frame(width: 30)
+            IconBadge(systemName: icon, color: iconColor, size: 34)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
@@ -385,17 +367,10 @@ struct PermissionRow: View {
                     .font(.title2)
             } else {
                 Button(buttonTitle, action: action)
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
+                    .buttonStyle(.glass)
             }
         }
-        .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(isGranted ? Color.green.opacity(0.5) : Color.clear, lineWidth: 2)
-        )
+        .glassCard(padding: 14, cornerRadius: 20, tint: isGranted ? Color.green.opacity(0.12) : nil)
     }
 }
 

@@ -13,80 +13,90 @@ struct DictionaryView: View {
     @FocusState private var wordFieldFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Words section
-            VStack(alignment: .leading, spacing: 8) {
-                Text("dictionaryWordsTitle")
-                    .font(.headline)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                PageHeader("dictionary", subtitle: "dictionarySubtitle")
 
-                HStack {
-                    TextField(String(localized: "dictionaryWordPlaceholder"), text: $newWord)
-                        .textFieldStyle(.roundedBorder)
-                        .focused($wordFieldFocused)
-                        .onSubmit(addWord)
-
-                    Button("dictionaryAdd", action: addWord)
-                        .disabled(newWord.trimmingCharacters(in: .whitespaces).isEmpty)
-                }
-
-                if settings.dictionaryWords.isEmpty {
-                    Text("dictionaryEmptyWords")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.vertical, 4)
-                } else {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(settings.dictionaryWords, id: \.self) { word in
-                            HStack {
-                                Text(word)
-                                Spacer()
-                                Button(action: { removeWord(word) }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.secondary)
-                                }
-                                .buttonStyle(.borderless)
-                            }
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 8)
-                            Divider()
+                // Words
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack {
+                        Label("dictionaryWordsTitle", systemImage: "textformat.abc")
+                            .font(.headline)
+                        Spacer()
+                        if !settings.dictionaryWords.isEmpty {
+                            Text(settings.dictionaryWords.count.formatted())
+                                .font(.callout.monospacedDigit())
+                                .foregroundStyle(.secondary)
                         }
                     }
-                    .background(Color(NSColor.textBackgroundColor))
-                    .cornerRadius(8)
-                }
-            }
 
-            // Instructions section
-            VStack(alignment: .leading, spacing: 8) {
-                Text("dictionaryInstructionsTitle")
-                    .font(.headline)
+                    HStack(spacing: 8) {
+                        TextField(String(localized: "dictionaryWordPlaceholder"), text: $newWord)
+                            .textFieldStyle(.plain)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .insetField(cornerRadius: 10)
+                            .focused($wordFieldFocused)
+                            .onSubmit(addWord)
 
-                ZStack(alignment: .topLeading) {
-                    TextEditor(text: $settings.dictionaryInstructions)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .padding(4)
-                        .frame(minHeight: 120)
-                        .background(Color(NSColor.textBackgroundColor))
-                        .cornerRadius(8)
+                        Button(action: addWord) {
+                            Label("dictionaryAdd", systemImage: "plus")
+                        }
+                        .buttonStyle(.glassProminent)
+                        .disabled(newWord.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
 
-                    if settings.dictionaryInstructions.isEmpty {
-                        Text("dictionaryInstructionsPlaceholder")
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 12)
-                            .allowsHitTesting(false)
+                    if settings.dictionaryWords.isEmpty {
+                        Text("dictionaryEmptyWords")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical, 4)
+                    } else {
+                        FlowLayout(spacing: 8) {
+                            ForEach(settings.dictionaryWords, id: \.self) { word in
+                                WordChip(word: word) {
+                                    removeWord(word)
+                                }
+                            }
+                        }
                     }
                 }
-            }
+                .glassCard(padding: 20, cornerRadius: 24)
 
-            Text("dictionaryDescription")
-                .font(.caption)
-                .foregroundColor(.secondary)
+                // Instructions
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("dictionaryInstructionsTitle", systemImage: "text.alignleft")
+                        .font(.headline)
+
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $settings.dictionaryInstructions)
+                            .font(.body)
+                            .scrollContentBackground(.hidden)
+                            .frame(minHeight: 140)
+
+                        if settings.dictionaryInstructions.isEmpty {
+                            Text("dictionaryInstructionsPlaceholder")
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 5)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                    .padding(10)
+                    .insetField(cornerRadius: 14)
+                }
+                .glassCard(padding: 20, cornerRadius: 24)
+
+                Label("dictionaryDescription", systemImage: "info.circle")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+            }
+            .frame(maxWidth: 860, alignment: .leading)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 30)
+            .frame(maxWidth: .infinity)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func addWord() {
@@ -95,13 +105,41 @@ struct DictionaryView: View {
             newWord = ""
             return
         }
-        settings.dictionaryWords.append(trimmed)
+        withAnimation(.snappy) {
+            settings.dictionaryWords.append(trimmed)
+        }
         newWord = ""
         wordFieldFocused = true
     }
 
     private func removeWord(_ word: String) {
-        settings.dictionaryWords.removeAll { $0 == word }
+        withAnimation(.snappy) {
+            settings.dictionaryWords.removeAll { $0 == word }
+        }
+    }
+}
+
+/// One dictionary word as a removable capsule
+private struct WordChip: View {
+    let word: String
+    let onRemove: () -> Void
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(word)
+                .font(.callout.weight(.medium))
+            Button(action: onRemove) {
+                Image(systemName: "xmark")
+                    .font(.caption2.weight(.bold))
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+        }
+        .padding(.leading, 12)
+        .padding(.trailing, 9)
+        .padding(.vertical, 6)
+        .background(Color.accentColor.opacity(0.18), in: Capsule())
+        .overlay(Capsule().strokeBorder(Color.accentColor.opacity(0.3)))
     }
 }
 

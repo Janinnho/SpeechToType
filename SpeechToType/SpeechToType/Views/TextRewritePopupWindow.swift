@@ -31,7 +31,7 @@ class TextRewriteWindowController: NSObject, ObservableObject {
         let hostingView = NSHostingView(rootView: contentView)
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 530, height: 450),
+            contentRect: NSRect(x: 0, y: 0, width: 560, height: 520),
             styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
@@ -184,18 +184,16 @@ struct TextRewritePopupView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(spacing: 12) {
-            // Mode selection
-            VStack(alignment: .leading, spacing: 8) {
-                Text("rewriteSelectMode")
-                    .font(.headline)
-
+        VStack(alignment: .leading, spacing: 12) {
+            // Mode and its options
+            VStack(alignment: .leading, spacing: 10) {
                 Picker("", selection: $selectedMode) {
                     ForEach(RewriteMode.allCases, id: \.self) { mode in
                         Text(mode.displayName).tag(mode)
                     }
                 }
                 .pickerStyle(.segmented)
+                .labelsHidden()
                 .onChange(of: selectedMode) { _, newMode in
                     // Reset dictated prompt when switching modes
                     if newMode != .dictate {
@@ -203,173 +201,38 @@ struct TextRewritePopupView: View {
                         dictationRecorder.cancelRecording()
                     }
                 }
+
+                modeOptions
             }
-
-            // Dictation input (for dictate mode)
-            if selectedMode == .dictate {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteDictateInstructions")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    HStack {
-                        if dictationRecorder.isRecording {
-                            // Recording indicator
-                            HStack(spacing: 8) {
-                                Circle()
-                                    .fill(Color.red)
-                                    .frame(width: 10, height: 10)
-
-                                Text(formatDuration(dictationRecorder.recordingDuration))
-                                    .font(.caption)
-                                    .monospacedDigit()
-
-                                // Audio level indicator
-                                GeometryReader { geometry in
-                                    Rectangle()
-                                        .fill(Color.red.opacity(0.3))
-                                        .frame(width: geometry.size.width * CGFloat(dictationRecorder.audioLevel))
-                                }
-                                .frame(height: 4)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(2)
-                            }
-                            .padding(8)
-                            .background(Color.red.opacity(0.1))
-                            .cornerRadius(8)
-
-                            Button(action: stopDictationRecording) {
-                                Image(systemName: "stop.fill")
-                                    .foregroundColor(.red)
-                            }
-                            .buttonStyle(.bordered)
-                        } else if isTranscribingDictation {
-                            HStack {
-                                ProgressView()
-                                    .scaleEffect(0.8)
-                                Text("transcribing")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(8)
-                        } else if !dictatedPrompt.isEmpty {
-                            // Show transcribed prompt
-                            Text(dictatedPrompt)
-                                .font(.body)
-                                .padding(8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(NSColor.textBackgroundColor))
-                                .cornerRadius(8)
-
-                            Button(action: { dictatedPrompt = "" }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
-                            }
-                            .buttonStyle(.borderless)
-
-                            Button(action: startDictationRecording) {
-                                Image(systemName: "mic.fill")
-                            }
-                            .buttonStyle(.bordered)
-                        } else {
-                            // Start recording button
-                            Button(action: startDictationRecording) {
-                                HStack {
-                                    Image(systemName: "mic.fill")
-                                    Text("rewriteStartDictation")
-                                }
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(.red)
-                        }
-                    }
-                }
-            }
-
-            // Translation language picker (for translate mode)
-            if selectedMode == .translate {
-                HStack {
-                    Text("rewriteTranslateTo")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    Picker("", selection: $selectedTranslationLanguage) {
-                        ForEach(AppSettings.translationLanguages, id: \.self) { language in
-                            Text(language).tag(language)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .frame(maxWidth: 150)
-                }
-            }
-
-            // Custom prompt field (only shown when custom mode is selected)
-            if selectedMode == .custom {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteCustomPromptLabel")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    TextField(String(localized: "rewriteCustomPromptPlaceholder"), text: $customPrompt, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .lineLimit(3...5)
-                }
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .glassCard(padding: 14, cornerRadius: 20)
 
             // Selected text preview
-            VStack(alignment: .leading, spacing: 4) {
-                Text("rewriteSelectedText")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                ScrollView {
-                    Text(controller.selectedText)
-                        .font(.body)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .frame(height: 60)
-                .padding(8)
-                .background(Color(NSColor.textBackgroundColor))
-                .cornerRadius(8)
-            }
+            textCard(title: "rewriteSelectedText", icon: "text.quote", text: controller.selectedText, height: 70)
 
             // Result preview (if available)
             if !resultText.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("rewriteResult")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    ScrollView {
-                        Text(resultText)
-                            .font(.body)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .frame(height: 60)
-                    .padding(8)
-                    .background(Color.green.opacity(0.1))
-                    .cornerRadius(8)
-                }
+                textCard(title: "rewriteResult", icon: "sparkles", text: resultText, height: 90, tint: Color.green.opacity(0.12))
             }
 
-            // Error message
             if let error = errorMessage {
-                Text(error)
+                Label(error, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption)
-                    .foregroundColor(.red)
-                    .padding(8)
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(8)
+                    .foregroundStyle(.red)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.red.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
 
-            Spacer()
+            Spacer(minLength: 0)
 
             // Action buttons
-            HStack {
+            HStack(spacing: 10) {
                 Button("cancel") {
                     dictationRecorder.cancelRecording()
                     controller.hide()
                 }
+                .buttonStyle(.glass)
                 .keyboardShortcut(.escape)
 
                 Spacer()
@@ -380,40 +243,159 @@ struct TextRewritePopupView: View {
                         NSPasteboard.general.setString(resultText, forType: .string)
                         controller.hide()
                     }
+                    .buttonStyle(.glass)
                     .keyboardShortcut("c", modifiers: .command)
 
-                    Button("rewriteInsert") {
+                    Button {
                         controller.insertResult(resultText)
+                    } label: {
+                        Label("rewriteInsert", systemImage: "text.cursor")
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
                     .keyboardShortcut(.return)
                 } else {
-                    Button("rewriteProcess") {
-                        processText()
+                    Button(action: processText) {
+                        HStack(spacing: 6) {
+                            if isProcessing {
+                                ProgressView()
+                                    .controlSize(.small)
+                                Text("rewriteProcessing")
+                            } else {
+                                Image(systemName: "sparkles")
+                                Text("rewriteProcess")
+                            }
+                        }
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
                     .disabled(isProcessing || isTranscribingDictation || !canProcess)
                     .keyboardShortcut(.return)
                 }
             }
+            .controlSize(.large)
         }
-        .padding()
-        .frame(width: 530, height: 450)
-        .overlay {
-            if isProcessing {
-                ZStack {
-                    Color.black.opacity(0.3)
-                    VStack {
-                        ProgressView()
-                            .scaleEffect(1.5)
-                        Text("rewriteProcessing")
-                            .foregroundColor(.white)
-                            .padding(.top, 8)
+        .padding(.horizontal, 18)
+        .padding(.top, 36)
+        .padding(.bottom, 18)
+        .frame(width: 560, height: 520)
+        .background(AppBackground())
+    }
+
+    // MARK: - Sections
+
+    @ViewBuilder
+    private var modeOptions: some View {
+        switch selectedMode {
+        case .dictate:
+            VStack(alignment: .leading, spacing: 6) {
+                Text("rewriteDictateInstructions")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                dictationControl
+            }
+        case .translate:
+            HStack {
+                Text("rewriteTranslateTo")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                Picker("", selection: $selectedTranslationLanguage) {
+                    ForEach(AppSettings.translationLanguages, id: \.self) { language in
+                        Text(language).tag(language)
                     }
                 }
-                .cornerRadius(12)
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .fixedSize()
+            }
+        case .custom:
+            TextField(String(localized: "rewriteCustomPromptPlaceholder"), text: $customPrompt, axis: .vertical)
+                .textFieldStyle(.plain)
+                .lineLimit(2...4)
+                .padding(10)
+                .insetField(cornerRadius: 12)
+        case .grammar, .elaborate:
+            EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var dictationControl: some View {
+        HStack(spacing: 10) {
+            if dictationRecorder.isRecording {
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 10, height: 10)
+                    Text(formatDuration(dictationRecorder.recordingDuration))
+                        .font(.caption.monospacedDigit())
+                    // Audio level indicator
+                    GeometryReader { geometry in
+                        Capsule()
+                            .fill(Color.red.opacity(0.5))
+                            .frame(width: geometry.size.width * CGFloat(dictationRecorder.audioLevel))
+                    }
+                    .frame(height: 5)
+                    .background(Color.primary.opacity(0.1), in: Capsule())
+                }
+                .padding(8)
+                .insetField(cornerRadius: 10)
+
+                Button(action: stopDictationRecording) {
+                    Image(systemName: "stop.fill")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .tint(.red)
+            } else if isTranscribingDictation {
+                ProgressView()
+                    .controlSize(.small)
+                Text("transcribing")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else if !dictatedPrompt.isEmpty {
+                // Show transcribed prompt
+                Text(dictatedPrompt)
+                    .font(.callout)
+                    .padding(8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .insetField(cornerRadius: 10)
+
+                Button {
+                    dictatedPrompt = ""
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+
+                Button(action: startDictationRecording) {
+                    Image(systemName: "mic.fill")
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+            } else {
+                Button(action: startDictationRecording) {
+                    Label("rewriteStartDictation", systemImage: "mic.fill")
+                }
+                .buttonStyle(.glassProminent)
+                .tint(.red)
             }
         }
+    }
+
+    private func textCard(title: LocalizedStringKey, icon: String, text: String, height: CGFloat, tint: Color? = nil) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(title, systemImage: icon)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+            ScrollView {
+                Text(text)
+                    .font(.body)
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(height: height)
+        }
+        .glassCard(padding: 14, cornerRadius: 20, tint: tint)
     }
 
     private var canProcess: Bool {
@@ -502,7 +484,7 @@ struct TextRewritePopupView: View {
                         let record = TranscriptionRecord(
                             text: result,
                             duration: 0,
-                            model: AppSettings.shared.selectedGPTModel.displayName,
+                            model: AppSettings.shared.rewriteModelSelection.displayName,
                             recordType: .rewrite,
                             originalText: controller.selectedText
                         )

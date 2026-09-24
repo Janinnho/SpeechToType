@@ -35,7 +35,13 @@ open ~/Library/Developer/Xcode/DerivedData/SpeechToType-*/Build/Products/Debug/S
 ## Architecture
 
 **Orchestration:** `SpeechToTypeApp.swift` (`AppDelegate.setupRecordingHandlers`) wires
-`HotkeyManager` callbacks → recording/transcription → insertion → history.
+`HotkeyManager` callbacks → recording/transcription → insertion → history. Recordings started
+with the start page's record button (`HotkeyManager.recordingSource == .button`, captured at
+stop) skip the insertion into the focused app: `AppDelegate.deliver` routes their text by
+`AppSettings.buttonDictationTarget` — `.messageField` (default; via
+`AppNavigation.pendingComposerDictation` into the start page composer), `.previousApp`
+(re-activates `TextInputService.getPreviousApp()`, then inserts; falls back to the message
+field) or `.clipboard`. History is recorded either way.
 
 **Core services** (`SpeechToType/SpeechToType/Services/`):
 - `AudioRecorder` — AVAudioRecorder, m4a 16 kHz mono; mic device enumeration.
@@ -54,13 +60,15 @@ open ~/Library/Developer/Xcode/DerivedData/SpeechToType-*/Build/Products/Debug/S
   streaming (see below).
 - `TranscriptionHistoryManager` — persisted history records.
 - `ChatManager` / `ChatService` / `ChatAttachmentStore` — chat (see below).
-- `TemplateStore` — "Vorlagen": plain text snippets (`Templates/templates.json`, debounced saves).
+- `TemplateStore` — "Vorlagen": plain text snippets with an optional title (`TextTemplate.title`;
+  lists fall back to the text's first line via `displayTitle`; `Templates/templates.json`,
+  debounced saves; files from before titles decode with an empty title).
 
 **Models:** `AppSettings` (singleton, all settings via UserDefaults `didSet`),
 `TranscriptionRecord`, `ChatModels` (conversation/message/attachment/`ChatModelSelection`).
-**Views:** Settings (panes incl. Chat), Onboarding, Dictionary, History, Rewrite, Status
-(+ `StartPageView` in `ContentView.swift`), Chat*, Templates, Markdown, RecordingOverlayWindow,
-TextRewritePopupWindow.
+**Views:** Home (dashboard), History, Dictionary, Chat*, Rewrite, Templates, Settings (panes
+incl. Chat), Onboarding, Markdown, RecordingOverlayWindow, TextRewritePopupWindow, plus the shared
+`DesignSystem.swift` (see "Design").
 
 ## Providers
 
@@ -140,11 +148,39 @@ inserted once (no backspaces → never overwrites existing text). History label
   blocking `stop()` must pre-arm its drain on the error path (see `OpenAIRealtimeService.emitError`).
 - All live engines use the system default microphone (the app's mic selector does not apply).
 
+## Design (Liquid Glass)
+
+- `DesignSystem.swift` holds the shared look: `AppBackground` (slowly drifting `MeshGradient`,
+  set as the window background via `.containerBackground(for: .window)` in `ContentView`; pauses
+  while the window is inactive and with Reduce Motion), `glassCard()`, `insetField()` (for fields
+  on glass — never glass on glass), `PageHeader`, `SectionTitle`, `EmptyStateView`, `IconBadge`,
+  `KeyCap`, `InfoChip`, `PanelSearchField`, `StatTile`, `DictationOrb` and `FlowLayout`.
+- Sidebar (`ContentView`) is one flat list of every `ContentTab` (no section headers).
+  `AppNavigation.shared` holds the selected tab and the history selection so the dashboard can
+  jump to a chat or history entry.
+- Page patterns: two-pane pages (History, Chat, Templates) = a fixed-width floating glass list
+  panel + content; single pages (Dictionary, Rewrite) = `ScrollView` with a max-width column of
+  glass cards; Home = dashboard (status card, stats, recent items, composer in a bottom inset).
+- The orb in Home's status card is a record button (`DictationRecordButton`): a click records
+  until the next click (`startButtonRecording()` + `continueButtonRecording()`), holding it
+  ≥ 0.35 s records until release — same live/batch path as the shortcut.
+- Buttons use `.glass` / `.glassProminent`. Keep panel content within the panel's width — the
+  detail column continues under the floating sidebar, so overflow slides under it. A segmented
+  `Picker` sizes every segment for its longest title and overflows narrow panels (hence
+  `HistoryFilterBar`).
+- The recording overlay, menu bar popover, rewrite popup and onboarding use the same components;
+  the settings forms stay native (`.formStyle(.grouped)`) with icon tiles in their sidebar.
+- App icon: `SpeechToType/SpeechToTypeIcon.icon` (Icon Composer, referenced by
+  `ASSETCATALOG_COMPILER_APPICON_NAME`) = violet→blue linear-gradient fill + one white glyph
+  layer `Assets/Glyph.svg` (three waveform bars flowing into a text cursor) with translucency
+  and a neutral shadow. Preview without Xcode: `xcrun actool … --app-icon SpeechToTypeIcon`, then
+  `iconutil -c iconset` on the resulting `.icns`.
+
 ## Chat & Vorlagen
 
 - Tabs: **Chat** (`ChatView`: conversation list + `ChatConversationView`) and **Vorlagen**
-  (`TemplatesView`). The start page (`StartPageView`) is `StatusView` + a composer; sending
-  there starts a conversation and switches to the chat tab.
+  (`TemplatesView`). The start page (`HomeView`) has a composer; sending there starts a
+  conversation and switches to the chat tab.
 - `ChatManager` (singleton) owns conversations, selection, per-conversation drafts and running
   replies — replies keep streaming when the view is gone. Live text goes through the separate
   `ChatStreamBuffer` (throttled to 20 Hz) so only `StreamingMessageView` re-renders per chunk.

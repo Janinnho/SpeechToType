@@ -290,6 +290,24 @@ enum AutoDeleteOption: String, CaseIterable, Codable {
     }
 }
 
+/// Where text dictated with the record button on the start page goes
+enum ButtonDictationTarget: String, CaseIterable, Codable {
+    case messageField = "messageField"
+    case previousApp = "previousApp"
+    case clipboard = "clipboard"
+
+    var displayName: LocalizedStringKey {
+        switch self {
+        case .messageField:
+            return "buttonDictationTargetMessageField"
+        case .previousApp:
+            return "buttonDictationTargetPreviousApp"
+        case .clipboard:
+            return "buttonDictationTargetClipboard"
+        }
+    }
+}
+
 /// Shortcut trigger mode
 enum ShortcutTriggerMode: String, Codable {
     case holdKey           // Hold single key to activate (for direct dictation)
@@ -370,7 +388,30 @@ struct ShortcutConfig: Codable, Equatable {
             kVK_Command: "⌘", kVK_RightCommand: "⌘ Right",
             kVK_Shift: "⇧"
         ]
-        return keyMap[keyCode] ?? "Key \(keyCode)"
+        return keyMap[keyCode] ?? Self.layoutCharacter(for: keyCode) ?? "Key \(keyCode)"
+    }
+
+    /// The character the key types on the current keyboard layout (e.g. "Ö" for key 41 on
+    /// a German layout), for keys the fixed map above doesn't name.
+    private static func layoutCharacter(for keyCode: Int) -> String? {
+        guard let source = TISCopyCurrentKeyboardLayoutInputSource()?.takeRetainedValue(),
+              let layoutPointer = TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) else { return nil }
+        let layoutData = Unmanaged<CFData>.fromOpaque(layoutPointer).takeUnretainedValue() as Data
+        var deadKeyState: UInt32 = 0
+        var length = 0
+        var characters = [UniChar](repeating: 0, count: 4)
+        let status = layoutData.withUnsafeBytes { buffer -> OSStatus in
+            guard let layout = buffer.baseAddress?.assumingMemoryBound(to: UCKeyboardLayout.self) else { return -1 }
+            return UCKeyTranslate(
+                layout, UInt16(keyCode), UInt16(kUCKeyActionDisplay), 0, UInt32(LMGetKbdType()),
+                OptionBits(kUCKeyTranslateNoDeadKeysBit), &deadKeyState, characters.count, &length, &characters
+            )
+        }
+        guard status == noErr, length > 0 else { return nil }
+        let character = String(utf16CodeUnits: characters, count: length)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .uppercased()
+        return character.isEmpty ? nil : character
     }
 }
 
@@ -461,6 +502,11 @@ final class AppSettings: ObservableObject {
     /// typed directly without ever touching the clipboard.
     @Published var copyToClipboardOnInsert: Bool {
         didSet { defaults.set(copyToClipboardOnInsert, forKey: "copyToClipboardOnInsert") }
+    }
+
+    /// Where text dictated with the start page's record button goes
+    @Published var buttonDictationTarget: ButtonDictationTarget {
+        didSet { defaults.set(buttonDictationTarget.rawValue, forKey: "buttonDictationTarget") }
     }
 
     /// Default language for translation
@@ -906,6 +952,7 @@ final class AppSettings: ObservableObject {
         self.textRewriteEnabled = defaults.object(forKey: "textRewriteEnabled") as? Bool ?? true
         self.saveRewritesToHistory = defaults.object(forKey: "saveRewritesToHistory") as? Bool ?? true
         self.copyToClipboardOnInsert = defaults.object(forKey: "copyToClipboardOnInsert") as? Bool ?? true
+        self.buttonDictationTarget = ButtonDictationTarget(rawValue: defaults.string(forKey: "buttonDictationTarget") ?? "") ?? .messageField
         self.defaultTranslationLanguage = defaults.string(forKey: "defaultTranslationLanguage") ?? "English"
 
         // Whisper server settings

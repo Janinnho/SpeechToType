@@ -2,7 +2,8 @@
 //  TemplatesView.swift
 //  SpeechToType
 //
-//  "Vorlagen": a simple list of text snippets to write down and copy out again.
+//  "Vorlagen": a simple list of text snippets (with an optional title) to write down and
+//  copy out again.
 //
 
 import SwiftUI
@@ -11,48 +12,44 @@ struct TemplatesView: View {
     @ObservedObject private var store = TemplateStore.shared
     @State private var selectedID: UUID?
     @State private var searchText = ""
-    @FocusState private var editorFocused: Bool
+    @FocusState private var focusedField: EditorField?
+
+    private enum EditorField {
+        case title
+        case text
+    }
 
     private var filteredTemplates: [TextTemplate] {
         let query = searchText.trimmingCharacters(in: .whitespaces)
         guard !query.isEmpty else { return store.templates }
-        return store.templates.filter { $0.text.localizedCaseInsensitiveContains(query) }
+        return store.templates.filter {
+            $0.title.localizedCaseInsensitiveContains(query) || $0.text.localizedCaseInsensitiveContains(query)
+        }
     }
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 14) {
             VStack(spacing: 0) {
                 HStack {
                     Text("templates")
-                        .font(.headline)
+                        .font(.title2.weight(.bold))
                     Spacer()
                     Button(action: addTemplate) {
                         Image(systemName: "plus")
+                            .font(.body.weight(.semibold))
+                            .frame(width: 22, height: 22)
                     }
-                    .buttonStyle(.borderless)
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
                     .help("templatesAdd")
                 }
-                .padding(.horizontal, 14)
-                .frame(height: 44)
+                .padding(.horizontal, 18)
+                .padding(.top, 16)
+                .padding(.bottom, 10)
 
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.secondary)
-                    TextField(String(localized: "search"), text: $searchText)
-                        .textFieldStyle(.plain)
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
-                        }
-                        .buttonStyle(.borderless)
-                    }
-                }
-                .padding(6)
-                .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(8)
-                .padding(.horizontal, 10)
-                .padding(.bottom, 8)
+                PanelSearchField(text: $searchText)
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
 
                 if filteredTemplates.isEmpty {
                     Text(searchText.isEmpty ? "templatesEmpty" : "noResults")
@@ -82,19 +79,24 @@ struct TemplatesView: View {
                         }
                     }
                     .listStyle(.sidebar)
+                    .scrollContentBackground(.hidden)
                 }
             }
-            .frame(width: 240)
+            .frame(width: 260)
+            .frame(maxHeight: .infinity)
+            .glassEffect(.regular, in: .rect(cornerRadius: 24))
 
-            Divider()
-
-            if let selectedID, let template = store.template(with: selectedID) {
-                editor(for: template)
-                    .id(template.id)
-            } else {
-                emptyState
+            Group {
+                if let selectedID, let template = store.template(with: selectedID) {
+                    editor(for: template)
+                        .id(template.id)
+                } else {
+                    emptyState
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .padding(14)
         .onAppear {
             if selectedID == nil {
                 selectedID = store.templates.first?.id
@@ -109,57 +111,75 @@ struct TemplatesView: View {
     }
 
     private func editor(for template: TextTemplate) -> some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Text(template.updatedAt, format: .dateTime.day().month().year().hour().minute())
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Spacer()
-                CopyButton(text: template.text, title: "copy")
-                    .disabled(template.text.isEmpty)
-                Button(role: .destructive) {
-                    delete(template.id)
-                } label: {
-                    Image(systemName: "trash")
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    TextField(
+                        "templatesTitlePlaceholder",
+                        text: Binding(
+                            get: { store.template(with: template.id)?.title ?? "" },
+                            set: { store.update(template.id, title: $0) }
+                        ),
+                        prompt: Text("templatesTitlePlaceholder")
+                    )
+                    .textFieldStyle(.plain)
+                    .font(.title2.weight(.bold))
+                    .focused($focusedField, equals: .title)
+                    .onSubmit { focusedField = .text }
+                    Text(template.updatedAt, format: .dateTime.day().month().year().hour().minute())
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
                 }
-                .buttonStyle(.borderless)
-                .help("delete")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                GlassEffectContainer(spacing: 8) {
+                    HStack(spacing: 8) {
+                        CopyButton(text: template.text, title: "copy")
+                            .buttonStyle(.glassProminent)
+                            .disabled(template.text.isEmpty)
+                        Button(role: .destructive) {
+                            delete(template.id)
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        .buttonStyle(.glass)
+                        .help("delete")
+                    }
+                }
             }
-            .padding(.horizontal, 16)
-            .frame(height: 44)
-
-            Divider()
+            .padding(.horizontal, 10)
 
             ZStack(alignment: .topLeading) {
                 TextEditor(text: Binding(
                     get: { store.template(with: template.id)?.text ?? "" },
                     set: { store.update(template.id, text: $0) }
                 ))
-                .font(.body)
+                .font(.system(size: 15))
                 .scrollContentBackground(.hidden)
-                .focused($editorFocused)
+                .focused($focusedField, equals: .text)
 
                 if template.text.isEmpty {
                     Text("templatesPlaceholder")
-                        .font(.body)
-                        .foregroundColor(.secondary)
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
                         .padding(.leading, 5)
                         .allowsHitTesting(false)
                 }
             }
             .padding(16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .glassEffect(.regular, in: .rect(cornerRadius: 22))
         }
-        .background(Color(NSColor.textBackgroundColor))
+        .padding(.top, 12)
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "note.text")
-                .font(.system(size: 40))
-                .foregroundStyle(.tertiary)
-            Text("templatesNoSelection")
-                .foregroundColor(.secondary)
-            Button("templatesAdd", action: addTemplate)
+        VStack(spacing: 14) {
+            EmptyStateView(icon: "note.text", title: "templatesNoSelection", message: "templatesEmptyMessage")
+                .fixedSize()
+            Button(action: addTemplate) {
+                Label("templatesAdd", systemImage: "plus")
+            }
+            .buttonStyle(.glassProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -168,7 +188,7 @@ struct TemplatesView: View {
         searchText = ""
         selectedID = store.add().id
         DispatchQueue.main.async {
-            editorFocused = true
+            focusedField = .title
         }
     }
 
@@ -181,8 +201,7 @@ struct TemplatesView: View {
 
     /// Templates that were created but never written into don't stay around
     private func removeIfBlank(_ id: UUID?) {
-        guard let id, let template = store.template(with: id),
-              template.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        guard let id, let template = store.template(with: id), template.isBlank else { return }
         store.delete(id)
     }
 
@@ -196,10 +215,11 @@ private struct TemplateRow: View {
     let template: TextTemplate
 
     var body: some View {
+        let title = template.displayTitle
         VStack(alignment: .leading, spacing: 2) {
-            Text(template.title.isEmpty ? String(localized: "templatesUntitled") : template.title)
+            Text(title.isEmpty ? String(localized: "templatesUntitled") : title)
                 .lineLimit(1)
-                .foregroundStyle(template.title.isEmpty ? .secondary : .primary)
+                .foregroundStyle(title.isEmpty ? .secondary : .primary)
             if !template.preview.isEmpty {
                 Text(template.preview)
                     .font(.caption)

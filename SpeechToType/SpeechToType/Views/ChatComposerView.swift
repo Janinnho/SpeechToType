@@ -80,16 +80,23 @@ struct ChatComposerView: View {
 
                     if isGenerating {
                         Button(action: onStop) {
-                            Image(systemName: "stop.circle.fill")
-                                .font(.title2)
+                            Image(systemName: "stop.fill")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(.primary)
+                                .frame(width: 26, height: 26)
                         }
+                        .buttonStyle(.glass)
+                        .buttonBorderShape(.circle)
                         .help("chatStop")
                     } else {
                         Button(action: send) {
-                            Image(systemName: "arrow.up.circle.fill")
-                                .font(.title2)
-                                .foregroundStyle(canSend ? Color.accentColor : Color.secondary)
+                            Image(systemName: "arrow.up")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundStyle(.white)
+                                .frame(width: 26, height: 26)
                         }
+                        .buttonStyle(.glassProminent)
+                        .buttonBorderShape(.circle)
                         .disabled(!canSend)
                         .help("chatSend")
                     }
@@ -97,18 +104,15 @@ struct ChatComposerView: View {
                 .buttonStyle(.borderless)
                 .foregroundStyle(.secondary)
             }
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Color(nsColor: .textBackgroundColor))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(
-                        isDropTargeted ? Color.accentColor : Color(nsColor: .separatorColor),
-                        lineWidth: isDropTargeted ? 2 : 1
-                    )
-            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .glassEffect(.regular, in: .rect(cornerRadius: 24))
+            .overlay {
+                if isDropTargeted {
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .strokeBorder(Color.accentColor, lineWidth: 2)
+                }
+            }
             .onDrop(of: [.fileURL], isTargeted: $isDropTargeted, perform: handleDrop)
 
             if let errorMessage {

@@ -40,12 +40,9 @@ struct ChatMessageView: View {
                     Text(message.content)
                         .textSelection(.enabled)
                         .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 9)
-                        .background(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color.accentColor.opacity(0.15))
-                        )
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .glassEffect(.regular.tint(Color.accentColor.opacity(0.35)), in: .rect(cornerRadius: 20))
                     CopyButton(text: message.content)
                         .buttonStyle(.borderless)
                         .foregroundStyle(.secondary)
@@ -57,12 +54,16 @@ struct ChatMessageView: View {
 
     private var assistantMessage: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if !message.content.isEmpty {
-                MarkdownView(text: message.content)
-            }
-
-            if let error = message.errorMessage {
-                ChatErrorView(message: error, onRetry: isLast ? onRegenerate : nil)
+            if !message.content.isEmpty || message.errorMessage != nil {
+                VStack(alignment: .leading, spacing: 10) {
+                    if !message.content.isEmpty {
+                        MarkdownView(text: message.content)
+                    }
+                    if let error = message.errorMessage {
+                        ChatErrorView(message: error, onRetry: isLast ? onRegenerate : nil)
+                    }
+                }
+                .glassCard(padding: 16, cornerRadius: 20)
             }
 
             HStack(spacing: 12) {
@@ -110,8 +111,10 @@ struct StreamingMessageView: View {
                     Text("chatThinking")
                         .foregroundStyle(.secondary)
                 }
+                .glassCard(padding: 14, cornerRadius: 18)
             } else {
                 MarkdownView(text: text)
+                    .glassCard(padding: 16, cornerRadius: 20)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

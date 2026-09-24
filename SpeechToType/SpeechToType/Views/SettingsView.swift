@@ -41,6 +41,18 @@ enum SettingsCategory: String, CaseIterable, Identifiable {
         case .about:     return "info.circle"
         }
     }
+
+    /// Tile color of the icon, as in System Settings
+    var color: Color {
+        switch self {
+        case .speech:    return .blue
+        case .text:      return .purple
+        case .chat:      return .green
+        case .shortcuts: return .orange
+        case .general:   return .gray
+        case .about:     return .indigo
+        }
+    }
 }
 
 struct SettingsView: View {
@@ -57,8 +69,13 @@ struct SettingsView: View {
         // split views makes the inner sidebar render behind the app's navigation.
         HStack(spacing: 0) {
             List(SettingsCategory.allCases, selection: $selection) { category in
-                Label(category.title, systemImage: category.icon)
-                    .tag(category)
+                Label {
+                    Text(category.title)
+                } icon: {
+                    IconBadge(systemName: category.icon, color: category.color, size: 22)
+                }
+                .padding(.vertical, 2)
+                .tag(category)
             }
             .listStyle(.sidebar)
             .frame(width: 200)
