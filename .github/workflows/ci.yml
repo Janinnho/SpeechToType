@@ -25,7 +25,7 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Select Xcode
         run: |
@@ -34,7 +34,7 @@ jobs:
           xcrun --sdk macosx --show-sdk-version
 
       - name: Cache Swift packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build/SourcePackages
           key: spm-${{ runner.os }}-${{ hashFiles('SpeechToType/SpeechToType.xcodeproj/project.pbxproj', 'SpeechToType/MicrosoftSpeechSDK/Package.swift', '**/Package.resolved') }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload resolved package versions
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Package.resolved
           path: SpeechToType/SpeechToType.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
