@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, Development]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # macos-26 image: Xcode 26.6 (macOS 26.5 SDK) — deployment target is macOS 26.2.
+  XCODE_APP: /Applications/Xcode_26.6.app
+  PROJECT: SpeechToType/SpeechToType.xcodeproj
+  SCHEME: SpeechToType
+
+jobs:
+  build-and-test:
+    name: Build & Test (macOS)
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s "$XCODE_APP"
+          xcodebuild -version
+          xcrun --sdk macosx --show-sdk-version
+
+      - name: Cache Swift packages
+        uses: actions/cache@v4
+        with:
+          path: build/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('SpeechToType/SpeechToType.xcodeproj/project.pbxproj', 'SpeechToType/MicrosoftSpeechSDK/Package.swift', '**/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      - name: Resolve packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project "$PROJECT" -scheme "$SCHEME" \
+            -clonedSourcePackagesDirPath build/SourcePackages
+
+      - name: Build & run unit tests (ad-hoc signed, UI tests skipped)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project "$PROJECT" -scheme "$SCHEME" \
+            -destination 'platform=macOS' \
+            -clonedSourcePackagesDirPath build/SourcePackages \
+            -derivedDataPath build/DerivedData \
+            -resultBundlePath build/TestResults.xcresult \
+            -skip-testing:SpeechToTypeUITests \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= \
+            | tee build/xcodebuild.log
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            build/TestResults.xcresult
+            build/xcodebuild.log
+          if-no-files-found: ignore
+
+      - name: Upload resolved package versions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package.resolved
+          path: SpeechToType/SpeechToType.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+          if-no-files-found: ignore

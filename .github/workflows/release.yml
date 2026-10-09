@@ -1,0 +1,304 @@
+name: Release
+
+# Builds, signs (Developer ID), notarizes and publishes SpeechToType.dmg,
+# then adds a signed Sparkle entry to appcast.xml on main.
+#
+# Trigger: push a numeric tag like `3.1` or `3.1.1` (no "v" prefix), or run manually.
+# Required secrets: see Documentation/Update.md.
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version / tag name, e.g. 3.1 (tag is created on the selected ref if it does not exist)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Release notes (Markdown). Empty = annotated tag message or auto-generated notes'
+        required: false
+        type: string
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  # macos-26 image: Xcode 26.6 (macOS 26.5 SDK) — deployment target is macOS 26.2.
+  XCODE_APP: /Applications/Xcode_26.6.app
+  PROJECT: SpeechToType/SpeechToType.xcodeproj
+  SCHEME: SpeechToType
+  TEAM_ID: 9WQ4DZ2W9G
+  APP_NAME: SpeechToType
+  DMG_NAME: SpeechToType.dmg
+
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - name: Check required secrets
+        env:
+          DEVELOPER_ID_CERT_P12_BASE64: ${{ secrets.DEVELOPER_ID_CERT_P12_BASE64 }}
+          DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+          ASC_API_KEY_P8_BASE64: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          missing=""
+          for name in DEVELOPER_ID_CERT_P12_BASE64 DEVELOPER_ID_CERT_PASSWORD ASC_API_KEY_ID ASC_API_ISSUER_ID ASC_API_KEY_P8_BASE64 SPARKLE_PRIVATE_KEY; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error title=Missing secrets::Please add these repository secrets (Settings → Secrets and variables → Actions):$missing"
+            exit 1
+          fi
+          echo "All required secrets are present."
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version and build number
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="$GITHUB_REF_NAME"
+          fi
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::Version '$VERSION' must look like 3.1 or 3.1.1 (no v prefix)."
+            exit 1
+          fi
+          git fetch origin main
+          git show origin/main:appcast.xml > "$RUNNER_TEMP/appcast-main.xml"
+          BUILD=$(python3 .github/scripts/appcast.py next-build "$RUNNER_TEMP/appcast-main.xml")
+          if grep -q "<sparkle:shortVersionString>$VERSION</sparkle:shortVersionString>" "$RUNNER_TEMP/appcast-main.xml"; then
+            echo "::error::Version $VERSION is already in appcast.xml on main."
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "BUILD=$BUILD" >> "$GITHUB_ENV"
+          echo "Releasing $APP_NAME $VERSION (build $BUILD)"
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s "$XCODE_APP"
+          xcodebuild -version
+
+      - name: Import Developer ID certificate into temporary keychain
+        env:
+          DEVELOPER_ID_CERT_P12_BASE64: ${{ secrets.DEVELOPER_ID_CERT_P12_BASE64 }}
+          DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
+          CERT_PATH="$RUNNER_TEMP/developer_id.p12"
+          echo "$DEVELOPER_ID_CERT_P12_BASE64" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$DEVELOPER_ID_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
+          security list-keychains -d user -s "$KEYCHAIN_PATH" "$HOME/Library/Keychains/login.keychain-db"
+          rm -f "$CERT_PATH"
+
+          IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep "Developer ID Application" | head -1 | awk '{print $2}')
+          if [ -z "$IDENTITY" ]; then
+            echo "::error::No 'Developer ID Application' identity found in the .p12 (does it contain the private key?)."
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+            exit 1
+          fi
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          echo "SIGN_IDENTITY=$IDENTITY" >> "$GITHUB_ENV"
+
+      - name: Resolve packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project "$PROJECT" -scheme "$SCHEME" \
+            -clonedSourcePackagesDirPath build/SourcePackages
+
+      - name: Archive
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project "$PROJECT" -scheme "$SCHEME" \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -archivePath build/SpeechToType.xcarchive \
+            -clonedSourcePackagesDirPath build/SourcePackages \
+            -derivedDataPath build/DerivedData \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD" \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            CODE_SIGN_IDENTITY="Developer ID Application" \
+            OTHER_CODE_SIGN_FLAGS="--keychain $KEYCHAIN_PATH --timestamp" \
+            | tee build/archive.log
+
+      - name: Export with Developer ID
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/SpeechToType.xcarchive \
+            -exportPath build/export \
+            -exportOptionsPlist SpeechToType/ExportOptions.plist
+          APP="build/export/$APP_NAME.app"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          codesign -dv --verbose=2 "$APP" 2>&1 | grep -E "Authority|TeamIdentifier|flags"
+          SHORT=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")
+          BUNDLE=$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$APP/Contents/Info.plist")
+          if [ "$SHORT" != "$VERSION" ] || [ "$BUNDLE" != "$BUILD" ]; then
+            echo "::error::Built app has version $SHORT ($BUNDLE), expected $VERSION ($BUILD)."
+            exit 1
+          fi
+          MIN_OS=$(/usr/libexec/PlistBuddy -c 'Print LSMinimumSystemVersion' "$APP/Contents/Info.plist" 2>/dev/null || echo "26.2")
+          echo "MIN_OS=$MIN_OS" >> "$GITHUB_ENV"
+          echo "APP_PATH=$APP" >> "$GITHUB_ENV"
+
+      - name: Write App Store Connect API key
+        env:
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_KEY_P8_BASE64: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
+        run: |
+          KEY_PATH="$RUNNER_TEMP/AuthKey_${ASC_API_KEY_ID}.p8"
+          echo "$ASC_API_KEY_P8_BASE64" | base64 --decode > "$KEY_PATH"
+          chmod 600 "$KEY_PATH"
+          echo "ASC_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Notarize and staple app
+        env:
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+        run: |
+          notarize() {
+            local file="$1"
+            xcrun notarytool submit "$file" \
+              --key "$ASC_KEY_PATH" --key-id "$ASC_API_KEY_ID" --issuer "$ASC_API_ISSUER_ID" \
+              --wait --timeout 30m --output-format json | tee "$RUNNER_TEMP/notary.json"
+            local status id
+            status=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("status",""))' "$RUNNER_TEMP/notary.json")
+            id=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("id",""))' "$RUNNER_TEMP/notary.json")
+            if [ "$status" != "Accepted" ]; then
+              echo "::error::Notarization of $file failed (status: $status)."
+              [ -n "$id" ] && xcrun notarytool log "$id" \
+                --key "$ASC_KEY_PATH" --key-id "$ASC_API_KEY_ID" --issuer "$ASC_API_ISSUER_ID"
+              exit 1
+            fi
+          }
+          ditto -c -k --keepParent "$APP_PATH" "$RUNNER_TEMP/app-notarize.zip"
+          notarize "$RUNNER_TEMP/app-notarize.zip"
+          xcrun stapler staple "$APP_PATH"
+          xcrun stapler validate "$APP_PATH"
+          # Export notarize() for the DMG step
+          declare -f notarize > "$RUNNER_TEMP/notarize.sh"
+
+      - name: Build, sign, notarize and staple DMG
+        env:
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+        run: |
+          source "$RUNNER_TEMP/notarize.sh"
+          STAGING="$RUNNER_TEMP/dmg"
+          DMG="$RUNNER_TEMP/$DMG_NAME"
+          rm -rf "$STAGING" && mkdir -p "$STAGING"
+          ditto "$APP_PATH" "$STAGING/$APP_NAME.app"
+          ln -s /Applications "$STAGING/Applications"
+          hdiutil create -volname "$APP_NAME" -srcfolder "$STAGING" -ov -format UDZO "$DMG"
+          codesign --force --sign "$SIGN_IDENTITY" --keychain "$KEYCHAIN_PATH" --timestamp "$DMG"
+          notarize "$DMG"
+          xcrun stapler staple "$DMG"
+          xcrun stapler validate "$DMG"
+          spctl -a -t open --context context:primary-signature -vv "$DMG"
+          echo "DMG_PATH=$DMG" >> "$GITHUB_ENV"
+
+      - name: Sign update for Sparkle
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          RESOLVED=$(find "$PROJECT" -name Package.resolved | head -1)
+          SPARKLE_VERSION=$(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(next(p["state"]["version"] for p in d["pins"] if p["identity"].lower()=="sparkle"))' "$RESOLVED")
+          echo "Sparkle (SPM) version: $SPARKLE_VERSION"
+          curl -fsSL -o "$RUNNER_TEMP/Sparkle.tar.xz" \
+            "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz"
+          mkdir -p "$RUNNER_TEMP/Sparkle"
+          tar -xJf "$RUNNER_TEMP/Sparkle.tar.xz" -C "$RUNNER_TEMP/Sparkle"
+
+          KEY_FILE="$RUNNER_TEMP/sparkle_ed25519"
+          (umask 077; printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE")
+          OUT=$("$RUNNER_TEMP/Sparkle/bin/sign_update" --ed-key-file "$KEY_FILE" "$DMG_PATH")
+          rm -f "$KEY_FILE"
+          SIG=$(echo "$OUT" | sed -n 's/.*sparkle:edSignature="\([^"]*\)".*/\1/p')
+          LEN=$(echo "$OUT" | sed -n 's/.*length="\([0-9]*\)".*/\1/p')
+          if [ -z "$SIG" ] || [ -z "$LEN" ]; then
+            echo "::error::Could not parse sign_update output."
+            exit 1
+          fi
+          echo "ED_SIGNATURE=$SIG" >> "$GITHUB_ENV"
+          echo "DMG_LENGTH=$LEN" >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_NOTES: ${{ inputs.release_notes }}
+        run: |
+          if gh release view "$VERSION" > /dev/null 2>&1; then
+            echo "Release $VERSION exists — uploading $DMG_NAME."
+            gh release upload "$VERSION" "$DMG_PATH" --clobber
+          else
+            NOTES_ARGS=(--generate-notes)
+            if [ -n "$INPUT_NOTES" ]; then
+              printf '%s\n' "$INPUT_NOTES" > "$RUNNER_TEMP/notes.md"
+              NOTES_ARGS=(--notes-file "$RUNNER_TEMP/notes.md")
+            elif [ "$(git cat-file -t "refs/tags/$VERSION" 2>/dev/null)" = "tag" ]; then
+              git tag -l --format='%(contents)' "$VERSION" > "$RUNNER_TEMP/notes.md"
+              NOTES_ARGS=(--notes-file "$RUNNER_TEMP/notes.md")
+            fi
+            gh release create "$VERSION" "$DMG_PATH" \
+              --title "$VERSION" --target "$GITHUB_SHA" "${NOTES_ARGS[@]}"
+          fi
+          BODY=$(gh release view "$VERSION" --json body -q .body)
+          [ -n "$BODY" ] || BODY="SpeechToType $VERSION"
+          gh api -X POST /markdown -f text="$BODY" -f mode=gfm > "$RUNNER_TEMP/notes.html"
+
+      - name: Add release to appcast.xml on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp .github/scripts/appcast.py "$RUNNER_TEMP/appcast.py"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/${DMG_NAME}"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B appcast-update origin/main
+            python3 "$RUNNER_TEMP/appcast.py" add-item appcast.xml \
+              --version "$VERSION" --build "$BUILD" --min-os "$MIN_OS" \
+              --url "$URL" --length "$DMG_LENGTH" --signature "$ED_SIGNATURE" \
+              --notes-html "$RUNNER_TEMP/notes.html"
+            git add appcast.xml
+            git commit -m "Appcast: SpeechToType $VERSION (build $BUILD)"
+            if git push origin HEAD:main; then
+              echo "appcast.xml updated on main."
+              exit 0
+            fi
+            echo "Push failed (attempt $attempt), retrying…"
+            sleep 5
+          done
+          echo "::error::Could not push appcast.xml to main (branch protection?). The release is published; add the appcast entry manually."
+          exit 1
+
+      - name: Clean up keychain and keys
+        if: always()
+        run: |
+          if [ -n "$KEYCHAIN_PATH" ]; then security delete-keychain "$KEYCHAIN_PATH" || true; fi
+          rm -f "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP/sparkle_ed25519" "$RUNNER_TEMP/developer_id.p12"
