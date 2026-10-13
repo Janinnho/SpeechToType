@@ -190,7 +190,7 @@ nonisolated enum AnthropicModel: String, CaseIterable, Codable {
     /// family becomes that family's newest model. Fable has no successor and becomes
     /// the default, Sonnet 5.5.
     init?(storedValue: String) {
-        guard let model = AnthropicModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        guard let model = AnthropicModel(rawValue: storedValue) ?? Self.successors[storedValue] else { return nil }
         self = model
     }
 }

@@ -95,7 +95,7 @@ nonisolated enum GPTModel: String, CaseIterable, Codable {
     /// Parses a stored model id. A current id is kept. A removed model becomes the
     /// newest model of the same family.
     init?(storedValue: String) {
-        guard let model = GPTModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        guard let model = GPTModel(rawValue: storedValue) ?? Self.successors[storedValue] else { return nil }
         self = model
     }
 
