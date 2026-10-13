@@ -14,15 +14,15 @@ permissions:
   contents: read
 
 env:
-  # macos-26 image: Xcode 26.6 (macOS 26.5 SDK) — deployment target is macOS 26.2.
-  XCODE_APP: /Applications/Xcode_26.6.app
+  # xcode-27 preview image: Xcode 27.1 (iOS 27.1 / macOS 27.0 SDK) — deployment target is macOS 26.2.
+  XCODE_APP: /Applications/Xcode_27.1.app
   PROJECT: SpeechToType/SpeechToType.xcodeproj
   SCHEME: SpeechToType
 
 jobs:
   build-and-test:
     name: Build & Test (macOS)
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
