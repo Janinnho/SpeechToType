@@ -155,27 +155,42 @@ enum GeminiTranscriptionMode: String, CaseIterable, Codable {
 }
 
 nonisolated enum AnthropicModel: String, CaseIterable, Codable {
-    case claudeFable51 = "claude-fable-5-1"
     case claudeOpus55 = "claude-opus-5-5"
-    case claudeSonnet5 = "claude-sonnet-5"
-    case claudeHaiku45 = "claude-haiku-4-5"
+    case claudeSonnet55 = "claude-sonnet-5-5"
+    case claudeHaiku55 = "claude-haiku-5-5"
+
+    /// Newest model of each family. Older ids, including every Fable model, move here.
+    private static let successors: [String: AnthropicModel] = [
+        "claude-fable-5-1": .claudeSonnet55,
+        "claude-fable-5": .claudeSonnet55,
+        "claude-opus-5": .claudeOpus55,
+        "claude-opus-4-8": .claudeOpus55,
+        "claude-opus-4-7": .claudeOpus55,
+        "claude-opus-4-6": .claudeOpus55,
+        "claude-opus-4-5": .claudeOpus55,
+        "claude-opus-4-5-20251101": .claudeOpus55,
+        "claude-sonnet-5": .claudeSonnet55,
+        "claude-sonnet-4-6": .claudeSonnet55,
+        "claude-haiku-4-5": .claudeHaiku55,
+        "claude-haiku-4-5-20251001": .claudeHaiku55
+    ]
 
     var displayName: String {
         switch self {
-        case .claudeFable51: return "Claude Fable 5.1"
         case .claudeOpus55: return "Claude Opus 5.5"
-        case .claudeSonnet5: return "Claude Sonnet 5"
-        case .claudeHaiku45: return "Claude Haiku 4.5"
+        case .claudeSonnet55: return "Claude Sonnet 5.5"
+        case .claudeHaiku55: return "Claude Haiku 5.5"
         }
     }
 
-    /// Whether the model takes `output_config.effort` (Haiku 4.5 does not)
-    var supportsEffort: Bool { self != .claudeHaiku45 }
+    /// Every model offered here accepts `output_config.effort`, including `low`.
+    var supportsEffort: Bool { true }
 
-    /// Parses a stored model id, moving Claude Opus 5 to its successor Opus 5.5.
+    /// Parses a stored model id. A current id is kept. A removed model of the same
+    /// family becomes that family's newest model. Fable has no successor and becomes
+    /// the default, Sonnet 5.5.
     init?(storedValue: String) {
-        guard let model = AnthropicModel(rawValue: storedValue)
-                ?? (storedValue == "claude-opus-5" ? .claudeOpus55 : nil) else { return nil }
+        guard let model = AnthropicModel(rawValue: storedValue) ?? Self.successors[storedValue] else { return nil }
         self = model
     }
 }
@@ -935,13 +950,14 @@ final class AppSettings: ObservableObject {
             self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gptTranscribe
         }
 
-        // GPT model: default is gpt6Sol (balanced tier). GPT-5.6 choices move to the GPT-6
-        // model of the same tier; anything else no longer offered falls back to the default.
+        // GPT model: default is gpt-6.1-sol (newest Sol, the balanced tier). A stored id
+        // that is still offered is kept. A removed model moves to the newest of its
+        // family; anything else falls back to the default.
         if !hasApplied16Migration {
-            self.selectedGPTModel = .gpt6Sol
-            defaults.set(GPTModel.gpt6Sol.rawValue, forKey: "selectedGPTModel")
+            self.selectedGPTModel = .gpt61Sol
+            defaults.set(GPTModel.gpt61Sol.rawValue, forKey: "selectedGPTModel")
         } else {
-            self.selectedGPTModel = GPTModel(storedValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt6Sol
+            self.selectedGPTModel = GPTModel(storedValue: defaults.string(forKey: "selectedGPTModel") ?? "") ?? .gpt61Sol
         }
 
         // Mark v1.6 migration as applied
@@ -981,7 +997,7 @@ final class AppSettings: ObservableObject {
         // Text processing & Anthropic settings
         self.textProcessingOpenAIApiKey = defaults.string(forKey: "textProcessingOpenAIApiKey") ?? ""
         self.anthropicApiKey = defaults.string(forKey: "anthropicApiKey") ?? ""
-        self.selectedAnthropicModel = AnthropicModel(storedValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claudeSonnet5
+        self.selectedAnthropicModel = AnthropicModel(storedValue: defaults.string(forKey: "selectedAnthropicModel") ?? "") ?? .claudeSonnet55
 
         // Ollama settings
         self.ollamaServerURL = defaults.string(forKey: "ollamaServerURL") ?? "http://localhost:11434"
@@ -1039,7 +1055,7 @@ final class AppSettings: ObservableObject {
         // by the rewrite model at the end of init, once all properties are available.
         let storedChatModel = defaults.data(forKey: "chatModel")
             .flatMap { try? JSONDecoder().decode(ChatModelSelection.self, from: $0) }
-        self.chatModel = storedChatModel?.upgraded ?? ChatModelSelection(provider: .openAI, modelID: GPTModel.gpt6Sol.rawValue)
+        self.chatModel = storedChatModel?.upgraded ?? ChatModelSelection(provider: .openAI, modelID: GPTModel.gpt61Sol.rawValue)
         self.chatCustomInstructions = defaults.string(forKey: "chatCustomInstructions") ?? ""
         self.chatAutoGenerateTitles = defaults.object(forKey: "chatAutoGenerateTitles") as? Bool ?? true
 

@@ -58,39 +58,55 @@ enum RewriteMode: String, CaseIterable, Codable {
 
 nonisolated enum GPTModel: String, CaseIterable, Codable {
     case gpt6Astra = "gpt-6-astra"
-    case gpt6Sol = "gpt-6-sol"
+    case gpt61Sol = "gpt-6.1-sol"
     case gpt6Luna = "gpt-6-luna"
+
+    /// Removed ids mapped to the newest model of the same family. Sol stays Sol
+    /// (`gpt-6.1-sol` replaces `gpt-6-sol`). There is no GPT-6 Terra, so Terra follows
+    /// the balanced tier to Sol. Older flagships go to Astra. Mini and nano are not
+    /// separate families in this generation; Luna is the newest small model.
+    private static let successors: [String: GPTModel] = [
+        "gpt-6-sol": .gpt61Sol,
+        "gpt-5.6-sol": .gpt61Sol,
+        "gpt-5.6-terra": .gpt61Sol,
+        "gpt-5.6-luna": .gpt6Luna,
+        "gpt-5.5": .gpt6Astra,
+        "gpt-5.4": .gpt6Astra,
+        "gpt-5.4-mini": .gpt6Luna,
+        "gpt-5.2": .gpt6Astra,
+        "gpt-5": .gpt6Astra,
+        "gpt-5-mini": .gpt6Luna,
+        "gpt-5-nano": .gpt6Luna,
+        "o3": .gpt6Astra,
+        "gpt-4.1": .gpt61Sol,
+        "gpt-4.1-mini": .gpt6Luna,
+        "gpt-4o": .gpt61Sol,
+        "gpt-4o-mini": .gpt6Luna
+    ]
 
     var displayName: String {
         switch self {
-        case .gpt6Astra:
-            return "GPT-6 Astra"
-        case .gpt6Sol:
-            return "GPT-6 Sol"
-        case .gpt6Luna:
-            return "GPT-6 Luna"
+        case .gpt6Astra: return "GPT-6 Astra"
+        case .gpt61Sol: return "GPT-6.1 Sol"
+        case .gpt6Luna: return "GPT-6 Luna"
         }
     }
 
-    /// Parses a stored model id. Ids of the previous generation map to the successor of
-    /// the same tier (5.6 Sol → Astra, Terra → Sol, Luna → Luna).
+    /// Parses a stored model id. A current id is kept. A removed model becomes the
+    /// newest model of the same family.
     init?(storedValue: String) {
-        let successors: [String: GPTModel] = [
-            "gpt-5.6-sol": .gpt6Astra,
-            "gpt-5.6-terra": .gpt6Sol,
-            "gpt-5.6-luna": .gpt6Luna
-        ]
-        guard let model = GPTModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        guard let model = GPTModel(rawValue: storedValue) ?? Self.successors[storedValue] else { return nil }
         self = model
     }
 
-    /// Whether this model uses max_completion_tokens instead of max_tokens.
-    /// The whole GPT-6 family does.
+    /// The models offered here all take `max_completion_tokens`.
     var usesMaxCompletionTokens: Bool { true }
 
-    /// Whether this model supports custom temperature values.
-    /// The GPT-6 family does not.
+    /// The models offered here do not accept a custom temperature.
     var supportsCustomTemperature: Bool { false }
+
+    /// Whether a rewrite or a short side task may send `reasoning_effort: "low"`.
+    var supportsReasoningEffort: Bool { true }
 }
 
 enum TextRewriteError: Error, LocalizedError {
@@ -192,10 +208,14 @@ class TextRewriteService {
             "messages": [
                 ["role": "system", "content": systemPrompt],
                 ["role": "user", "content": text]
-            ],
-            // Rewriting is a short, simple task: light reasoning keeps the reply fast
-            "reasoning_effort": "low"
+            ]
         ]
+
+        // Rewriting is a short, simple task: light reasoning keeps the reply fast.
+        // Non-reasoning models reject the field.
+        if model.supportsReasoningEffort {
+            requestBody["reasoning_effort"] = "low"
+        }
 
         if model.supportsCustomTemperature {
             requestBody["temperature"] = 0.7
