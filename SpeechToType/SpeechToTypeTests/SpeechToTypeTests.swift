@@ -21,10 +21,10 @@ struct SpeechToTypeTests {
             "claude-sonnet-5-5",
             "claude-haiku-5-5"
         ])
-        #expect(GPTModel.allCases.allSatisfy(\.supportsReasoningEffort))
-        #expect(GPTModel.allCases.allSatisfy(\.usesMaxCompletionTokens))
+        #expect(GPTModel.allCases.allSatisfy { $0.supportsReasoningEffort })
+        #expect(GPTModel.allCases.allSatisfy { $0.usesMaxCompletionTokens })
         #expect(GPTModel.allCases.allSatisfy { !$0.supportsCustomTemperature })
-        #expect(AnthropicModel.allCases.allSatisfy(\.supportsEffort))
+        #expect(AnthropicModel.allCases.allSatisfy { $0.supportsEffort })
     }
 
     @Test func removedModelsMigrateToTheNewestOfTheSameFamily() {
