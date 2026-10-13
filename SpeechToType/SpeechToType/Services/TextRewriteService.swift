@@ -58,39 +58,76 @@ enum RewriteMode: String, CaseIterable, Codable {
 
 nonisolated enum GPTModel: String, CaseIterable, Codable {
     case gpt6Astra = "gpt-6-astra"
+    case gpt61Sol = "gpt-6.1-sol"
     case gpt6Sol = "gpt-6-sol"
     case gpt6Luna = "gpt-6-luna"
+    case gpt56Sol = "gpt-5.6-sol"
+    case gpt56Terra = "gpt-5.6-terra"
+    case gpt56Luna = "gpt-5.6-luna"
+    case gpt55 = "gpt-5.5"
+    case gpt54 = "gpt-5.4"
+    case gpt54Mini = "gpt-5.4-mini"
+    case gpt52 = "gpt-5.2"
+    case gpt5 = "gpt-5"
+    case gpt5Mini = "gpt-5-mini"
+    case gpt5Nano = "gpt-5-nano"
+    case o3 = "o3"
+    case gpt41 = "gpt-4.1"
+    case gpt41Mini = "gpt-4.1-mini"
+    case gpt4o = "gpt-4o"
+    case gpt4oMini = "gpt-4o-mini"
 
     var displayName: String {
         switch self {
-        case .gpt6Astra:
-            return "GPT-6 Astra"
-        case .gpt6Sol:
-            return "GPT-6 Sol"
-        case .gpt6Luna:
-            return "GPT-6 Luna"
+        case .gpt6Astra: return "GPT-6 Astra"
+        case .gpt61Sol: return "GPT-6.1 Sol"
+        case .gpt6Sol: return "GPT-6 Sol"
+        case .gpt6Luna: return "GPT-6 Luna"
+        case .gpt56Sol: return "GPT-5.6 Sol"
+        case .gpt56Terra: return "GPT-5.6 Terra"
+        case .gpt56Luna: return "GPT-5.6 Luna"
+        case .gpt55: return "GPT-5.5"
+        case .gpt54: return "GPT-5.4"
+        case .gpt54Mini: return "GPT-5.4 Mini"
+        case .gpt52: return "GPT-5.2"
+        case .gpt5: return "GPT-5"
+        case .gpt5Mini: return "GPT-5 Mini"
+        case .gpt5Nano: return "GPT-5 Nano"
+        case .o3: return "o3"
+        case .gpt41: return "GPT-4.1"
+        case .gpt41Mini: return "GPT-4.1 Mini"
+        case .gpt4o: return "GPT-4o"
+        case .gpt4oMini: return "GPT-4o Mini"
         }
     }
 
-    /// Parses a stored model id. Ids of the previous generation map to the successor of
-    /// the same tier (5.6 Sol → Astra, Terra → Sol, Luna → Luna).
+    /// Parses a stored model id. Every id still offered resolves to itself, so a saved
+    /// GPT-5.6 choice is kept now that those models are selectable again.
     init?(storedValue: String) {
-        let successors: [String: GPTModel] = [
-            "gpt-5.6-sol": .gpt6Astra,
-            "gpt-5.6-terra": .gpt6Sol,
-            "gpt-5.6-luna": .gpt6Luna
-        ]
-        guard let model = GPTModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
+        guard let model = GPTModel(rawValue: storedValue) else { return nil }
         self = model
     }
 
-    /// Whether this model uses max_completion_tokens instead of max_tokens.
-    /// The whole GPT-6 family does.
-    var usesMaxCompletionTokens: Bool { true }
+    /// GPT-4o still takes `max_tokens`. Later chat models, including GPT-4.1, take
+    /// `max_completion_tokens`.
+    var usesMaxCompletionTokens: Bool {
+        switch self {
+        case .gpt4o, .gpt4oMini: return false
+        default: return true
+        }
+    }
 
-    /// Whether this model supports custom temperature values.
-    /// The GPT-6 family does not.
-    var supportsCustomTemperature: Bool { false }
+    /// Reasoning models reject a custom temperature. GPT-4.1 and GPT-4o do not reason.
+    var supportsCustomTemperature: Bool { !supportsReasoningEffort }
+
+    /// Whether a rewrite or a short side task may send `reasoning_effort: "low"`.
+    /// Every reasoning model offered here accepts `low`.
+    var supportsReasoningEffort: Bool {
+        switch self {
+        case .gpt41, .gpt41Mini, .gpt4o, .gpt4oMini: return false
+        default: return true
+        }
+    }
 }
 
 enum TextRewriteError: Error, LocalizedError {
@@ -192,10 +229,14 @@ class TextRewriteService {
             "messages": [
                 ["role": "system", "content": systemPrompt],
                 ["role": "user", "content": text]
-            ],
-            // Rewriting is a short, simple task: light reasoning keeps the reply fast
-            "reasoning_effort": "low"
+            ]
         ]
+
+        // Rewriting is a short, simple task: light reasoning keeps the reply fast.
+        // Non-reasoning models reject the field.
+        if model.supportsReasoningEffort {
+            requestBody["reasoning_effort"] = "low"
+        }
 
         if model.supportsCustomTemperature {
             requestBody["temperature"] = 0.7

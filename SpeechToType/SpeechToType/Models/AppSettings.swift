@@ -157,25 +157,44 @@ enum GeminiTranscriptionMode: String, CaseIterable, Codable {
 nonisolated enum AnthropicModel: String, CaseIterable, Codable {
     case claudeFable51 = "claude-fable-5-1"
     case claudeOpus55 = "claude-opus-5-5"
+    case claudeSonnet55 = "claude-sonnet-5-5"
+    case claudeHaiku55 = "claude-haiku-5-5"
+    case claudeFable5 = "claude-fable-5"
+    case claudeOpus5 = "claude-opus-5"
+    case claudeOpus48 = "claude-opus-4-8"
+    case claudeOpus47 = "claude-opus-4-7"
+    case claudeOpus46 = "claude-opus-4-6"
+    case claudeOpus45 = "claude-opus-4-5-20251101"
     case claudeSonnet5 = "claude-sonnet-5"
+    case claudeSonnet46 = "claude-sonnet-4-6"
     case claudeHaiku45 = "claude-haiku-4-5"
 
     var displayName: String {
         switch self {
         case .claudeFable51: return "Claude Fable 5.1"
         case .claudeOpus55: return "Claude Opus 5.5"
+        case .claudeSonnet55: return "Claude Sonnet 5.5"
+        case .claudeHaiku55: return "Claude Haiku 5.5"
+        case .claudeFable5: return "Claude Fable 5"
+        case .claudeOpus5: return "Claude Opus 5"
+        case .claudeOpus48: return "Claude Opus 4.8"
+        case .claudeOpus47: return "Claude Opus 4.7"
+        case .claudeOpus46: return "Claude Opus 4.6"
+        case .claudeOpus45: return "Claude Opus 4.5"
         case .claudeSonnet5: return "Claude Sonnet 5"
+        case .claudeSonnet46: return "Claude Sonnet 4.6"
         case .claudeHaiku45: return "Claude Haiku 4.5"
         }
     }
 
-    /// Whether the model takes `output_config.effort` (Haiku 4.5 does not)
+    /// Whether the model takes `output_config.effort`. Haiku 4.5 does not; every other
+    /// model offered here does, including `low`.
     var supportsEffort: Bool { self != .claudeHaiku45 }
 
-    /// Parses a stored model id, moving Claude Opus 5 to its successor Opus 5.5.
+    /// Parses a stored model id. Known ids stay as they are, including Claude Opus 5,
+    /// which is still available alongside Opus 5.5.
     init?(storedValue: String) {
-        guard let model = AnthropicModel(rawValue: storedValue)
-                ?? (storedValue == "claude-opus-5" ? .claudeOpus55 : nil) else { return nil }
+        guard let model = AnthropicModel(rawValue: storedValue) else { return nil }
         self = model
     }
 }
@@ -935,8 +954,8 @@ final class AppSettings: ObservableObject {
             self.selectedModel = TranscriptionModel(rawValue: defaults.string(forKey: "selectedModel") ?? "") ?? .gptTranscribe
         }
 
-        // GPT model: default is gpt6Sol (balanced tier). GPT-5.6 choices move to the GPT-6
-        // model of the same tier; anything else no longer offered falls back to the default.
+        // GPT model: default is gpt6Sol (balanced tier). A stored id that is still offered
+        // is kept; anything else falls back to the default.
         if !hasApplied16Migration {
             self.selectedGPTModel = .gpt6Sol
             defaults.set(GPTModel.gpt6Sol.rawValue, forKey: "selectedGPTModel")

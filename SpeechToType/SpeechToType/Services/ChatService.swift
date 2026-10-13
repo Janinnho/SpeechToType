@@ -208,7 +208,7 @@ nonisolated enum ChatService {
             "stream": true,
             "messages": messages
         ]
-        if request.quick, GPTModel(rawValue: request.model.modelID) != nil {
+        if request.quick, GPTModel(rawValue: request.model.modelID)?.supportsReasoningEffort == true {
             body["reasoning_effort"] = "low"
         }
 
