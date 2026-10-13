@@ -59,75 +59,54 @@ enum RewriteMode: String, CaseIterable, Codable {
 nonisolated enum GPTModel: String, CaseIterable, Codable {
     case gpt6Astra = "gpt-6-astra"
     case gpt61Sol = "gpt-6.1-sol"
-    case gpt6Sol = "gpt-6-sol"
     case gpt6Luna = "gpt-6-luna"
-    case gpt56Sol = "gpt-5.6-sol"
-    case gpt56Terra = "gpt-5.6-terra"
-    case gpt56Luna = "gpt-5.6-luna"
-    case gpt55 = "gpt-5.5"
-    case gpt54 = "gpt-5.4"
-    case gpt54Mini = "gpt-5.4-mini"
-    case gpt52 = "gpt-5.2"
-    case gpt5 = "gpt-5"
-    case gpt5Mini = "gpt-5-mini"
-    case gpt5Nano = "gpt-5-nano"
-    case o3 = "o3"
-    case gpt41 = "gpt-4.1"
-    case gpt41Mini = "gpt-4.1-mini"
-    case gpt4o = "gpt-4o"
-    case gpt4oMini = "gpt-4o-mini"
+
+    /// Removed ids mapped to the newest model of the same family. Sol stays Sol
+    /// (`gpt-6.1-sol` replaces `gpt-6-sol`). There is no GPT-6 Terra, so Terra follows
+    /// the balanced tier to Sol. Older flagships go to Astra. Mini and nano are not
+    /// separate families in this generation; Luna is the newest small model.
+    private static let successors: [String: GPTModel] = [
+        "gpt-6-sol": .gpt61Sol,
+        "gpt-5.6-sol": .gpt61Sol,
+        "gpt-5.6-terra": .gpt61Sol,
+        "gpt-5.6-luna": .gpt6Luna,
+        "gpt-5.5": .gpt6Astra,
+        "gpt-5.4": .gpt6Astra,
+        "gpt-5.4-mini": .gpt6Luna,
+        "gpt-5.2": .gpt6Astra,
+        "gpt-5": .gpt6Astra,
+        "gpt-5-mini": .gpt6Luna,
+        "gpt-5-nano": .gpt6Luna,
+        "o3": .gpt6Astra,
+        "gpt-4.1": .gpt61Sol,
+        "gpt-4.1-mini": .gpt6Luna,
+        "gpt-4o": .gpt61Sol,
+        "gpt-4o-mini": .gpt6Luna
+    ]
 
     var displayName: String {
         switch self {
         case .gpt6Astra: return "GPT-6 Astra"
         case .gpt61Sol: return "GPT-6.1 Sol"
-        case .gpt6Sol: return "GPT-6 Sol"
         case .gpt6Luna: return "GPT-6 Luna"
-        case .gpt56Sol: return "GPT-5.6 Sol"
-        case .gpt56Terra: return "GPT-5.6 Terra"
-        case .gpt56Luna: return "GPT-5.6 Luna"
-        case .gpt55: return "GPT-5.5"
-        case .gpt54: return "GPT-5.4"
-        case .gpt54Mini: return "GPT-5.4 Mini"
-        case .gpt52: return "GPT-5.2"
-        case .gpt5: return "GPT-5"
-        case .gpt5Mini: return "GPT-5 Mini"
-        case .gpt5Nano: return "GPT-5 Nano"
-        case .o3: return "o3"
-        case .gpt41: return "GPT-4.1"
-        case .gpt41Mini: return "GPT-4.1 Mini"
-        case .gpt4o: return "GPT-4o"
-        case .gpt4oMini: return "GPT-4o Mini"
         }
     }
 
-    /// Parses a stored model id. Every id still offered resolves to itself, so a saved
-    /// GPT-5.6 choice is kept now that those models are selectable again.
+    /// Parses a stored model id. A current id is kept. A removed model becomes the
+    /// newest model of the same family.
     init?(storedValue: String) {
-        guard let model = GPTModel(rawValue: storedValue) else { return nil }
+        guard let model = GPTModel(rawValue: storedValue) ?? successors[storedValue] else { return nil }
         self = model
     }
 
-    /// GPT-4o still takes `max_tokens`. Later chat models, including GPT-4.1, take
-    /// `max_completion_tokens`.
-    var usesMaxCompletionTokens: Bool {
-        switch self {
-        case .gpt4o, .gpt4oMini: return false
-        default: return true
-        }
-    }
+    /// The models offered here all take `max_completion_tokens`.
+    var usesMaxCompletionTokens: Bool { true }
 
-    /// Reasoning models reject a custom temperature. GPT-4.1 and GPT-4o do not reason.
-    var supportsCustomTemperature: Bool { !supportsReasoningEffort }
+    /// The models offered here do not accept a custom temperature.
+    var supportsCustomTemperature: Bool { false }
 
     /// Whether a rewrite or a short side task may send `reasoning_effort: "low"`.
-    /// Every reasoning model offered here accepts `low`.
-    var supportsReasoningEffort: Bool {
-        switch self {
-        case .gpt41, .gpt41Mini, .gpt4o, .gpt4oMini: return false
-        default: return true
-        }
-    }
+    var supportsReasoningEffort: Bool { true }
 }
 
 enum TextRewriteError: Error, LocalizedError {
