@@ -12,6 +12,27 @@
         -->
 
         <item>
+            <title>Version 3.1</title>
+            <pubDate>Tue, 13 Oct 2026 15:31:19 +0000</pubDate>
+            <sparkle:version>19</sparkle:version>
+            <sparkle:shortVersionString>3.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.2</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+<p>SpeechToType 3.1</p>
+<ul>
+<li>Neue Modelle: GPT-6.1 Sol (neuer Standard), GPT-6 Astra, GPT-6 Luna, Claude Sonnet 5.5 (neuer Standard), Claude Opus 5.5, Claude Haiku 5.5</li>
+<li>Auswahl auf das jeweils neueste Modell pro Familie reduziert; ältere Auswahl wird automatisch übernommen</li>
+<li>Fable-Modelle entfernt</li>
+</ul>
+            ]]></description>
+            <enclosure
+                url="https://github.com/Janinnho/SpeechToType/releases/download/3.1/SpeechToType.dmg"
+                sparkle:edSignature="1CgLnS+maDuqpi+pqq3Hrp5t5cl9NoYEONUeHBGAms15oRNSTQRp/FmkcPtvwWakB1aTrGYt58emmhYJgHdsAA=="
+                length="8890276"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 3.0</title>
             <pubDate>Thu, 24 Sep 2026 12:00:00 +0200</pubDate>
             <sparkle:version>18</sparkle:version>
