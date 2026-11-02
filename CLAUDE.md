@@ -80,16 +80,22 @@ incl. Chat), Onboarding, Markdown, RecordingOverlayWindow, TextRewritePopupWindo
   dictionary instructions as `prompt`. Branch on `isRealtimeOnly` / `batchFallback`. The
   `gpt-4o-*-transcribe` models and `whisper-1` are deprecated (shutdown Feb 2027) and were
   removed; a stored legacy value falls back to `gpt-transcribe`.
-- **Text models** (as of Sept 2026): `GPTModel` = `gpt-6-astra` / `gpt-6-sol` (default) /
-  `gpt-6-luna`; `AnthropicModel` = `claude-fable-5-1` / `claude-opus-5-5` / `claude-sonnet-5`
-  (default) / `claude-haiku-4-5`; `GeminiModel` = `gemini-3.8-flash` (default) /
-  `gemini-3.1-pro-preview` (Pro exists on the Gemini API only as preview) / `gemini-3.5-flash-lite`.
-  Stored ids of an earlier generation map to their successor via `init?(storedValue:)`
-  (settings) and `ChatModelSelection.upgraded` (chats) — extend these maps when bumping models.
+- **Text models** (as of Nov 2026): `GPTModel` = `gpt-6-astra` / `gpt-6.1-sol` (default) /
+  `gpt-6.1-terra` / `gpt-6-luna`; `AnthropicModel` = `claude-opus-5-5` / `claude-sonnet-5-5`
+  (default) / `claude-haiku-5-5` (Fable is not offered); `GeminiModel` = `gemini-4-argon` /
+  `gemini-3.8-flash` (default) / `gemini-3.1-pro-preview` (Pro exists on the Gemini API only
+  as preview) / `gemini-3.5-flash-lite`. Stored ids of an earlier generation map to the newest
+  model of the same family via `init?(storedValue:)` (settings) and `ChatModelSelection.upgraded`
+  (chats) — extend these maps when bumping models. Argon is its own family, so Flash and Pro
+  do not migrate onto it.
 - The current text models reason before answering. Rewrites send `reasoning_effort: "low"`
-  (OpenAI) / `output_config.effort: "low"` (Claude except Haiku 4.5, see `supportsEffort`) with
-  an 8192-token limit, and take Claude's first `text` block (a thinking block can come first).
-  Gemini requests carry no `temperature` (deprecated for the current models).
+  (OpenAI) / `output_config.effort: "low"` (every current Claude model, see `supportsEffort`)
+  with an 8192-token limit, and take Claude's first `text` block (a thinking block can come
+  first). Gemini requests carry no `temperature` (ignored on the current models). Argon
+  rewrites send `thinkingConfig.thinkingLevel: LOW` and `maxOutputTokens: 32768`, because
+  thinking counts toward that cap and Google's migration guide says to raise a cap below 32,768.
+  Argon chat uses the documented default (`MEDIUM`, 65536). `gemini-4-argon` is text-only
+  here: the Live API does not support it, and speech stays on `GeminiSpeechModel`.
 - **Gemini speech models** (`GeminiSpeechModel`): `gemini-3.5-transcribe` (unary, default)
   and `gemini-3.5-transcribe-live` (**Live API only**). Both are separate from `GeminiModel`,
   which stays reserved for text rewriting. The unary model runs on

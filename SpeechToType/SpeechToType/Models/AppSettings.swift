@@ -53,20 +53,42 @@ nonisolated enum TextProcessingProvider: String, CaseIterable, Codable {
 }
 
 nonisolated enum GeminiModel: String, CaseIterable, Codable {
+    /// Flagship. Text only — the Live API and the Transcribe models are separate.
+    case gemini4Argon = "gemini-4-argon"
     case gemini38Flash = "gemini-3.8-flash"
     case gemini31ProPreview = "gemini-3.1-pro-preview"
     case gemini35FlashLite = "gemini-3.5-flash-lite"
 
     var displayName: String {
         switch self {
+        case .gemini4Argon: return "Gemini 4 Argon"
         case .gemini38Flash: return "Gemini 3.8 Flash"
         case .gemini31ProPreview: return "Gemini 3.1 Pro (Preview)"
         case .gemini35FlashLite: return "Gemini 3.5 Flash-Lite"
         }
     }
 
-    /// Parses a stored model id, moving older Flash models to 3.8 Flash. Gemini 3.1 Pro
-    /// exists on the Gemini API only as a preview (`gemini-3.1-pro` was never valid there).
+    /// Output budget for a short rewrite. Thinking counts toward this cap.
+    /// Argon's migration guide says an explicit limit below 32,768 should be raised
+    /// to at least that, and that a lower thinking level is how you spend fewer tokens.
+    var rewriteMaxOutputTokens: Int { self == .gemini4Argon ? 32_768 : 8_192 }
+
+    /// `generationConfig.thinkingConfig.thinkingLevel` for a rewrite.
+    /// generateContent takes the enum names (`LOW`, `MEDIUM`, `HIGH`). Nil keeps the
+    /// model's default. Only Argon gets an explicit level; earlier models error if
+    /// the field is sent and they don't support it.
+    var rewriteThinkingLevel: String? { self == .gemini4Argon ? "LOW" : nil }
+
+    /// Chat budget. Argon documents 65,536 as the standard-task default. Nil omits
+    /// the field so the other models keep the API default.
+    var chatMaxOutputTokens: Int? { self == .gemini4Argon ? 65_536 : nil }
+
+    /// Chat thinking level. `MEDIUM` is Argon's documented default.
+    var chatThinkingLevel: String? { self == .gemini4Argon ? "MEDIUM" : nil }
+
+    /// Parses a stored model id. A current id is kept. Older Flash and Pro ids move
+    /// to the newest model of that same family. Argon is its own family, so nothing
+    /// older is redirected onto it.
     init?(storedValue: String) {
         let successors: [String: GeminiModel] = [
             "gemini-3.7-flash": .gemini38Flash,

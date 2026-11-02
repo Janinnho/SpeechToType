@@ -50,9 +50,9 @@ The app window adds a dashboard with your stats and recent activity, your transc
 ### AI Text Rewriting
 Select any text and rewrite it with AI — fix grammar, elaborate, translate, speak your own instruction, or apply a custom prompt.
 
-- **OpenAI** (GPT-6 Astra, GPT-6 Sol, GPT-6 Luna)
-- **Anthropic** (Claude Fable 5.1, Claude Opus 5.5, Claude Sonnet 5, Claude Haiku 4.5)
-- **Google Gemini** (Gemini 3.8 Flash, Gemini 3.1 Pro Preview, Gemini 3.5 Flash-Lite)
+- **OpenAI** (GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna)
+- **Anthropic** (Claude Opus 5.5, Claude Sonnet 5.5, Claude Haiku 5.5)
+- **Google Gemini** (Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.1 Pro Preview, Gemini 3.5 Flash-Lite)
 - **Apple Intelligence** — On-device text processing via the FoundationModels framework, no API key required
 - **Ollama** — Use any local model running on your machine
 
