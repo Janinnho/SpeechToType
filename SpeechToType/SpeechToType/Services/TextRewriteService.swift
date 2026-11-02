@@ -59,16 +59,17 @@ enum RewriteMode: String, CaseIterable, Codable {
 nonisolated enum GPTModel: String, CaseIterable, Codable {
     case gpt6Astra = "gpt-6-astra"
     case gpt61Sol = "gpt-6.1-sol"
+    case gpt61Terra = "gpt-6.1-terra"
     case gpt6Luna = "gpt-6-luna"
 
     /// Removed ids mapped to the newest model of the same family. Sol stays Sol
-    /// (`gpt-6.1-sol` replaces `gpt-6-sol`). There is no GPT-6 Terra, so Terra follows
-    /// the balanced tier to Sol. Older flagships go to Astra. Mini and nano are not
+    /// (`gpt-6.1-sol` replaces `gpt-6-sol`). Terra stays Terra (`gpt-6.1-terra`
+    /// replaces `gpt-5.6-terra`). Older flagships go to Astra. Mini and nano are not
     /// separate families in this generation; Luna is the newest small model.
     private static let successors: [String: GPTModel] = [
         "gpt-6-sol": .gpt61Sol,
         "gpt-5.6-sol": .gpt61Sol,
-        "gpt-5.6-terra": .gpt61Sol,
+        "gpt-5.6-terra": .gpt61Terra,
         "gpt-5.6-luna": .gpt6Luna,
         "gpt-5.5": .gpt6Astra,
         "gpt-5.4": .gpt6Astra,
@@ -88,6 +89,7 @@ nonisolated enum GPTModel: String, CaseIterable, Codable {
         switch self {
         case .gpt6Astra: return "GPT-6 Astra"
         case .gpt61Sol: return "GPT-6.1 Sol"
+        case .gpt61Terra: return "GPT-6.1 Terra"
         case .gpt6Luna: return "GPT-6 Luna"
         }
     }
@@ -306,7 +308,18 @@ class TextRewriteService {
         request.httpMethod = "POST"
         request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        // Argon can think for several minutes before the first byte. Google asks for
+        // a client timeout of at least 15 minutes on hard prompts.
+        if model == .gemini4Argon {
+            request.timeoutInterval = 900
+        }
 
+        // No temperature: the current Gemini models ignore sampling parameters.
+        // The limit leaves room for the model's thinking on top of the rewritten text.
+        var generationConfig: [String: Any] = ["maxOutputTokens": model.rewriteMaxOutputTokens]
+        if let thinkingLevel = model.rewriteThinkingLevel {
+            generationConfig["thinkingConfig"] = ["thinkingLevel": thinkingLevel]
+        }
         let requestBody: [String: Any] = [
             "systemInstruction": [
                 "parts": [["text": systemPrompt]]
@@ -315,11 +328,7 @@ class TextRewriteService {
                 "role": "user",
                 "parts": [["text": text]]
             ]],
-            // No temperature: the current Gemini models deprecate the sampling parameters.
-            // The limit leaves room for the model's thinking on top of the rewritten text.
-            "generationConfig": [
-                "maxOutputTokens": 8192
-            ]
+            "generationConfig": generationConfig
         ]
 
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)

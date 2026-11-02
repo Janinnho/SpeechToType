@@ -359,9 +359,26 @@ nonisolated enum ChatService {
         if !request.instructions.isEmpty {
             body["systemInstruction"] = ["parts": [["text": request.instructions]]]
         }
+        if let model = GeminiModel(rawValue: request.model.modelID) {
+            var generationConfig: [String: Any] = [:]
+            if let maxOutputTokens = model.chatMaxOutputTokens {
+                generationConfig["maxOutputTokens"] = maxOutputTokens
+            }
+            if let thinkingLevel = model.chatThinkingLevel {
+                generationConfig["thinkingConfig"] = ["thinkingLevel": thinkingLevel]
+            }
+            if !generationConfig.isEmpty {
+                body["generationConfig"] = generationConfig
+            }
+        }
 
         var urlRequest = makeRequest(url: url)
         urlRequest.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
+        // Argon docs ask for at least 15 minutes. `timeoutInterval` here is the idle
+        // wait before the first byte, which includes the thinking time.
+        if GeminiModel(rawValue: request.model.modelID) == .gemini4Argon {
+            urlRequest.timeoutInterval = 900
+        }
         urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         var text = ""
